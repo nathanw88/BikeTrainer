@@ -1,0 +1,38 @@
+#login{
+  width: 25%;
+  margin-left: 10%;
+  margin-top: 5%;
+  background-color:  rgb(23,1,1, 0.5);
+}
+
+#login-button{
+background-color: rgb(153,184,152);
+}
+
+#register-button, #cancel-button{
+  background-color: rgb(232,74,95)
+}
+
+div.modal-content{
+  background-color: rgb(23,1,1, 0.5);
+}
+
+label{
+
+  color: rgb(205,205,231)
+}
+
+h5.modal-title{
+  color:rgb(205,205,231);
+}
+
+@media screen and (max-width: 980px) {
+
+  #login{
+    width: 70%;
+    margin: auto;
+    margin-top: 15%;
+    background-color:  rgb(23,1,1, 0.5);
+  }
+
+}
