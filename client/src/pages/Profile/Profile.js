@@ -371,7 +371,7 @@ class Profile extends Component {
                       </div>
                      : 
                       item === "sleeping"? <div><h5>Sleeping</h5>
-                      <p><b>Date:</b> {data.date.replace("T06:00:00.000Z", "")} <b>Laid down:</b> {data.laid_down.replace("00.000000", "")} <b>Asleep:</b> {data.asleep.replace("00.000000", "")} <b>Got up:</b> {data.got_up.replace("00.000000", "")} <br/> <b>Awake:</b> {data.awake.replace("00.000000", "")} <b>Waking heartbeat: </b>{data.waking_heartbeat}</p>
+                      <p><b>Date:</b> {data.date.replace("T00:00:00.000Z", "")} <b>Laid down:</b> {data.laid_down.replace("00.000000", "")} <b>Asleep:</b> {data.asleep.replace("00.000000", "")} <b>Got up:</b> {data.got_up.replace("00.000000", "")} <br/> <b>Awake:</b> {data.awake.replace("00.000000", "")} <b>Waking heartbeat: </b>{data.waking_heartbeat}</p>
                       </div>
                       :
                         item === "food"?<div><h5>Food</h5>
