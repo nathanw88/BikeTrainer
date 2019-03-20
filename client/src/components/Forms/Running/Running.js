@@ -80,7 +80,7 @@ handleInputChange = event => {
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="mph" className="mr-sm-2">Speed in MPH</Label>
-    <Input type="number" name="avg_mph" id="avg_mph" onChange={this.handleInputChange} value={this.state.log.avg_mph} placeholder="Your avgerage MPH goes here" />
+    <Input type="number" name="avg_mph" id="avg_mph" onChange={this.handleInputChange} value={this.state.log.avg_mph} placeholder="Your average MPH goes here" />
   </FormGroup>  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="date" className="mr-sm-2">Date</Label>
     <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} placeholder="Date and time of the ride" />

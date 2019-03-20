@@ -40,14 +40,17 @@ export default class NavBar extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/profile/" > Data</NavLink>
+                <NavLink href="/profile/">{localStorage.getItem("email")}</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/profile/" disabled ={!localStorage.getItem("email")}>Data</NavLink>
               </NavItem>
               
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
+              <UncontrolledDropdown  nav inNavbar>
+                <DropdownToggle disabled ={!localStorage.getItem("email")}  nav caret>
                   Log info
                 </DropdownToggle>
-                <DropdownMenu right>
+                <DropdownMenu disabled ={!localStorage.getItem("email")} right>
                   <DropdownItem onClick={()=>{localStorage.setItem("log", "bike")}} href="/log">
                     Bike
                   </DropdownItem>
@@ -64,7 +67,7 @@ export default class NavBar extends React.Component {
                 </DropdownMenu>
               </UncontrolledDropdown>
               <NavItem>
-                <NavLink onClick={()=>{this.logout()}}href="/">Logout</NavLink>
+                <NavLink disabled ={!localStorage.getItem("email")} onClick={()=>{this.logout()}}href="/">Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>
