@@ -1,0 +1,44 @@
+#profile-container{
+  background-image: url(../../images/balance.jpg); 
+  min-height: 100vh; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* position: fixed;
+  background-size: cover;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;  */
+   
+}
+
+div.dropdown-menu{
+  background-color:  rgb(23,1,1, 0.6);
+}
+
+
+#controls-container{
+  color: rgb(205,205,231);
+  margin: auto;
+  margin-top: 60px;
+  background-color:  rgb(23,1,1, 0.6);
+  padding-top: 24px;
+  padding-bottom: 12px;
+}
+
+#profile-jumbotron{
+  color: rgb(205,205,231);
+  margin-top: 60px;
+  background-color:  rgb(23,1,1, 0.6);
+  padding-top: 24px;
+  padding-left: 75px;
+  padding-bottom: 12px;
+
+}
+
+Button.profile-button{
+  background-color:rgb(48,41,34);
+}
+

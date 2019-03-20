@@ -6,7 +6,6 @@ var user = require("../../models/users")
 
 router.route("/login").post((req, res) => {
     user.selectWhere("userEmail", req.body.userEmail, function (result) {
-        console.log(result)
         let password = req.body.userPassword;
         let userID
         let userEmail = req.body.userEmail
@@ -44,7 +43,12 @@ router.route("/register").post((req, res) => {
         }
     })
 })
-
+router.route("/logs/:id/:table").get((req, res) =>{
+    user.selectLogs(req.params.id, req.params.table, function(result){
+        
+        res.json(result)
+    })
+})
 
 
 module.exports = router;

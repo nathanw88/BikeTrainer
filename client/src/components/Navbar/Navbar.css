@@ -12,9 +12,10 @@ a.navbar-brand, a.nav-link{
    background-color:  rgb(23,1,1, 0.5);
 }
 
-.dropdown-item{
-   color:rgb(205,205,231);
+a.dropdown-item{
+   color: rgb(205,205,231);
 }
-.navbar-toggler{
-   background-color:rgb(205,205,231);
+span.navbar-toggler-icon{
+  background: url(../../images/menu.png); 
+    background-size: cover;
 }

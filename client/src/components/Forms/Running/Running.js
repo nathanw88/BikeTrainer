@@ -18,7 +18,6 @@ class Running extends React.Component {
     }
   }
   log = event=>{
-    console.log(localStorage.getItem("id"))
     API.logRun([Object.keys(this.state.log)],[Object.values(this.state.log)]).then(res => {
       if(res.data.error){
         alert(res.data.error)
@@ -28,15 +27,13 @@ class Running extends React.Component {
       }
       
 
-    }).catch(err => console.log(err));
+    })
     
   }
 
 handleInputChange = event => {
   const { log } = this.state
-  console.log(event.target)
   const { name, value } = event.target;
-  console.log(log)
   log[name] = value
   this.setState({
    log

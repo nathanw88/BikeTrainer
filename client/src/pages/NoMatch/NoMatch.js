@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Row, Col} from "reactstrap"
+import { Col, Row, Container } from "../../components/Grid";
 
 const NoMatch = () => (
   <Container fluid>

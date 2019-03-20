@@ -14,6 +14,11 @@ var user = {
     });
   },
 
+  selectLogs: function(userId, table, cb){
+    orm.selectLogs(userId, table, function(res){
+      cb(res);
+    })
+  }
 
 };
 

@@ -7,3 +7,14 @@
   padding-bottom: 12px;
 
 }
+
+@media screen and (max-width: 980px) {
+
+  #bike-form{
+    width: 70%;
+    margin: auto;
+    margin-top: 15%;
+    background-color:  rgb(23,1,1, 0.5);
+  }
+
+}

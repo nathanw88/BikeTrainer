@@ -123,7 +123,16 @@ var orm = {
             cb(result);
         });
     },
-
+    selectLogs: function(FK, table, cb){
+        
+        var queryString = "SELECT * FROM ?? WHERE ??.fk_user = ? ORDER BY date"
+        
+        connection.query(queryString, [table, table, FK], function(err, result){
+            if (err) throw err;
+            
+            cb(result)
+        })
+    }
   
 }
 

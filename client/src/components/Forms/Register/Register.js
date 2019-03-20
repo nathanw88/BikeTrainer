@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Container, Col, Form,
+  Form,
   FormGroup, Label, Input,
   Button, FormText, FormFeedback,
 } from 'reactstrap';

@@ -21,6 +21,10 @@ export default {
   },
   logFood: (keys, values) =>{
     return axios.post("/api/log/food",{keys, values})
+  },
+
+  selectLogs: (id, table) =>{
+    return axios.get(`/api/users/logs/${id}/${table}`)
   }
 
 };
