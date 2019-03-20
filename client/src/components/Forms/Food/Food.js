@@ -48,21 +48,22 @@ handleInputChange = event => {
     <Form>
       <FormText>Date is required.</FormText>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="carbs" className="mr-sm-2">Grams of carbs.</Label>
+    <Label for="carbs" className="mr-sm-2">Grams of carbs</Label>
     <Input type="number" name="carbs" id="carbs" onChange={this.handleInputChange} value={this.state.log.carbs}  />
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="fats" className="mr-sm-2">Grams of fats.</Label>
+    <Label for="fats" className="mr-sm-2">Grams of fats</Label>
     <Input type="number" name="fats" id="fats" onChange={this.handleInputChange} value={this.state.log.fats}/>
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="proteins" className="mr-sm-2">Grams of protein.</Label>
+    <Label for="proteins" className="mr-sm-2">Grams of protein</Label>
     <Input type="number" name="proteins" id="proteins" onChange={this.handleInputChange} value={this.state.log.proteins} />
   </FormGroup>
  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="date" className="mr-sm-2">Date</Label>
     <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} />
   </FormGroup>
+  <br/>
   <Button id="login-button"
       disabled={
         !(

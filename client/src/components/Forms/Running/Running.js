@@ -47,6 +47,7 @@ handleInputChange = event => {
 <Jumbotron id="run-form">
 <div>
     <Form>
+      <h5 className="log-heading">Running</h5>
       <FormText>Miles, Minutes, and Date are required.</FormText>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="difficulty" className="mr-sm-2">Difficulty</Label>
@@ -54,7 +55,7 @@ handleInputChange = event => {
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="distanceMiles" className="mr-sm-2">Miles</Label>
-    <Input type="number" name="distance_miles" id="distance_miles" onChange={this.handleInputChange} value={this.state.log.distance_miles} placeholder="Miles you ran." />
+    <Input type="number" name="distance_miles" id="distance_miles" onChange={this.handleInputChange} value={this.state.log.distance_miles} placeholder="Miles you ran" />
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="durationMinutes" className="mr-sm-2">Minutes</Label>
@@ -66,7 +67,7 @@ handleInputChange = event => {
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="maxHeartbeat" className="mr-sm-2">Max Heartbeat</Label>
-    <Input type="number" name="max_heartbeat" id="max_heartbeat" onChange={this.handleInputChange} value={this.state.log.max_heartbet} placeholder="Enter max heartbeat." />
+    <Input type="number" name="max_heartbeat" id="max_heartbeat" onChange={this.handleInputChange} value={this.state.log.max_heartbet} placeholder="Enter max heartbeat" />
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="workoutType" className="mr-sm-2">Workout type</Label>
@@ -79,11 +80,12 @@ handleInputChange = event => {
   </FormGroup>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="mph" className="mr-sm-2">Speed in MPH</Label>
-    <Input type="number" name="avg_mph" id="avg_mph" onChange={this.handleInputChange} value={this.state.log.avg_mph} placeholder="Your avgerage MPH goes here." />
+    <Input type="number" name="avg_mph" id="avg_mph" onChange={this.handleInputChange} value={this.state.log.avg_mph} placeholder="Your avgerage MPH goes here" />
   </FormGroup>  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="date" className="mr-sm-2">Date</Label>
-    <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} placeholder="Date and time of the ride." />
+    <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} placeholder="Date and time of the ride" />
   </FormGroup>
+  <br/>
   <Button id="login-button"
       disabled={
         !(

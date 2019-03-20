@@ -73,6 +73,7 @@ handleInputChange = event => {
     <Label for="date" className="mr-sm-2">Date</Label>
     <Input type="date" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} />
   </FormGroup>
+  <br/>
   <Button id="login-button"
       disabled={
         !(

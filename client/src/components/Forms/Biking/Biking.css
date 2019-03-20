@@ -7,6 +7,9 @@
   padding-bottom: 12px;
 
 }
+h5.log-heading{
+  color: rgb(205,205,231);
+}
 
 @media screen and (max-width: 980px) {
 

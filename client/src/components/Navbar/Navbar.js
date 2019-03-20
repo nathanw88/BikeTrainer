@@ -35,17 +35,14 @@ export default class NavBar extends React.Component {
     return (
       <div>
         <Navbar id="navbar" expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarBrand href="/">Trainer</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/profile/" >{localStorage.getItem("email")?localStorage.getItem("email") : "Profile"}</NavLink>
+                <NavLink href="/profile/" > Data</NavLink>
               </NavItem>
               
-              <NavItem>
-                <NavLink onClick={()=>{this.logout()}}href="/">Logout</NavLink>
-              </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                   Log info
@@ -66,6 +63,9 @@ export default class NavBar extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <NavItem>
+                <NavLink onClick={()=>{this.logout()}}href="/">Logout</NavLink>
+              </NavItem>
             </Nav>
           </Collapse>
         </Navbar>

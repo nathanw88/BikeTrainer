@@ -22,19 +22,25 @@ div.dropdown-menu{
 #controls-container{
   color: rgb(205,205,231);
   margin: auto;
-  margin-top: 60px;
+  margin-top: 70px;
+  margin-left: 40px;
   background-color:  rgb(23,1,1, 0.6);
+  padding-left: auto;
   padding-top: 24px;
-  padding-bottom: 12px;
+  padding-bottom: 24px;
 }
 
 #profile-jumbotron{
   color: rgb(205,205,231);
   margin-top: 60px;
   background-color:  rgb(23,1,1, 0.6);
-  padding-top: 24px;
-  padding-left: 75px;
-  padding-bottom: 12px;
+ 
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  /* padding-top: 77.5px;
+  padding-left: 77.5px;
+  padding-bottom: 77.5px; */
 
 }
 

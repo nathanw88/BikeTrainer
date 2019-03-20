@@ -244,7 +244,7 @@ class Profile extends Component {
                 <Container fluid>
                 {this.state.graphDisplay ?
                 <div>
-                  <h5>Select five</h5>
+                  
                   <Dropdown isOpen={this.state.bikingOpen} toggle={() => this.toggle("bikingOpen")}>
                     <DropdownToggle caret>
                       Biking
@@ -343,8 +343,8 @@ class Profile extends Component {
                 </Container>
               </Jumbotron>
             </Col>
-            <Col size="md-2"></Col>
-            <Col size="md-7">
+            <Col size="md-3"></Col>
+            <Col size="md-6">
               <Jumbotron id="profile-jumbotron">
                 {this.state.graphDisplay ?
                 <div>
@@ -356,7 +356,6 @@ class Profile extends Component {
                     onInitialized={(figure) => this.setState(figure)}
                     onUpdate={(figure) => this.setState(figure)}
                   />
-                  <p>Selected: {this.state.cSelected.toString()}</p> 
                   </div>
                   : this.state.statsDisplay ? <div>{
                   this.state.dSelected.map((item, key) =>
@@ -376,7 +375,7 @@ class Profile extends Component {
                       </div>
                       :
                         item === "food"?<div><h5>Food</h5>
-                         <p>Date: {data.date.replace("T", " ").replace(":00.000Z", "")}</p>
+                         <p>Date: {data.date.replace("T", " ").replace(":00.000Z", "")} Carbs: {data.carbs} Fats: {data.fats} Proteins: {data.proteins}</p>
                          </div>
                         :
                           null
