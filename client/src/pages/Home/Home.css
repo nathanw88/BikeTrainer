@@ -1,10 +1,11 @@
 
 #home-container{
-  background: url(../../images/wellness.jpg); 
+  background: url(../../images/login.jpg); 
   position: fixed;
   background-size: cover;
   top: 0; 
   left: 0; 
   right: 0; 
-  bottom: 0;  
+  bottom: 0;
+  overflow-y: scroll;  
 }

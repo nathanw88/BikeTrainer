@@ -1,17 +1,12 @@
 #profile-container{
-  background-image: url(../../images/balance.jpg); 
-  min-height: 100vh; 
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* position: fixed;
+  background: url(../../images/balance.jpg); 
+  position: fixed;
   background-size: cover;
   top: 0; 
   left: 0; 
   right: 0; 
-  bottom: 0;  */
-   
+  bottom: 0;
+  overflow-y: scroll; 
 }
 
 div.dropdown-menu{
@@ -22,7 +17,7 @@ div.dropdown-menu{
 #controls-container{
   color: rgb(205,205,231);
   margin: auto;
-  margin-top: 70px;
+  margin-top: 80px;
   margin-left: 40px;
   background-color:  rgb(23,1,1, 0.6);
   padding-left: auto;
@@ -30,9 +25,14 @@ div.dropdown-menu{
   padding-bottom: 24px;
 }
 
+#data-container{
+  padding-left: 69px;
+  padding-top: 42px;
+  padding-bottom: 42px;
+}
 #profile-jumbotron{
   color: rgb(205,205,231);
-  margin-top: 60px;
+  margin-top: 80px;
   background-color:  rgb(23,1,1, 0.6);
  
   padding-top: 15px;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Jumbotron, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import API from '../../../utils/API'
 import Register from "../Register/Register"
+import {Col, Row, Container} from "../../Grid"
 import "./Login.css"
 class LoginModal extends React.Component {
   constructor(props) {
@@ -58,7 +59,15 @@ handleInputChange = event => {
           <Label for="examplePassword" className="mr-sm-2">Password</Label>
           <Input type="password" name="userPassword" id="userPassword" onChange={this.handleInputChange} value={this.state.userPassword} placeholder="Password!" />
         </FormGroup>
-        <Button id="login-button"
+        <br/>
+        
+       
+      </Form>
+      <br/>
+        <Container>
+          <Row>
+            <Col size="md-6">
+        <Button className="login-button" id="login-button"
             disabled={
               !(
                 this.state.userEmail &&
@@ -69,11 +78,14 @@ handleInputChange = event => {
           >
              Login
           </Button>
-       
-      </Form>
-            <br />
-            <div>
-        <Button id="register-button" onClick={this.toggle}>Register new user</Button>
+          </Col>
+          
+          
+          <Col size ="md-6"> 
+        <Button id="register-button" onClick={this.toggle}>Register</Button>
+        </Col>
+        </Row>
+        </Container>
         <div id="register-modal">
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>Register</ModalHeader>
@@ -86,7 +98,7 @@ handleInputChange = event => {
         </Modal>
         </div>
       </div>
-      </div>
+      
       </Jumbotron>
     );
   }

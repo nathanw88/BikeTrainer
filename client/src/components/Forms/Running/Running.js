@@ -43,7 +43,7 @@ handleInputChange = event => {
   render(){
     return(
 
-    
+<div id="running-container">
 <Jumbotron id="run-form">
 <div>
     <Form>
@@ -106,7 +106,9 @@ handleInputChange = event => {
 
 </div>
 </div>
-</Jumbotron>)
+</Jumbotron>
+</div>
+)
   }
     }
 

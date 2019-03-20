@@ -42,10 +42,11 @@ handleInputChange = event => {
   render(){
     return(
 
-    
+    <div id="food-container">
 <Jumbotron id="food-form">
 <div>
     <Form>
+      <h5 className= "log-heading">Food</h5>
       <FormText>Date is required.</FormText>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="carbs" className="mr-sm-2">Grams of carbs</Label>
@@ -82,7 +83,9 @@ handleInputChange = event => {
 
 </div>
 </div>
-</Jumbotron>)
+</Jumbotron>
+</div>
+)
   }
     }
 

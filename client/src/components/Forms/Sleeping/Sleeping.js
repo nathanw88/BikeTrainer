@@ -44,10 +44,11 @@ handleInputChange = event => {
   render(){
     return(
 
-    
+<div id="sleep-container">
 <Jumbotron id="sleep-form">
 <div>
     <Form>
+      <h5 className= "log-heading">Sleeping</h5>
       <FormText>Laid down time, Got up time, and Date are required.</FormText>
   <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
     <Label for="laidDown" className="mr-sm-2">Laid down.</Label>
@@ -94,7 +95,8 @@ handleInputChange = event => {
 
 </div>
 </div>
-</Jumbotron>)
+</Jumbotron>
+</div>)
   }
     }
 

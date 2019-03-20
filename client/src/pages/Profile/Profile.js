@@ -357,25 +357,25 @@ class Profile extends Component {
                     onUpdate={(figure) => this.setState(figure)}
                   />
                   </div>
-                  : this.state.statsDisplay ? <div>{
+                  : this.state.statsDisplay ? <div id="data-container">{
                   this.state.dSelected.map((item, key) =>
                   
                    this.state[item].data.map((data, index)=>
                    
                      (item === "biking")? <div><h5>Biking</h5>
-                     <p>Date: {data.date.replace("T", " ").replace(":00.000Z", "")} Difficulty: {data.difficulty} Miles: {data.distance_miles} Minutes: {data.duration_miles} AVG Heartbeat: {data.avg_heartbeat} Max Heartbeat: {data.max_heartbeat} Type: {data.workout_type} MPH:{data.avg_mph}</p>
+                     <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Difficulty:</b> {data.difficulty} <b>Miles:</b> {data.distance_miles} <b>Minutes:</b> {data.duration_minutes} <b>AVG Heartbeat:</b> {data.avg_heartbeat} <br/>  <b>Max Heartbeat:</b> {data.max_heartbeat} <b>Type:</b> {data.workout_type} <b>MPH: </b>{data.avg_mph}</p>
                      </div>
                      :
                      (item === "running")? <div><h5>Running</h5>
-                      <p>Date: {data.date.replace("T", " ").replace(":00.000Z", "")} Difficulty: {data.difficulty} Miles: {data.distance_miles} Minutes: {data.duration_miles} AVG Heartbeat: {data.avg_heartbeat} Max Heartbeat: {data.max_heartbeat} Type: {data.workout_type} MPH:{data.avg_mph}</p>
+                      <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Difficulty:</b> {data.difficulty} <b>Miles:</b> {data.distance_miles} <b>Minutes:</b> {data.duration_minutes} <b>AVG Heartbeat:</b> {data.avg_heartbeat} <br/> <b>Max Heartbeat:</b> {data.max_heartbeat} <b>Type:</b> {data.workout_type} <b>MPH:</b> {data.avg_mph}</p>
                       </div>
                      : 
                       item === "sleeping"? <div><h5>Sleeping</h5>
-                      <p>Date: {data.date.replace("T06:00:00.000Z", "")} Laid down: {data.laid_down.replace("00.000000", "")} Asleep: {data.asleep.replace("00.000000", "")} Got up: {data.got_up.replace("00.000000", "")} Awake: {data.awake.replace("00.000000", "")} Waking heartbeat{data.waking_heartbeat}</p>
+                      <p><b>Date:</b> {data.date.replace("T06:00:00.000Z", "")} <b>Laid down:</b> {data.laid_down.replace("00.000000", "")} <b>Asleep:</b> {data.asleep.replace("00.000000", "")} <b>Got up:</b> {data.got_up.replace("00.000000", "")} <br/> <b>Awake:</b> {data.awake.replace("00.000000", "")} <b>Waking heartbeat: </b>{data.waking_heartbeat}</p>
                       </div>
                       :
                         item === "food"?<div><h5>Food</h5>
-                         <p>Date: {data.date.replace("T", " ").replace(":00.000Z", "")} Carbs: {data.carbs} Fats: {data.fats} Proteins: {data.proteins}</p>
+                         <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Carbs:</b> {data.carbs} <b>Fats:</b> {data.fats} <b>Proteins:</b> {data.proteins}</p>
                          </div>
                         :
                           null

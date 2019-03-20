@@ -1,18 +1,27 @@
 #login{
-  width: 25%;
-  margin-left: 10%;
-  margin-top: 5%;
+  width: 30%;
+  margin-left: 12.5%;
+  margin-top: 14.5%;
   background-color:  rgb(23,1,1, 0.5);
 }
 
 #login-button{
+
 background-color: rgb(153,184,152);
 }
 
 #register-button, #cancel-button{
+  
   background-color: rgb(232,74,95)
 }
 
+#register-button{
+  /* margin-left: 165px; */
+  width: 150px;
+}
+Button.login-button{
+  width: 150px;
+}
 div.modal-content{
   background-color: rgb(23,1,1, 0.5);
 }
