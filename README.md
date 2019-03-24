@@ -1,4 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Trainer 
+
+## Description
+
+a trainer to log your workouts your food intake and your sleep. with the ability to show you your data on a graph so you can see you effort along a time line.
+Live Link: https://wellness-trainer.herokuapp.com/ for testing use the email: test@test.com password: 12345678
+
 
 ## Available Scripts
 
