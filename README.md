@@ -10,9 +10,13 @@ Live Link: https://wellness-trainer.herokuapp.com/ for testing use the following
 
 In the project directory, you can run:
 
+###`npm install`
+
+installs all dependencies for server and client using concurrently to make that happen
+
 ### `npm start`
 
-Runs the app in the development mode.<br>
+Runs the server and client with concurrently in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
