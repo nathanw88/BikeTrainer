@@ -10,7 +10,7 @@ Live Link: https://wellness-trainer.herokuapp.com/ for testing use the following
 
 In the project directory, you can run:
 
-###`npm install`
+### `npm install`
 
 installs all dependencies for server and client using concurrently to make that happen
 
