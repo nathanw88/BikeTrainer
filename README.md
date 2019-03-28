@@ -7,7 +7,7 @@ Live Link: https://wellness-trainer.herokuapp.com/ for testing use the following
 
 ## to Get Started
 
-Clone repo down set up MySQL using the scheema file with the folliwing info port: 3307, user: root, password:root, database: trainer_db; then use the npm install script on the root directory of the repo, after the install finishes, run npm start and wait for a bit.
+Clone repo down, set up MySQL using the scheema file with the folliwing info port: 3307, user: root, password:root, database: trainer_db; then use the npm install script on the root directory of the repo, after the install finishes, run npm start and you will be ready to go.
 
 ## Available Scripts
 
