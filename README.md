@@ -5,6 +5,9 @@
 a trainer to log your workouts your food intake and your sleep. with the ability to show you your data on a graph so you can see you effort along a time line.
 Live Link: https://wellness-trainer.herokuapp.com/ for testing use the following login info email: test@test.com password: 12345678
 
+## to Get Started
+
+Clone repo down set up MySQL using the scheema file with the folliwing info port: 3307, user: root, password:root, database: trainer_db; then use the npm install script on the root directory of the repo, after the install finishes, run npm start and wait for a bit.
 
 ## Available Scripts
 
@@ -47,32 +50,3 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
