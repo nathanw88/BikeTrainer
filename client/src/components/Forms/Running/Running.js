@@ -4,6 +4,7 @@ import API from '../../../utils/API'
 import "./Running.css"
 
 class Running extends React.Component {
+  // setting state with the current user that logged in this is where running logs will be stored until it is sent to the backend.
   state={
     log:{
       fk_user: localStorage.getItem("id"),
@@ -17,6 +18,7 @@ class Running extends React.Component {
       date: ""
     }
   }
+  //data is send over to api.js in utils folder where it will be sent to the backend
   log = event=>{
     API.logRun([Object.keys(this.state.log)],[Object.values(this.state.log)]).then(res => {
       if(res.data.error){
@@ -30,7 +32,7 @@ class Running extends React.Component {
     })
     
   }
-
+// function for handling changes in the log form
 handleInputChange = event => {
   const { log } = this.state
   const { name, value } = event.target;
@@ -46,6 +48,7 @@ handleInputChange = event => {
 <div id="running-container">
 <Jumbotron id="run-form">
 <div>
+  {/* for for logging runs */}
     <Form>
       <h5 className="log-heading">Running</h5>
       <FormText>Miles, Minutes, and Date are required.</FormText>

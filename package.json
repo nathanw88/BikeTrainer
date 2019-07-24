@@ -2,7 +2,7 @@
   "name": "trainer",
   "version": "1.0.0",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.4",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
@@ -13,10 +13,11 @@
     "react-dom": "^16.8.3",
     "react-router": "^5.0.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.5",
+    "react-scripts": "^3.0.1",
+    "react-select": "^3.0.4",
     "reactstrap": "^7.1.0",
     "semantic-ui-react": "^0.85.0",
-    "sequelize": "^4.42.1"
+    "sequelize": "^6.0.0"
   },
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",

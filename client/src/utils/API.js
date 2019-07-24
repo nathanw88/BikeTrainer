@@ -19,8 +19,10 @@ export default {
   logSleep: (keys, values) =>{
     return axios.post("/api/log/sleep",{keys, values})
   },
-  logFood: (keys, values) =>{
-    return axios.post("/api/log/food",{keys, values})
+  logFood: (array, foodName) =>{
+    console.log("array:" + array)
+    console.log(foodName)
+    return axios.post("/api/log/food", {array, foodName})
   },
 
   selectLogs: (id, table) =>{

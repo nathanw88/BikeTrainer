@@ -14,18 +14,22 @@ import {
   import "./Navbar.css"
 
 export default class NavBar extends React.Component {
+  
   constructor(props) {
     super(props);
-
+    //binding this on toggle instead of on calling it
     this.toggle = this.toggle.bind(this);
+    //setting initial state of navbar dropdown to false
     this.state = {
       isOpen: false
     };
   }
+  // log out function which clears the local storage of user info
   logout(){
     localStorage.setItem("email", "")
     localStorage.setItem("id", "")
   }
+  // toggle function opens dropdown for selecting what you want to log
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen

@@ -51,6 +51,31 @@ var orm = {
             cb(result);
         });
     },
+
+    //insert multiple rows
+    createMulti: function (table, array, fk, cb) {
+      
+        var vals = [];
+        var queryString = "INSERT INTO " + table;
+        queryString += " (";
+        queryString += Object.keys(array[0]).toString();
+        queryString += ",fk_food"
+        queryString += `) VALUES ${array.map((nutrient)=>{
+            vals.push(...Object.values(nutrient));
+            vals.push(fk)
+            return `(${printQuestionMarks((Object.values(nutrient).length) + 1)})`;
+        })}`;
+       
+        queryString += ";";
+console.log(queryString)
+console.log(vals)
+
+        connection.query(queryString, vals, function (err, result) {
+            if (err) throw err;
+            cb(result);
+        });
+    },
+
     //delete from table function
     delete: function (table, cols, vals, cb) {
         var queryString = "DELETE FROM ?? WHERE "
@@ -123,17 +148,17 @@ var orm = {
             cb(result);
         });
     },
-    selectLogs: function(FK, table, cb){
-        
+    selectLogs: function (FK, table, cb) {
+
         var queryString = "SELECT * FROM ?? WHERE ??.fk_user = ? ORDER BY date"
-        
-        connection.query(queryString, [table, table, FK], function(err, result){
+
+        connection.query(queryString, [table, table, FK], function (err, result) {
             if (err) throw err;
-            
+
             cb(result)
         })
     }
-  
+
 }
 
 module.exports = orm;

@@ -3,12 +3,13 @@ import { Jumbotron, Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu 
 import { Row, Col, Container } from "../../components/Grid/index"
 import "./Profile.css"
 import API from "../../utils/API"
-import Plot from 'react-plotly.js';
+import Graph from "../../components/Profile/Graph/Graph"
+import Logs from "../../components/Profile/Logs/Logs"
+
 class Profile extends Component {
   constructor(props) {
     super(props);
 
-    // this.state = { cSelected: [] };
 
 
     this.state = {
@@ -22,22 +23,25 @@ class Profile extends Component {
       running: {
         data: [],
       },
-      food: {
+      nutrient: {
         data: [],
       },
       cSelected: ["biking.distance_miles", "biking.avg_mph", "biking.duration_minutes", "biking.avg_heartbeat", "biking.max_heartbeat"],
-      dSelected: ["sleeping", "biking", "running", "food"],
-      data: [],
-      layout: {},
-      frames: [],
-      config: {},
+      dSelected: ["sleeping", "biking", "running", "nutrient"],
+      // data: [],
+      // layout: {},
+      // frames: [],
+      // config: {},
       sleepingOpen: false,
       bikingOpen: false,
       runningOpen: false,
-      foodOpen: false,
+      nutrientOpen: false,
+      displayOpen:false,
+      display: "logs",
       graphDisplay: true,
       statsDisplay: false,
     }
+    // this.onDisplayBtnClick = this.onDisplayBtnClick(this);
     this.toggleDisplay = this.toggleDisplay.bind(this);
     this.toggle = this.toggle.bind(this);
     this.onCheckboxBtnClick = this.onCheckboxBtnClick.bind(this);
@@ -45,8 +49,16 @@ class Profile extends Component {
     this.selectLogs("sleeping")
     this.selectLogs("running")
     this.selectLogs("biking")
-    this.selectLogs("food")
+    this.selectLogs("nutrient")
 
+
+  }
+
+  onDisplayBtnClick(display){
+
+    this.setState({
+      display
+    })
 
   }
 
@@ -77,7 +89,7 @@ class Profile extends Component {
 
     }
     this.setState({ cSelected: [...this.state.cSelected] });
-    this.buildPlot()
+
 
   }
   
@@ -97,92 +109,7 @@ class Profile extends Component {
   }
 
 
-  buildPlot() {
-    var trace1 = {
-      x: [],
-      y: [],
-      name: '',
-      type: 'scatter'
-    };
-
-    var trace2 = {
-      x: [],
-      y: [],
-      name: '',
-      yaxis: '',
-      type: 'scatter'
-    };
-
-    var trace3 = {
-      x: [],
-      y: [],
-      name: '',
-      yaxis: '',
-      type: 'scatter'
-    };
-
-    var trace4 = {
-      x: [],
-      y: [],
-      name: '',
-      yaxis: '',
-      type: 'scatter'
-    };
-
-    var trace5 = {
-      x: [],
-      y: [],
-      name: '',
-      yaxis: '',
-      type: 'scatter'
-    }
-    for (var i = 0; i < this.state.cSelected.length; i++) {
-      var selected = this.state.cSelected[i].split(".")
-      for (var j = 0; j < this.state[selected[0]].data.length; j++) {
-        switch (i) {
-          case 0:
-            trace1.x.push(this.state[selected[0]].data[j].date)
-            trace1.y.push(this.state[selected[0]].data[j][selected[1]])
-            trace1.name = selected[1]
-            trace1.yaxis = selected[1]
-            break;
-          case 1:
-            trace2.x.push(this.state[selected[0]].data[j].date)
-            trace2.y.push(this.state[selected[0]].data[j][selected[1]])
-            trace2.name = selected[1]
-            trace2.yaxis = selected[1]
-            break;
-          case 2:
-            trace3.x.push(this.state[selected[0]].data[j].date)
-            trace3.y.push(this.state[selected[0]].data[j][selected[1]])
-            trace3.name = selected[1]
-            trace3.yaxis = selected[1]
-            break;
-          case 3:
-            trace4.x.push(this.state[selected[0]].data[j].date)
-            trace4.y.push(this.state[selected[0]].data[j][selected[1]])
-            trace4.name = selected[1]
-            trace4.yaxis = selected[1]
-            break;
-          case 4:
-            trace5.x.push(this.state[selected[0]].data[j].date)
-            trace5.y.push(this.state[selected[0]].data[j][selected[1]])
-            trace5.name = selected[1]
-            trace5.yaxis = selected[1]
-            break;
-          default:
-           console.log("Error building plot data")
-        }
-      }
-    }
-    this.state.data.push(trace1, trace2, trace3, trace4, trace5)
-    while (this.state.data.length > 5) {
-      this.state.data.splice(0, 1)
-    }
-    this.setState({ data: [...this.state.data] });
-   
-
-  }
+  
   selectLogs(table) {
     API.selectLogs(localStorage.getItem("id"), table).then(res => {
       if (res.data.error) {
@@ -214,11 +141,12 @@ class Profile extends Component {
             })
 
             break;
-          case "food":
-            const { food } = this.state
-            food.data = res.data
+          case "nutrient":
+            const { nutrient } = this.state
+            nutrient.data = res.data
+            console.log(nutrient)
             this.setState({
-              food
+              nutrient
             })
             break;
           default:
@@ -226,7 +154,7 @@ class Profile extends Component {
        
           
         }
-        this.buildPlot()
+        
       }
 
     })
@@ -239,11 +167,12 @@ class Profile extends Component {
       <div id="profile-container">
         <Container id="profile-inner-container" fluid>
           <Row>
-            <Col size="md-2">
+            <Col size="lg-2">
               <Jumbotron id="controls-container">
                 <Container fluid>
-                {this.state.graphDisplay ?
+                {this.state.display === "graph" ?
                 <div>
+                  <p>Select five data points to plot.</p>
                   
                   <Dropdown isOpen={this.state.bikingOpen} toggle={() => this.toggle("bikingOpen")}>
                     <DropdownToggle caret>
@@ -305,15 +234,15 @@ class Profile extends Component {
 
 
 
-                  <Dropdown isOpen={this.state.foodOpen} toggle={() => this.toggle("foodOpen")}>
+                  <Dropdown isOpen={this.state.nutrientOpen} toggle={() => this.toggle("nutrientOpen")}>
                     <DropdownToggle caret>
-                      Food
+                      nutrient
         </DropdownToggle>
                     <DropdownMenu>
                       <ButtonGroup>
-                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("food.carbs")} active={this.state.cSelected.includes("food.carbs")}>Carbs</Button>
-                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("food.fats")} active={this.state.cSelected.includes("food.fats")}>Fats</Button>
-                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("food.proteins")} active={this.state.cSelected.includes("food.proteins")}>Proteins</Button>
+                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("nutrient.carbs")} active={this.state.cSelected.includes("nutrient.carbs")}>Carbs</Button>
+                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("nutrient.fats")} active={this.state.cSelected.includes("nutrient.fats")}>Fats</Button>
+                        <Button className="profile-button" onClick={() => this.onCheckboxBtnClick("nutrient.proteins")} active={this.state.cSelected.includes("nutrient.proteins")}>Proteins</Button>
                       </ButtonGroup>
                     </DropdownMenu>
                   </Dropdown>
@@ -321,73 +250,53 @@ class Profile extends Component {
                   
                   </div>
                   :
-                   this.state.statsDisplay? 
+                   this.state.display === "logs" ? 
                     <div>
-                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("running")} active={this.state.dSelected.includes("running")}>Running</Button>
+                      {/* <p>Toggle data to display.</p> */}
+                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("running")} active={this.state.dSelected.includes("running")}>{this.state.dSelected.includes("running")? <p>Remove running data.</p> :<p>Add running data.</p>}</Button>
                       <br/>
                       <br/>
-                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("biking")} active={this.state.dSelected.includes("biking")}>Biking</Button>
+                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("biking")} active={this.state.dSelected.includes("biking")}>{this.state.dSelected.includes("biking")? <p>Remove biking data.</p> :<p>Add biking data.</p>}</Button>
                       <br/>
                       <br/>
-                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("sleeping")} active={this.state.dSelected.includes("sleeping")}>Sleeping</Button>
+                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("sleeping")} active={this.state.dSelected.includes("sleeping")}>{this.state.dSelected.includes("sleeping")? <p>Remove sleeping data.</p> :<p>Add sleeping data.</p>}</Button>
                       <br/>
                       <br/>
-                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("food")} active={this.state.dSelected.includes("food")}>Food</Button>
+                      <Button className="profile-button" onClick={() => this.onStatsboxBtnClick("nutrient")} active={this.state.dSelected.includes("nutrient")}>{this.state.dSelected.includes("nutrient")? <p>Remove nutrient data.</p> :<p>Add nutrient data.</p>}</Button>
                       <br/>
                       <br/>
                     </div>  
                     :
                   null
                 }
-                  <Button onClick={this.toggleDisplay}>Change display</Button> 
+                  {/* <Button onClick={this.toggleDisplay}>Change display</Button>  */}
+                  <Dropdown isOpen={this.state.displayOpen} toggle={() => this.toggle("displayOpen")}>
+                    <DropdownToggle caret>
+                      Display
+        </DropdownToggle>
+                    <DropdownMenu>
+                      <ButtonGroup>
+                        <Button className="profile-button" onClick={() => this.onDisplayBtnClick("graph")} active={this.state.display === "graph"}>Graph</Button>
+                        <Button className="profile-button" onClick={() => this.onDisplayBtnClick("stats")} active={this.state.display === "stats"}>Stats</Button>
+                        <Button className="profile-button" onClick={() => this.onDisplayBtnClick("logs")} active={this.state.display === "logs"}>Logs</Button>
+                      </ButtonGroup>
+                    </DropdownMenu>
+                  </Dropdown>
                 </Container>
               </Jumbotron>
             </Col>
-            <Col size="md-3"></Col>
-            <Col size="md-6">
-              <Jumbotron id="profile-jumbotron">
-                {this.state.graphDisplay ?
-                <div>
-                  <Plot
-                    data={this.state.data}
-                    layout={this.state.layout}
-                    frames={this.state.frames}
-                    config={this.state.config}
-                    onInitialized={(figure) => this.setState(figure)}
-                    onUpdate={(figure) => this.setState(figure)}
-                  />
-                  </div>
-                  : this.state.statsDisplay ? <div id="data-container">{
-                  this.state.dSelected.map((item, key) =>
+            <Col size="lg-3"></Col>
+            <Col size="lg-6">
+          
+                {this.state.display === "graph" ?
+                <Graph sleeping={this.state.sleeping.data} biking={this.state.biking.data} running={this.state.running.data} nutrient={this.state.nutrient.data} cSelected={this.state.cSelected}></Graph>
+            
+                :this.state.display === "logs" ?
+                <Logs dSelected={this.state.dSelected} biking={this.state.biking} running={this.state.running} sleeping={this.state.sleeping} nutrient={this.state.nutrient}></Logs>
+                : null
                   
-                   this.state[item].data.map((data, index)=>
-                   
-                     (item === "biking")? <div><h5>Biking</h5>
-                     <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Difficulty:</b> {data.difficulty} <b>Miles:</b> {data.distance_miles} <b>Minutes:</b> {data.duration_minutes} <b>AVG Heartbeat:</b> {data.avg_heartbeat} <br/>  <b>Max Heartbeat:</b> {data.max_heartbeat} <b>Type:</b> {data.workout_type} <b>MPH: </b>{data.avg_mph}</p>
-                     </div>
-                     :
-                     (item === "running")? <div><h5>Running</h5>
-                      <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Difficulty:</b> {data.difficulty} <b>Miles:</b> {data.distance_miles} <b>Minutes:</b> {data.duration_minutes} <b>AVG Heartbeat:</b> {data.avg_heartbeat} <br/> <b>Max Heartbeat:</b> {data.max_heartbeat} <b>Type:</b> {data.workout_type} <b>MPH:</b> {data.avg_mph}</p>
-                      </div>
-                     : 
-                      item === "sleeping"? <div><h5>Sleeping</h5>
-                      <p><b>Date:</b> {data.date.replace("T00:00:00.000Z", "")} <b>Laid down:</b> {data.laid_down.replace("00.000000", "")} <b>Asleep:</b> {data.asleep.replace("00.000000", "")} <b>Got up:</b> {data.got_up.replace("00.000000", "")} <br/> <b>Awake:</b> {data.awake.replace("00.000000", "")} <b>Waking heartbeat: </b>{data.waking_heartbeat}</p>
-                      </div>
-                      :
-                        item === "food"?<div><h5>Food</h5>
-                         <p><b>Date:</b> {data.date.replace("T", " ").replace(":00.000Z", "")} <b>Carbs:</b> {data.carbs} <b>Fats:</b> {data.fats} <b>Proteins:</b> {data.proteins}</p>
-                         </div>
-                        :
-                          null
-                   )
-                  )
-                }
-                  </div> :
-                    null
                 }
                
-
-              </Jumbotron>
             </Col>
           </Row>
         </Container>

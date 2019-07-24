@@ -4,6 +4,7 @@ import API from '../../../utils/API'
 import "./Biking.css"
 
 class Biking extends React.Component {
+  // state that holds the info entered into the form to be sent to the backend.
   state={
     log:{
       fk_user: localStorage.getItem("id"),
@@ -17,6 +18,8 @@ class Biking extends React.Component {
       date: ""
     }
   }
+
+  //the function for sending the biking log to the backend to be added to MySQL
   log = event=>{
     
     API.logBike([Object.keys(this.state.log)],[Object.values(this.state.log)]).then(res => {
@@ -32,9 +35,11 @@ class Biking extends React.Component {
     
   }
 
+  //for updating the state on input changes in the biking log form 
 handleInputChange = event => {
+  
   const { log } = this.state
- 
+  
   const { name, value } = event.target;
 
   log[name] = value
@@ -49,6 +54,7 @@ handleInputChange = event => {
 <div id="bike-container">
 <Jumbotron id="bike-form">
 <div>
+  {/* the form for logging a bike ride */}
     <Form>
       <h5 className= "log-heading">Biking</h5>
       <FormText>Miles, Minutes, and Date are required.</FormText>

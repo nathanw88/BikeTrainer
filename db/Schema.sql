@@ -57,13 +57,27 @@ CREATE TABLE sleeping (
     );
    
 CREATE TABLE food (
-	fk_user INT(11) NOT NULL,
 	id INT(11) NOT NULL AUTO_INCREMENT,
-	carbs INT(11),
-    fats INT(11),
-    proteins INT(11),
-    date DATETIME(6),
-    
-	FOREIGN KEY (fk_user) REFERENCES users (id),
+    name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
     );
+   
+CREATE TABLE nutrient (
+	fk_user INT(11) NOT NULL,
+    fk_food INT(11) NOT NULL,
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	value INT(11),
+    nutrient_id INT(11),
+    date DATE,
+    time TIME(6),
+    grouping VARCHAR(11),
+    name VARCHAR(11),
+    unit VARCHAR(11),
+    
+	FOREIGN KEY (fk_user) REFERENCES users (id),
+    FOREIGN KEY (fk_food) REFERENCES food (id),
+    PRIMARY KEY (id)
+    );
+
+
+    CREATE TABLE

@@ -7,7 +7,7 @@ class Home extends Component {
   render(){
 
     return(<div id="home-container">
-      
+      {/* Shows the login form  */}
      <LoginModal/>
      </div>);
   }

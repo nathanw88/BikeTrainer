@@ -1,92 +1,174 @@
 import React from 'react';
 import { Jumbotron, Button, FormText, Form, FormGroup, Label, Input } from 'reactstrap';
-import API from '../../../utils/API'
-import "./Food.css"
+import API from '../../../utils/API';
+import "./Food.css";
+import axios from "axios";
 
-class Sleeping extends React.Component {
-  state={
-    log:{
+
+const APIKey = "6tWDuI4UaiW1Ho7b67OLh0VTLk3M2MixZaoFNWdG"
+class Food extends React.Component {
+  //state holds the log objecct that holds all the info from the form to be sent to the back end
+  state = {
+    input: {
+
       fk_user: localStorage.getItem("id"),
-      carbs: "",
-      fats: "",
-      proteins: "",
-      date: ""
-    }
+      date: new Date().toISOString().substr(0, 16),
+      food: "",
+      grams: 0,
+      servingType: "",
+      servings: 0
+
+    },
+    selected: {},
+    choices: []
+  };
+ 
+
+//function that grabs food data 
+  selectChoice = (i) => {
+    // console.log(this.state.choices[i])
+    const { input } = this.state;
+    input.food = this.state.choices[i].name;
+    this.setState({ input });
+    this.setState({ selected: this.state.choices[i] });
+
+    axios.get(`https://api.nal.usda.gov/ndb/V2/reports?ndbno=${this.state.choices[i].ndbno}&type=f&format=json&api_key=${APIKey}`).then((response)=>{
+      this.setState({ selected: response.data.foods[0].food });
+      // console.log(response.data.foods[0].food.nutrients[0].measures)
+      // console.log(this.state.selected.nutrients[0].measures)
+  
+    })
+    this.setState({ choices: [] });
   }
-  log = event=>{
-    console.log(localStorage.getItem("id"))
-    API.logFood([Object.keys(this.state.log)],[Object.values(this.state.log)]).then(res => {
+
+  //function to send data to the backend to be stored in MySQL
+
+  log = event => {
+    let foodName = this.state.selected.desc.name;
+    let array = [];
+    this.state.selected.nutrients.map((nutrient)=>{
+      if (parseFloat(nutrient.value) > 0){
+      if(this.state.input.grams){
+        // console.log(nutrient.value)
+        // console.log(nutrient)
+        // console.log(nutrient.value)
+        // console.log(parseInt(this.state.input.grams))
+       nutrient.value = (parseFloat(nutrient.value)* parseFloat(this.state.input.grams)/ 100).toFixed(2);
+        console.log(nutrient.value)
+        array.push({
+          fk_user: this.state.input.fk_user,
+          value: parseFloat(nutrient.value),
+          nutrient_id: nutrient.nutrient_id,
+          date: (this.state.input.date).substr(0, 10),
+          time: (this.state.input.date).substr(12, 16),
+          grouping: nutrient.group,
+          name: nutrient.name,
+          unit: nutrient.unit
+          });
+      }
+    }
+    })
+    // console.log(array);
+    // console.log(this.state.selected)
+    API.logFood(array, foodName).then(res => {
       if(res.data.error){
-        alert(res.data.error)
+        alert(res.data.error);
       }
       else if(!res.data.error){
-        window.location.replace('/profile')
+        
+         window.location.replace('/profile')
       }
-      
+
 
     }).catch(err => console.log(err));
-    
+
   }
 
-handleInputChange = event => {
-  const { log } = this.state
-  console.log(event.target)
-  const { name, value } = event.target;
-  console.log(log)
-  log[name] = value
-  this.setState({
-   log
-  });
-};
 
-  render(){
-    return(
+  //function to update the state with changes to any form inputs.
+  handleInputChange = event => {
+    const { input } = this.state;
+    //console.log(event.target)
+    const { name, value } = event.target;
+    //console.log(input)
+    input[name] = value;
+    this.setState({
+      input
+    });
+    if (name === "food") {
+      this.setState({ choices: [] });
+      if (this.state.input.food) {
+        var fdaAddressURL = `https://api.nal.usda.gov/ndb/search/?format=json&q=${this.state.input.food}&sort=r&max=50&offset=0&api_key=${APIKey}`;
+        axios.get(fdaAddressURL).then((response) => {
+          //console.log(!response.data.errors)
+          if (!response.data.errors) {
+            var data = response.data.list.item;
 
-    <div id="food-container">
-<Jumbotron id="food-form">
-<div>
-    <Form>
-      <h5 className= "log-heading">Food</h5>
-      <FormText>Date is required.</FormText>
-  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="carbs" className="mr-sm-2">Grams of carbs</Label>
-    <Input type="number" name="carbs" id="carbs" onChange={this.handleInputChange} value={this.state.log.carbs}  />
-  </FormGroup>
-  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="fats" className="mr-sm-2">Grams of fats</Label>
-    <Input type="number" name="fats" id="fats" onChange={this.handleInputChange} value={this.state.log.fats}/>
-  </FormGroup>
-  <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="proteins" className="mr-sm-2">Grams of protein</Label>
-    <Input type="number" name="proteins" id="proteins" onChange={this.handleInputChange} value={this.state.log.proteins} />
-  </FormGroup>
- <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-    <Label for="date" className="mr-sm-2">Date</Label>
-    <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.log.date} />
-  </FormGroup>
-  <br/>
-  <Button id="login-button"
-      disabled={
-        !(
-          this.state.log.fk_user &&
-          this.state.log.date
-        )
+            // const choices  = this.state;
+            // choices = data;
+            this.setState({ choices: [...this.state.choices, ...response.data.list.item] });
+          }
+
+        })
       }
-      onClick={() =>this.log()}
-    >
-       Save
-    </Button>
- 
-</Form>
-      <br />
-      <div>
-
-</div>
-</div>
-</Jumbotron>
-</div>
-)
-  }
     }
+  };
 
-    export default Sleeping
+
+
+  render() {
+    return (
+
+      <div id="food-container">
+        <Jumbotron id="food-form">
+          <div>
+            {/* form for logging food intake */}
+            <Form>
+              <h5 className="log-heading">Food</h5>
+              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                <Label for="date" className="mr-sm-2">Date</Label>
+                <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.input.date} />
+              </FormGroup>
+              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                <Label for="food" className="mr-sm-2">What you ate</Label>
+                <Input type="input" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
+                {!this.state.choices == false ? <ul id="choices">
+                  {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.name}</li>)}
+                </ul> : <div></div>}
+              </FormGroup>
+              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                <Label for="grams" className="mr-sm-2">Grams Eaten</Label>
+                <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams} />
+              </FormGroup>
+
+              
+
+
+              <br />
+              <Button id="login-button"
+                disabled={
+                  !(
+                    this.state.input.fk_user &&
+                    this.state.input.date &&
+                    this.state.input.food &&
+                    this.state.input.grams|| this.state.input.servings
+                  )
+                }
+                onClick={() => this.log()}
+              >
+                Save
+    </Button>
+
+            </Form>
+            <br />
+            <div>
+
+            </div>
+          </div>
+        </Jumbotron>
+      </div>
+    )
+  }
+}
+
+export default Food

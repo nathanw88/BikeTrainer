@@ -48,3 +48,19 @@ Button.profile-button{
   background-color:rgb(48,41,34);
 }
 
+@media screen and (max-width: 1300px) {
+
+  #controls-container{
+    width: 250px;
+  }
+  
+}
+
+
+@media screen and (max-width: 750px) {
+
+  #controls-container{
+    width: 55%;
+  }
+  
+}
