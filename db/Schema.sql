@@ -70,8 +70,8 @@ CREATE TABLE nutrient (
     nutrient_id INT(11),
     date DATE,
     time TIME(6),
-    grouping VARCHAR(11),
-    name VARCHAR(11),
+    grouping VARCHAR(255),
+    name VARCHAR(255),
     unit VARCHAR(11),
     
 	FOREIGN KEY (fk_user) REFERENCES users (id),
