@@ -1,84 +1,3 @@
-CREATE DATABASE IF NOT EXISTS trainer_db;
-USE trainer_db;
-
-CREATE TABLE users (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    userEmail VARCHAR(255) NOT NULL UNIQUE,
-    userPassword LONGTEXT,
-    userBirthday VARCHAR(11),
-    PRIMARY KEY (id)
-);
-
-
-CREATE TABLE biking (
-	fk_user INT(11) not null,
-	id INT(11) NOT NULL AUTO_INCREMENT,
-    difficulty INT(55),
-    distance_miles INT(255),
-    duration_minutes INT(255),
-    avg_heartbeat INT(11),
-    max_heartbeat INT(11),
-    workout_type VARCHAR(55),
-    avg_mph INT(55), 
-    date DATETIME(6),
-    
-    FOREIGN KEY (fk_user) REFERENCES users (id),
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE running (
-	fk_user INT(11) not null,
-	id INT(11) NOT NULL AUTO_INCREMENT,
-    difficulty INT(55),
-    distance_miles INT(255),
-    duration_minutes INT(255),
-    avg_heartbeat INT(11),
-    max_heartbeat INT(11),
-    workout_type VARCHAR(55),
-    avg_mph INT(55), 
-    date DATETIME(6),
-    
-    FOREIGN KEY (fk_user) REFERENCES users (id),
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE sleeping (
-	fk_user INT(11) NOT NULL,
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    laid_down TIME(6),
-    asleep TIME(6),
-    got_up TIME(6),
-    awake TIME(6),
-    waking_heartbeat INT(11),
-    date DATE,
-    
-	FOREIGN KEY (fk_user) REFERENCES users (id),
-    PRIMARY KEY (id)
-    );
-   
-CREATE TABLE food (
-	id INT(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-    );
-  
-CREATE TABLE error_log (
-	fk_user INT(11) NOT NULL,
-    fk_food INT(11) NOT NULL,
-	id INT(11) NOT NULL AUTO_INCREMENT,
-	value INT(11),
-    nutrient_id INT(11),
-    date DATE,
-    time TIME(6),
-    grouping VARCHAR(255),
-    name VARCHAR(255),
-    unit VARCHAR(11),
-    
-	FOREIGN KEY (fk_user) REFERENCES users (id),
-    FOREIGN KEY (fk_food) REFERENCES food (id),
-    PRIMARY KEY (id)
-    );
-
 CREATE TABLE Protein (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
@@ -94,9 +13,7 @@ CREATE TABLE Protein (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-
-CREATE TABLE Total_Lipids (
+        );CREATE TABLE Total_Lipids (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -111,9 +28,7 @@ CREATE TABLE Total_Lipids (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Carbohydrate_By_Difference (
+        );CREATE TABLE Carbohydrate_By_Difference (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -128,9 +43,7 @@ CREATE TABLE Carbohydrate_By_Difference (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Ash (
+        );CREATE TABLE Ash (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -145,9 +58,7 @@ CREATE TABLE Ash (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Energy (
+        );CREATE TABLE Energy (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -162,9 +73,7 @@ CREATE TABLE Energy (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Starch (
+        );CREATE TABLE Starch (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -179,9 +88,7 @@ CREATE TABLE Starch (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Sucrose (
+        );CREATE TABLE Sucrose (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -196,9 +103,7 @@ CREATE TABLE Sucrose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Glucose_Dextrose (
+        );CREATE TABLE Glucose(Dextrose) (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -213,9 +118,7 @@ CREATE TABLE Glucose_Dextrose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Fructose (
+        );CREATE TABLE Fructose (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -230,9 +133,7 @@ CREATE TABLE Fructose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Lactose (
+        );CREATE TABLE Lactose (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -247,9 +148,7 @@ CREATE TABLE Lactose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Maltose (
+        );CREATE TABLE Maltose (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -264,9 +163,7 @@ CREATE TABLE Maltose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Ethyl_Alcohol (
+        );CREATE TABLE Ethyl_Alcohol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -281,9 +178,7 @@ CREATE TABLE Ethyl_Alcohol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Water (
+        );CREATE TABLE Water (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -298,9 +193,7 @@ CREATE TABLE Water (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Adjusted_Protein (
+        );CREATE TABLE Adjusted_Protein (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -315,9 +208,7 @@ CREATE TABLE Adjusted_Protein (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Caffeine (
+        );CREATE TABLE Caffeine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -332,9 +223,7 @@ CREATE TABLE Caffeine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Theobromine (
+        );CREATE TABLE Theobromine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -349,9 +238,7 @@ CREATE TABLE Theobromine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Sugar (
+        );CREATE TABLE Energy (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -366,9 +253,7 @@ CREATE TABLE Total_Sugar (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Galactose (
+        );CREATE TABLE Total_Sugar (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -383,9 +268,7 @@ CREATE TABLE Galactose (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Dietary_Fiber (
+        );CREATE TABLE Galactose (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -400,9 +283,7 @@ CREATE TABLE Total_Dietary_Fiber (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Calcium (
+        );CREATE TABLE Total_Dietary_Fiber (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -417,9 +298,7 @@ CREATE TABLE Calcium (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Iron (
+        );CREATE TABLE Calcium (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -434,9 +313,7 @@ CREATE TABLE Iron (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Magnesium (
+        );CREATE TABLE Iron (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -451,9 +328,7 @@ CREATE TABLE Magnesium (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Phosphorus (
+        );CREATE TABLE Magnesium (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -468,9 +343,7 @@ CREATE TABLE Phosphorus (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Potassium (
+        );CREATE TABLE Phosphorus (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -485,9 +358,7 @@ CREATE TABLE Potassium (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Sodium (
+        );CREATE TABLE Potassium (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -502,9 +373,7 @@ CREATE TABLE Sodium (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Zinc (
+        );CREATE TABLE Sodium (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -519,9 +388,7 @@ CREATE TABLE Zinc (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Copper (
+        );CREATE TABLE Zinc (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -536,9 +403,7 @@ CREATE TABLE Copper (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Fluoride (
+        );CREATE TABLE Copper (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -553,9 +418,7 @@ CREATE TABLE Fluoride (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Manganese (
+        );CREATE TABLE Fluoride (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -570,9 +433,7 @@ CREATE TABLE Manganese (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Selenium (
+        );CREATE TABLE Manganese (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -587,9 +448,7 @@ CREATE TABLE Selenium (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_A (
+        );CREATE TABLE Selenium (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -604,9 +463,7 @@ CREATE TABLE Vitamin_A (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Retinol (
+        );CREATE TABLE Vitamin_A (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -621,9 +478,7 @@ CREATE TABLE Retinol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE RAE_Vitamin_A (
+        );CREATE TABLE Retinol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -638,9 +493,7 @@ CREATE TABLE RAE_Vitamin_A (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Beta_Carotene (
+        );CREATE TABLE RAE_Vitamin_A (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -655,9 +508,7 @@ CREATE TABLE Beta_Carotene (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Alpha_Carotene (
+        );CREATE TABLE Beta_Carotene (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -672,9 +523,7 @@ CREATE TABLE Alpha_Carotene (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_E (
+        );CREATE TABLE Alpha_Carotene (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -689,9 +538,7 @@ CREATE TABLE Vitamin_E (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_D (
+        );CREATE TABLE Vitamin_E (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -706,9 +553,7 @@ CREATE TABLE Vitamin_D (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_D2 (
+        );CREATE TABLE Vitamin_D (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -723,9 +568,7 @@ CREATE TABLE Vitamin_D2 (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_D3 (
+        );CREATE TABLE Vitamin_D2 (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -740,9 +583,7 @@ CREATE TABLE Vitamin_D3 (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_D2_D3_ (
+        );CREATE TABLE Vitamin_D3 (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -757,9 +598,7 @@ CREATE TABLE Vitamin_D2_D3_ (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Beta_Cryptoxathin (
+        );CREATE TABLE Vitamin_(D2+D3) (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -774,9 +613,7 @@ CREATE TABLE Beta_Cryptoxathin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Lycopene (
+        );CREATE TABLE Beta_Cryptoxathin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -791,9 +628,7 @@ CREATE TABLE Lycopene (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Lutein_Zeacanthin (
+        );CREATE TABLE Lycopene (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -808,9 +643,7 @@ CREATE TABLE Lutein_Zeacanthin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Beta_Tocopherol (
+        );CREATE TABLE Lutein+Zeacanthin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -825,9 +658,7 @@ CREATE TABLE Beta_Tocopherol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Gamma_Tocopherol (
+        );CREATE TABLE Beta_Tocopherol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -842,9 +673,7 @@ CREATE TABLE Gamma_Tocopherol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Delta_Tocopherol (
+        );CREATE TABLE Gamma_Tocopherol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -859,9 +688,7 @@ CREATE TABLE Delta_Tocopherol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Alpha_Tocotrienol (
+        );CREATE TABLE Delta_Tocopherol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -876,9 +703,7 @@ CREATE TABLE Alpha_Tocotrienol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Beta_Tocotrienol (
+        );CREATE TABLE Alpha_Tocotrienol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -893,9 +718,7 @@ CREATE TABLE Beta_Tocotrienol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Gamma_Tocotrienol (
+        );CREATE TABLE Beta_Tocotrienol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -910,9 +733,7 @@ CREATE TABLE Gamma_Tocotrienol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Delta_Tocotrienol (
+        );CREATE TABLE Gamma_Tocotrienol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -927,9 +748,7 @@ CREATE TABLE Delta_Tocotrienol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_C (
+        );CREATE TABLE Delta_Tocotrienol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -944,9 +763,7 @@ CREATE TABLE Vitamin_C (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Thiamin (
+        );CREATE TABLE Vitamin_C (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -961,9 +778,7 @@ CREATE TABLE Thiamin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Riboflavin (
+        );CREATE TABLE Thiamin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -978,9 +793,7 @@ CREATE TABLE Riboflavin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Niacin (
+        );CREATE TABLE Riboflavin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -995,9 +808,7 @@ CREATE TABLE Niacin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Pantothenic_Acid (
+        );CREATE TABLE Niacin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1012,9 +823,7 @@ CREATE TABLE Pantothenic_Acid (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_B₆ (
+        );CREATE TABLE Pantothenic_Acid (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1029,9 +838,7 @@ CREATE TABLE Vitamin_B₆ (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Folate_Total (
+        );CREATE TABLE Vitamin_B₆ (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1046,9 +853,7 @@ CREATE TABLE Folate_Total (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_B₁₂ (
+        );CREATE TABLE Folate_Total (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1063,9 +868,7 @@ CREATE TABLE Vitamin_B₁₂ (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Choline (
+        );CREATE TABLE Vitamin_B₁₂ (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1080,9 +883,7 @@ CREATE TABLE Total_Choline (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Menaquinone_4 (
+        );CREATE TABLE Total_Choline (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1097,9 +898,7 @@ CREATE TABLE Menaquinone_4 (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Dihydrophylloquinone (
+        );CREATE TABLE Menaquinone-4 (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1114,9 +913,7 @@ CREATE TABLE Dihydrophylloquinone (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_K (
+        );CREATE TABLE Dihydrophylloquinone (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1131,9 +928,7 @@ CREATE TABLE Vitamin_K (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Folic_Acid (
+        );CREATE TABLE Vitamin_K (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1148,9 +943,7 @@ CREATE TABLE Folic_Acid (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Food_Folate (
+        );CREATE TABLE Folic_Acid (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1165,9 +958,7 @@ CREATE TABLE Food_Folate (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE DFE_Folate (
+        );CREATE TABLE Food_Folate (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1182,9 +973,7 @@ CREATE TABLE DFE_Folate (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Betaine (
+        );CREATE TABLE DFE_Folate (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1199,9 +988,7 @@ CREATE TABLE Betaine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Tryptophan (
+        );CREATE TABLE Betaine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1216,9 +1003,7 @@ CREATE TABLE Tryptophan (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Theonine (
+        );CREATE TABLE Tryptophan (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1233,9 +1018,7 @@ CREATE TABLE Theonine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Isoleucine (
+        );CREATE TABLE Theonine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1250,9 +1033,7 @@ CREATE TABLE Isoleucine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Leucine (
+        );CREATE TABLE Isoleucine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1267,9 +1048,7 @@ CREATE TABLE Leucine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Lysine (
+        );CREATE TABLE Leucine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1284,9 +1063,7 @@ CREATE TABLE Lysine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Methionine (
+        );CREATE TABLE Lysine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1301,9 +1078,7 @@ CREATE TABLE Methionine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Cystine (
+        );CREATE TABLE Methionine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1318,9 +1093,7 @@ CREATE TABLE Cystine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Phenylalanine (
+        );CREATE TABLE Cystine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1335,9 +1108,7 @@ CREATE TABLE Phenylalanine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Tyrosine (
+        );CREATE TABLE Phenylalanine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1352,9 +1123,7 @@ CREATE TABLE Tyrosine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Valine (
+        );CREATE TABLE Tyrosine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1369,9 +1138,7 @@ CREATE TABLE Valine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Arginine (
+        );CREATE TABLE Valine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1386,9 +1153,7 @@ CREATE TABLE Arginine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Histidine (
+        );CREATE TABLE Arginine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1403,9 +1168,7 @@ CREATE TABLE Histidine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Alanine (
+        );CREATE TABLE Histidine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1420,9 +1183,7 @@ CREATE TABLE Alanine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Aspartic_Acid (
+        );CREATE TABLE Alanine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1437,9 +1198,7 @@ CREATE TABLE Aspartic_Acid (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Glutamic_Acid (
+        );CREATE TABLE Aspartic_Acid (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1454,9 +1213,7 @@ CREATE TABLE Glutamic_Acid (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Glycine (
+        );CREATE TABLE Glutamic_Acid (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1471,9 +1228,7 @@ CREATE TABLE Glycine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Proline (
+        );CREATE TABLE Glycine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1488,9 +1243,7 @@ CREATE TABLE Proline (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Serine (
+        );CREATE TABLE Proline (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1505,9 +1258,7 @@ CREATE TABLE Serine (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Hydroxyproline (
+        );CREATE TABLE Serine (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1522,9 +1273,7 @@ CREATE TABLE Hydroxyproline (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE added_Vitamin_E (
+        );CREATE TABLE Hydroxyproline (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1539,9 +1288,7 @@ CREATE TABLE added_Vitamin_E (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Sugars_added (
+        );CREATE TABLE added_Vitamin_E (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1556,9 +1303,7 @@ CREATE TABLE Sugars_added (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Vitamin_E_added (
+        );CREATE TABLE Sugars_added (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1573,9 +1318,7 @@ CREATE TABLE Vitamin_E_added (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE added_Vitamin_B₁₂ (
+        );CREATE TABLE Vitamin_E_added (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1590,9 +1333,7 @@ CREATE TABLE added_Vitamin_B₁₂ (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Cholesterol (
+        );CREATE TABLE added_Vitamin_B₁₂ (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1607,9 +1348,7 @@ CREATE TABLE Cholesterol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Trans (
+        );CREATE TABLE Cholesterol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1624,9 +1363,7 @@ CREATE TABLE Total_Trans (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Saturated (
+        );CREATE TABLE Total_Trans (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1641,9 +1378,7 @@ CREATE TABLE Total_Saturated (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{4:0}` (
+        );CREATE TABLE Total_Saturated (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1658,9 +1393,7 @@ CREATE TABLE `{4:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{6:0}` (
+        );CREATE TABLE {4:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1675,9 +1408,7 @@ CREATE TABLE `{6:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{8:0}` (
+        );CREATE TABLE {6:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1692,9 +1423,7 @@ CREATE TABLE `{8:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{10:0}` (
+        );CREATE TABLE {8:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1709,9 +1438,7 @@ CREATE TABLE `{10:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{12:0}` (
+        );CREATE TABLE {10:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1726,9 +1453,7 @@ CREATE TABLE `{12:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{14:0}` (
+        );CREATE TABLE {12:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1743,9 +1468,7 @@ CREATE TABLE `{14:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{16:0}` (
+        );CREATE TABLE {14:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1760,9 +1483,7 @@ CREATE TABLE `{16:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:0}` (
+        );CREATE TABLE {16:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1777,9 +1498,7 @@ CREATE TABLE `{18:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:0}` (
+        );CREATE TABLE {18:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1794,9 +1513,7 @@ CREATE TABLE `{20:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:1_Undifferentiated}` (
+        );CREATE TABLE {20:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1811,9 +1528,7 @@ CREATE TABLE `{18:1_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_Undifferentiated}` (
+        );CREATE TABLE {18:1_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1828,9 +1543,7 @@ CREATE TABLE `{18:2_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:3_Undifferentiated}` (
+        );CREATE TABLE {18:2_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1845,9 +1558,7 @@ CREATE TABLE `{18:3_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:4_Undifferentiated}` (
+        );CREATE TABLE {18:3_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1862,9 +1573,7 @@ CREATE TABLE `{20:4_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:6_n-3_(DHA)}` (
+        );CREATE TABLE {20:4_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1879,9 +1588,7 @@ CREATE TABLE `{22:6_n-3_(DHA)}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:0}` (
+        );CREATE TABLE {22:6_n-3_(DHA)} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1896,9 +1603,7 @@ CREATE TABLE `{22:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{14:1}` (
+        );CREATE TABLE {22:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1913,9 +1618,7 @@ CREATE TABLE `{14:1}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{16:1_Indifferentiated}` (
+        );CREATE TABLE {14:1} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1930,9 +1633,7 @@ CREATE TABLE `{16:1_Indifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:4}` (
+        );CREATE TABLE {16:1_Indifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1947,9 +1648,7 @@ CREATE TABLE `{18:4}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:1}` (
+        );CREATE TABLE {18:4} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1964,9 +1663,7 @@ CREATE TABLE `{20:1}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:5_n-3_(EPA)}` (
+        );CREATE TABLE {20:1} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1981,9 +1678,7 @@ CREATE TABLE `{20:5_n-3_(EPA)}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:1_Undifferentiated}` (
+        );CREATE TABLE {20:5_n-3_(EPA)} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1998,9 +1693,7 @@ CREATE TABLE `{22:1_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:5_n-3_(DPA)}` (
+        );CREATE TABLE {22:1_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2015,9 +1708,7 @@ CREATE TABLE `{22:5_n-3_(DPA)}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Phytosterols (
+        );CREATE TABLE {22:5_n-3_(DPA)} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2032,9 +1723,7 @@ CREATE TABLE Phytosterols (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Stigmasterol (
+        );CREATE TABLE Phytosterols (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2049,9 +1738,7 @@ CREATE TABLE Stigmasterol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Campesterol (
+        );CREATE TABLE Stigmasterol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2066,9 +1753,7 @@ CREATE TABLE Campesterol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `Beta-Sitosterol` (
+        );CREATE TABLE Campesterol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2083,9 +1768,7 @@ CREATE TABLE `Beta-Sitosterol` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Monounsaturated (
+        );CREATE TABLE Beta-Sitosterol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2100,9 +1783,7 @@ CREATE TABLE Total_Monounsaturated (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Polyunsaturated (
+        );CREATE TABLE Total_Monounsaturated (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2117,9 +1798,7 @@ CREATE TABLE Total_Polyunsaturated (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{15:0}` (
+        );CREATE TABLE Total_Polyunsaturated (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2134,9 +1813,7 @@ CREATE TABLE `{15:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{17:0}` (
+        );CREATE TABLE {15:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2151,9 +1828,7 @@ CREATE TABLE `{17:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{24:0}` (
+        );CREATE TABLE {17:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2168,9 +1843,7 @@ CREATE TABLE `{24:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{16:1_t}` (
+        );CREATE TABLE {24:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2185,9 +1858,7 @@ CREATE TABLE `{16:1_t}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:1_t}` (
+        );CREATE TABLE {16:1_t} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2202,9 +1873,7 @@ CREATE TABLE `{18:1_t}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:1_t}` (
+        );CREATE TABLE {18:1_t} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2219,9 +1888,7 @@ CREATE TABLE `{22:1_t}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_t}` (
+        );CREATE TABLE {22:1_t} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2236,9 +1903,7 @@ CREATE TABLE `{18:2_t}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_i}` (
+        );CREATE TABLE {18:2_t} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2253,9 +1918,7 @@ CREATE TABLE `{18:2_i}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_t,t}` (
+        );CREATE TABLE {18:2_i} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2270,9 +1933,7 @@ CREATE TABLE `{18:2_t,t}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_CLAs}` (
+        );CREATE TABLE {18:2_t,t} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2287,9 +1948,7 @@ CREATE TABLE `{18:2_CLAs}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{24:1_c}` (
+        );CREATE TABLE {18:2_CLAs} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2304,9 +1963,7 @@ CREATE TABLE `{24:1_c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:2_n-6_c,c}` (
+        );CREATE TABLE {24:1_c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2321,9 +1978,7 @@ CREATE TABLE `{20:2_n-6_c,c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{16:1_c}` (
+        );CREATE TABLE {20:2_n-6_c,c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2338,9 +1993,7 @@ CREATE TABLE `{16:1_c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:1_c}` (
+        );CREATE TABLE {16:1_c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2355,9 +2008,7 @@ CREATE TABLE `{18:1_c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:2_n-6_c,c}` (
+        );CREATE TABLE {18:1_c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2372,9 +2023,7 @@ CREATE TABLE `{18:2_n-6_c,c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:1_c}` (
+        );CREATE TABLE {18:2_n-6_c,c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2389,9 +2038,7 @@ CREATE TABLE `{22:1_c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:3_n-6_c,c,c}` (
+        );CREATE TABLE {22:1_c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2406,9 +2053,7 @@ CREATE TABLE `{18:3_n-6_c,c,c}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{17:1}` (
+        );CREATE TABLE {18:3_n-6_c,c,c} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2423,9 +2068,7 @@ CREATE TABLE `{17:1}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:3_Undifferentiated}` (
+        );CREATE TABLE {17:1} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2440,9 +2083,7 @@ CREATE TABLE `{20:3_Undifferentiated}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Transmonoenoic (
+        );CREATE TABLE {20:3_Undifferentiated} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2457,9 +2098,7 @@ CREATE TABLE Total_Transmonoenoic (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Transpolyenoic (
+        );CREATE TABLE Total_Transmonoenoic (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2474,9 +2113,7 @@ CREATE TABLE Total_Transpolyenoic (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{13:0}` (
+        );CREATE TABLE Total_Transpolyenoic (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2491,9 +2128,7 @@ CREATE TABLE `{13:0}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{15:1}` (
+        );CREATE TABLE {13:0} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2508,9 +2143,7 @@ CREATE TABLE `{15:1}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Daidzein (
+        );CREATE TABLE {15:1} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2525,9 +2158,7 @@ CREATE TABLE Daidzein (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Genistein (
+        );CREATE TABLE Daidzein (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2542,9 +2173,7 @@ CREATE TABLE Genistein (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Total_Isoflavones (
+        );CREATE TABLE Genistein (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2559,9 +2188,7 @@ CREATE TABLE Total_Isoflavones (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Biochanin_A (
+        );CREATE TABLE Total_Isoflavones (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2576,9 +2203,7 @@ CREATE TABLE Biochanin_A (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Cyanidin (
+        );CREATE TABLE Biochanin_A (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2593,9 +2218,7 @@ CREATE TABLE Cyanidin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Proanthocyanidin_dimers (
+        );CREATE TABLE Cyanidin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2610,9 +2233,7 @@ CREATE TABLE Proanthocyanidin_dimers (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Proanthocyanidin_trimers (
+        );CREATE TABLE Proanthocyanidin_dimers (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2627,9 +2248,7 @@ CREATE TABLE Proanthocyanidin_trimers (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `Proanthocyanidin_4-6mers` (
+        );CREATE TABLE Proanthocyanidin_trimers (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2644,9 +2263,7 @@ CREATE TABLE `Proanthocyanidin_4-6mers` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `Proanthocyanidin_7-10mers` (
+        );CREATE TABLE Proanthocyanidin_4-6mers (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2661,9 +2278,7 @@ CREATE TABLE `Proanthocyanidin_7-10mers` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `Proanthocyanidin_polymers_(>10mers)` (
+        );CREATE TABLE Proanthocyanidin_7-10mers (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2678,9 +2293,7 @@ CREATE TABLE `Proanthocyanidin_polymers_(>10mers)` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Petunidin (
+        );CREATE TABLE Proanthocyanidin_polymers_(>10mers) (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2695,9 +2308,7 @@ CREATE TABLE Petunidin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Delphinidin (
+        );CREATE TABLE Petunidin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2712,9 +2323,7 @@ CREATE TABLE Delphinidin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Malvidin (
+        );CREATE TABLE Delphinidin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2729,9 +2338,7 @@ CREATE TABLE Malvidin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Peonidin (
+        );CREATE TABLE Malvidin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2746,9 +2353,7 @@ CREATE TABLE Peonidin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `(+)-Catechin` (
+        );CREATE TABLE Peonidin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2763,9 +2368,7 @@ CREATE TABLE `(+)-Catechin` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `(-)-Epigallocatechin` (
+        );CREATE TABLE (+)-Catechin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2780,9 +2383,7 @@ CREATE TABLE `(-)-Epigallocatechin` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `(-)-Epicatechin` (
+        );CREATE TABLE (-)-Epigallocatechin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2797,9 +2398,7 @@ CREATE TABLE `(-)-Epicatechin` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `(-)-Epigallocatechin_3-gallate` (
+        );CREATE TABLE (-)-Epicatechin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2814,9 +2413,7 @@ CREATE TABLE `(-)-Epigallocatechin_3-gallate` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Naringenin (
+        );CREATE TABLE (-)-Epigallocatechin_3-gallate (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2831,9 +2428,7 @@ CREATE TABLE Naringenin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Apigenin (
+        );CREATE TABLE Naringenin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2848,9 +2443,7 @@ CREATE TABLE Apigenin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Luteolin (
+        );CREATE TABLE Apigenin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2865,9 +2458,7 @@ CREATE TABLE Luteolin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Isorhamnetin (
+        );CREATE TABLE Luteolin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2882,9 +2473,7 @@ CREATE TABLE Isorhamnetin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Kaempferol (
+        );CREATE TABLE Isorhamnetin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2899,9 +2488,7 @@ CREATE TABLE Kaempferol (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Myricetin (
+        );CREATE TABLE Kaempferol (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2916,9 +2503,7 @@ CREATE TABLE Myricetin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE Quercetin (
+        );CREATE TABLE Myricetin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2933,9 +2518,7 @@ CREATE TABLE Quercetin (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `(+)-Gallocatechin` (
+        );CREATE TABLE Quercetin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2950,9 +2533,7 @@ CREATE TABLE `(+)-Gallocatechin` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:3_n-3_c,c,c_(ALA)}` (
+        );CREATE TABLE (+)-Gallocatechin (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2967,9 +2548,7 @@ CREATE TABLE `{18:3_n-3_c,c,c_(ALA)}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:3_n-3}` (
+        );CREATE TABLE {18:3_n-3_c,c,c_(ALA)} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -2984,9 +2563,7 @@ CREATE TABLE `{20:3_n-3}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:3_n-6}` (
+        );CREATE TABLE {20:3_n-3} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -3001,9 +2578,7 @@ CREATE TABLE `{20:3_n-6}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{20:4_n-6}` (
+        );CREATE TABLE {20:3_n-6} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -3018,9 +2593,7 @@ CREATE TABLE `{20:4_n-6}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{18:3i}` (
+        );CREATE TABLE {20:4_n-6} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -3035,9 +2608,7 @@ CREATE TABLE `{18:3i}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{21:5}` (
+        );CREATE TABLE {18:3i} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -3052,9 +2623,7 @@ CREATE TABLE `{21:5}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
-        
-CREATE TABLE `{22:4}` (
+        );CREATE TABLE {21:5} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,
@@ -3069,9 +2638,22 @@ CREATE TABLE `{22:4}` (
       FOREIGN KEY (fk_user) REFERENCES users (id),
         FOREIGN KEY (fk_food) REFERENCES food (id),
         PRIMARY KEY (id)
-        );
+        );CREATE TABLE {22:4} (
+      fk_user INT(11) NOT NULL,
+        fk_food INT(11) NOT NULL,
+      id INT(11) NOT NULL AUTO_INCREMENT,
+      value INT(11),
+        nutrient_id INT(11),
+        date DATE,
+        time TIME(6),
+        grouping VARCHAR(255),
+        name VARCHAR(255),
+        unit VARCHAR(11),
         
-CREATE TABLE `{18:1-11_t_(18:1t_n-7)}` (
+      FOREIGN KEY (fk_user) REFERENCES users (id),
+        FOREIGN KEY (fk_food) REFERENCES food (id),
+        PRIMARY KEY (id)
+        );CREATE TABLE {18:1-11_t_(18:1t_n-7)} (
       fk_user INT(11) NOT NULL,
         fk_food INT(11) NOT NULL,
       id INT(11) NOT NULL AUTO_INCREMENT,

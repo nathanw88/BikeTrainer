@@ -76,6 +76,28 @@ console.log(vals)
         });
     },
 
+    createMultiTables: function (array, fk, cb) {
+        res = [ ];
+        array.map((nutrient)=>{
+            var vals = [];
+            vals.push(...Object.values(nutrient[1]));
+            vals.push(fk);
+            var queryString = "INSERT INTO `" + nutrient[0] +"`"; 
+            queryString += " (";
+            queryString += Object.keys(nutrient[1]).toString();
+            queryString += ",fk_food"
+            queryString += `) VALUES (${printQuestionMarks((Object.values(nutrient[1]).length) + 1)})`
+            // console.log(queryString)
+            // console.log(vals)
+
+            connection.query(queryString, vals, function (err, result) {
+                res.push(result);
+                if (err) throw err;
+                
+             });
+        })
+    cb(res)
+    },
     //delete from table function
     delete: function (table, cols, vals, cb) {
         var queryString = "DELETE FROM ?? WHERE "

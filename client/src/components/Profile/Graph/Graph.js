@@ -10,23 +10,25 @@ class Graph extends Component {
 
     this.state = {
 
-    
+
       data: [],
       layout: {},
       frames: [],
       config: {},
 
     }
-  
+
 
   }
 
 
-  
-  componentWillReceiveProps(prevProps){
- 
+ componentDidMount(){
+   this.buildPlot()
+ }
+  componentWillReceiveProps(prevProps) {
+
     this.buildPlot()
-    
+
   }
 
   buildPlot() {
@@ -68,8 +70,8 @@ class Graph extends Component {
       yaxis: '',
       type: 'scatter'
     }
-    for (var i = 0; i < this.props.cSelected.length; i++) {
-      var selected = this.props.cSelected[i].split(".")
+    for (var i = 0; i < this.props.graphSelected.length; i++) {
+      var selected = this.props.graphSelected[i].split(".")
       for (var j = 0; j < this.props[selected[0]].length; j++) {
         switch (i) {
           case 0:
@@ -103,7 +105,7 @@ class Graph extends Component {
             trace5.yaxis = selected[1]
             break;
           default:
-           console.log("Error building plot data")
+            console.log("Error building plot data")
         }
       }
     }
@@ -112,34 +114,35 @@ class Graph extends Component {
       this.state.data.splice(0, 1)
     }
     this.setState({ data: [...this.state.data] });
-   
-console.log(this.state)
+
+    console.log(this.state)
+    console.log(this.props)
   }
- 
+
   render() {
 
 
     return (
-     
-       
-          
-  
-              <Jumbotron id="profile-jumbotron">
-                
-                <div>
-                  <Plot
-                    data={this.state.data}
-                    layout={this.state.layout}
-                    frames={this.state.frames}
-                    config={this.state.config}
-                    onInitialized={(figure) => this.setState(figure)}
-                    onUpdate={(figure) => this.setState(figure)}
-                  />
-                  </div>
-               
 
-              </Jumbotron>
-        
+
+
+
+      <Jumbotron id="profile-jumbotron">
+
+        <div>
+          <Plot
+            data={this.state.data}
+            layout={this.state.layout}
+            frames={this.state.frames}
+            config={this.state.config}
+            onInitialized={(figure) => this.setState(figure)}
+            onUpdate={(figure) => this.setState(figure)}
+          />
+        </div>
+
+
+      </Jumbotron>
+
     );
   }
 }

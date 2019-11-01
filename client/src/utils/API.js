@@ -20,8 +20,7 @@ export default {
     return axios.post("/api/log/sleep",{keys, values})
   },
   logFood: (array, foodName) =>{
-    console.log("array:" + array)
-    console.log(foodName)
+    
     return axios.post("/api/log/food", {array, foodName})
   },
 

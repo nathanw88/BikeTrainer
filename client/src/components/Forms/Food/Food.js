@@ -3,7 +3,13 @@ import { Jumbotron, Button, FormText, Form, FormGroup, Label, Input } from 'reac
 import API from '../../../utils/API';
 import "./Food.css";
 import axios from "axios";
-
+import { exportDefaultSpecifier } from '@babel/types';
+// JSON holding nutrient_id to Table Name.
+import tables from "../../../JSON/NutrientTables.json";
+// JSON conversion chart
+import conversions from "../../../JSON/conversions.json";
+// JSON holding what each nutrients regular unit of measurement is.
+import regularMeasurement from "../../../JSON/regularMeasurement.json";
 
 const APIKey = "6tWDuI4UaiW1Ho7b67OLh0VTLk3M2MixZaoFNWdG"
 class Food extends React.Component {
@@ -22,21 +28,21 @@ class Food extends React.Component {
     selected: {},
     choices: []
   };
- 
 
-//function that grabs food data 
+
+  //function that grabs food data 
   selectChoice = (i) => {
-    // console.log(this.state.choices[i])
+    console.log(tables)
     const { input } = this.state;
     input.food = this.state.choices[i].name;
     this.setState({ input });
     this.setState({ selected: this.state.choices[i] });
 
-    axios.get(`https://api.nal.usda.gov/ndb/V2/reports?ndbno=${this.state.choices[i].ndbno}&type=f&format=json&api_key=${APIKey}`).then((response)=>{
+    axios.get(`https://api.nal.usda.gov/ndb/V2/reports?ndbno=${this.state.choices[i].ndbno}&type=f&format=json&api_key=${APIKey}`).then((response) => {
       this.setState({ selected: response.data.foods[0].food });
       // console.log(response.data.foods[0].food.nutrients[0].measures)
       // console.log(this.state.selected.nutrients[0].measures)
-  
+
     })
     this.setState({ choices: [] });
   }
@@ -44,43 +50,86 @@ class Food extends React.Component {
   //function to send data to the backend to be stored in MySQL
 
   log = event => {
+    let nutrientsLogged = [];
     let foodName = this.state.selected.desc.name;
     let array = [];
-    this.state.selected.nutrients.map((nutrient)=>{
-      if (parseFloat(nutrient.value) > 0){
-      if(this.state.input.grams){
-        // console.log(nutrient.value)
-        // console.log(nutrient)
-        // console.log(nutrient.value)
-        // console.log(parseInt(this.state.input.grams))
-       nutrient.value = (parseFloat(nutrient.value)* parseFloat(this.state.input.grams)/ 100).toFixed(2);
-        console.log(nutrient.value)
-        array.push({
-          fk_user: this.state.input.fk_user,
-          value: parseFloat(nutrient.value),
-          nutrient_id: nutrient.nutrient_id,
-          date: (this.state.input.date).substr(0, 10),
-          time: (this.state.input.date).substr(12, 16),
-          grouping: nutrient.group,
-          name: nutrient.name,
-          unit: nutrient.unit
-          });
+    this.state.selected.nutrients.map((nutrient) => {
+
+      if (nutrientsLogged.includes(tables[nutrient.nutrient_id])) {
+
+        nutrientsLogged.push(tables[nutrient.nutrient_id])
+
+        if (parseFloat(nutrient.value)) {
+
+          if (this.state.input.grams) {
+
+            if (regularMeasurement[nutrient.nutrient_id]) {
+
+              try {
+                nutrient.value = parseFloat(nutrient.value) * (conversions[regularMeasurement[nutrient.nutrient_id]][nutrient.unit]);
+                nutrient.unit = regularMeasurement[nutrient.nutrient_id];
+                nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
+
+                array.push([
+                  tables[nutrient.nutrient_id],
+                  {
+                    fk_user: this.state.input.fk_user,
+                    value: parseFloat(nutrient.value),
+                    nutrient_id: nutrient.nutrient_id,
+                    date: (this.state.input.date).substr(0, 10),
+                    time: (this.state.input.date).substr(12, 16),
+                    grouping: nutrient.group,
+                    name: nutrient.name,
+                    unit: nutrient.unit
+                  }]);
+              }
+              catch (err) {
+                nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
+                array.push([
+                  `error_log`,
+                  {
+                    fk_user: this.state.input.fk_user,
+                    value: parseFloat(nutrient.value),
+                    nutrient_id: nutrient.nutrient_id,
+                    date: (this.state.input.date).substr(0, 10),
+                    time: (this.state.input.date).substr(12, 16),
+                    grouping: nutrient.group,
+                    name: nutrient.name,
+                    unit: nutrient.unit
+                  }]);
+              }
+            }
+            else if (!regularMeasurement[nutrient.nutrient_id]) {
+              nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
+              array.push([
+                `error_log`,
+                {
+                  fk_user: this.state.input.fk_user,
+                  value: parseFloat(nutrient.value),
+                  nutrient_id: nutrient.nutrient_id,
+                  date: (this.state.input.date).substr(0, 10),
+                  time: (this.state.input.date).substr(12, 16),
+                  grouping: nutrient.group,
+                  name: nutrient.name,
+                  unit: nutrient.unit
+                }]);
+            }
+
+          }
+        }
       }
-    }
     })
-    // console.log(array);
-    // console.log(this.state.selected)
     API.logFood(array, foodName).then(res => {
-      if(res.data.error){
+      if (res.data.error) {
         alert(res.data.error);
       }
-      else if(!res.data.error){
-        
-         window.location.replace('/profile')
+      else if (!res.data.error) {
+        window.location.replace('/profile')
       }
 
 
     }).catch(err => console.log(err));
+
 
   }
 
@@ -123,7 +172,7 @@ class Food extends React.Component {
         <Jumbotron id="food-form">
           <div>
             {/* form for logging food intake */}
-            <Form>
+            <Form autocomplete="new-password">
               <h5 className="log-heading">Food</h5>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                 <Label for="date" className="mr-sm-2">Date</Label>
@@ -131,7 +180,8 @@ class Food extends React.Component {
               </FormGroup>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                 <Label for="food" className="mr-sm-2">What you ate</Label>
-                <Input type="input" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
+
+                <Input type="textarea" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
                 {!this.state.choices == false ? <ul id="choices">
                   {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.name}</li>)}
                 </ul> : <div></div>}
@@ -141,7 +191,7 @@ class Food extends React.Component {
                 <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams} />
               </FormGroup>
 
-              
+
 
 
               <br />
@@ -151,7 +201,8 @@ class Food extends React.Component {
                     this.state.input.fk_user &&
                     this.state.input.date &&
                     this.state.input.food &&
-                    this.state.input.grams|| this.state.input.servings
+                    this.state.selected &&
+                    this.state.input.grams || this.state.input.servings
                   )
                 }
                 onClick={() => this.log()}

@@ -2,14 +2,14 @@ var orm = require("../config/orm.js");
 
 var user = {
   // The variables cols and vals are arrays.
-  createMulti: function (array, fk, cb) {
-    orm.createMulti("nutrient", array, fk, function (res) {
+  createMultiTables: function (array, fk, cb) {
+    orm.createMultiTables(array, fk, function (res) {
       cb(res);
     });
   },
 
   selectWhere: function (searchCol, val, cb) {
-    orm.selectWhere("nutrient", searchCol, val, function (res) {
+    orm.selectWhereMulti("nutrient", searchCol, val, function (res) {
       cb(res);
     });
   },
