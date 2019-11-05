@@ -54,7 +54,7 @@ class Food extends React.Component {
     let array = [];
     this.state.selected.nutrients.map((nutrient) => {
 
-      if (nutrientsLogged.includes(tables[nutrient.nutrient_id])) {
+      if (!nutrientsLogged.includes(tables[nutrient.nutrient_id])) {
 
         nutrientsLogged.push(tables[nutrient.nutrient_id])
 
