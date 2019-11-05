@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Jumbotron } from 'reactstrap';
 import Plot from 'react-plotly.js';
-import equal from 'fast-deep-equal'
+
 class Graph extends Component {
   constructor(props) {
     super(props);

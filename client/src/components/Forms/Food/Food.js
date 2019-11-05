@@ -1,9 +1,8 @@
 import React from 'react';
-import { Jumbotron, Button, FormText, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Jumbotron, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import API from '../../../utils/API';
 import "./Food.css";
 import axios from "axios";
-import { exportDefaultSpecifier } from '@babel/types';
 // JSON holding nutrient_id to Table Name.
 import tables from "../../../JSON/NutrientTables.json";
 // JSON conversion chart
@@ -151,7 +150,6 @@ class Food extends React.Component {
         axios.get(fdaAddressURL).then((response) => {
           //console.log(!response.data.errors)
           if (!response.data.errors) {
-            var data = response.data.list.item;
 
             // const choices  = this.state;
             // choices = data;
