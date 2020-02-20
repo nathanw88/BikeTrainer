@@ -1,124 +1,77 @@
 import React from 'react';
-import { Jumbotron, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Jumbotron, Button, Form, FormGroup, Label, Input, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import API from '../../../utils/API';
 import "./Food.css";
-import axios from "axios";
-// JSON holding nutrient_id to Table Name.
-import tables from "../../../JSON/NutrientTables.json";
-// JSON conversion chart
-import conversions from "../../../JSON/conversions.json";
-// JSON holding what each nutrients regular unit of measurement is.
-import regularMeasurement from "../../../JSON/regularMeasurement.json";
 
-const APIKey = "6tWDuI4UaiW1Ho7b67OLh0VTLk3M2MixZaoFNWdG"
 class Food extends React.Component {
   //state holds the log objecct that holds all the info from the form to be sent to the back end
-  state = {
-    input: {
+  constructor(props) {
+    super(props);
 
-      fk_user: localStorage.getItem("id"),
-      date: new Date().toISOString().substr(0, 16),
-      food: "",
-      grams: 0,
-      servingType: "",
-      servings: 0
+    this.state = {
 
-    },
-    selected: {},
-    choices: []
+      input: {
+
+        userEmail: localStorage.getItem("email"),
+        fk_user: localStorage.getItem("id"),
+        date: new Date().toISOString().substr(0, 16),
+        food: [],
+        grams: [],
+        selected: []
+      },
+      index: 0,
+      portions: [],
+      choices: [],
+      showGrams: true
+    };
   };
 
+  showCustomPortion = () => {
+    this.setState({ showGrams: false })
+  }
+
+  portionChoice = (grams) => {
+    const { input } = this.state;
+    input.grams[this.state.index] = grams;
+    this.setState({ input });
+    this.setState({ showGrams: false })
+    console.log(this.state.input.grams)
+  }
 
   //function that grabs food data 
   selectChoice = (i) => {
-    console.log(tables)
+    console.log(this.state.choices[i])
     const { input } = this.state;
-    input.food = this.state.choices[i].name;
+    input.food[this.state.index] = `${this.state.choices[i].description} ${this.state.choices[i].additional_descriptions ? this.state.choices[i].additional_descriptions : ""} ${this.state.choices[i].brand ? this.state.choices[i].brand : ""}`;
+    input.selected[this.state.index] = this.state.choices[i]
     this.setState({ input });
-    this.setState({ selected: this.state.choices[i] });
 
-    axios.get(`https://api.nal.usda.gov/ndb/V2/reports?ndbno=${this.state.choices[i].ndbno}&type=f&format=json&api_key=${APIKey}`).then((response) => {
-      this.setState({ selected: response.data.foods[0].food });
-      // console.log(response.data.foods[0].food.nutrients[0].measures)
-      // console.log(this.state.selected.nutrients[0].measures)
+    API.selectPortions(this.state.choices[i].id).then(res => {
 
-    })
+      this.setState({
+        portions: res.data
+      })
+    });
+
     this.setState({ choices: [] });
+
   }
 
   //function to send data to the backend to be stored in MySQL
 
   log = event => {
-    let nutrientsLogged = [];
-    let foodName = this.state.selected.desc.name;
-    let array = [];
-    this.state.selected.nutrients.map((nutrient) => {
-
-      if (!nutrientsLogged.includes(tables[nutrient.nutrient_id])) {
-
-        nutrientsLogged.push(tables[nutrient.nutrient_id])
-
-        if (parseFloat(nutrient.value)) {
-
-          if (this.state.input.grams) {
-
-            if (regularMeasurement[nutrient.nutrient_id]) {
-
-              try {
-                nutrient.value = parseFloat(nutrient.value) * (conversions[regularMeasurement[nutrient.nutrient_id]][nutrient.unit]);
-                nutrient.unit = regularMeasurement[nutrient.nutrient_id];
-                nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
-
-                array.push([
-                  tables[nutrient.nutrient_id],
-                  {
-                    fk_user: this.state.input.fk_user,
-                    value: parseFloat(nutrient.value),
-                    nutrient_id: nutrient.nutrient_id,
-                    date: (this.state.input.date).substr(0, 10),
-                    time: (this.state.input.date).substr(12, 16),
-                    grouping: nutrient.group,
-                    name: nutrient.name,
-                    unit: nutrient.unit
-                  }]);
-              }
-              catch (err) {
-                nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
-                array.push([
-                  `error_log`,
-                  {
-                    fk_user: this.state.input.fk_user,
-                    value: parseFloat(nutrient.value),
-                    nutrient_id: nutrient.nutrient_id,
-                    date: (this.state.input.date).substr(0, 10),
-                    time: (this.state.input.date).substr(12, 16),
-                    grouping: nutrient.group,
-                    name: nutrient.name,
-                    unit: nutrient.unit
-                  }]);
-              }
-            }
-            else if (!regularMeasurement[nutrient.nutrient_id]) {
-              nutrient.value = (parseFloat(nutrient.value) * parseFloat(this.state.input.grams) / 100).toFixed(2);
-              array.push([
-                `error_log`,
-                {
-                  fk_user: this.state.input.fk_user,
-                  value: parseFloat(nutrient.value),
-                  nutrient_id: nutrient.nutrient_id,
-                  date: (this.state.input.date).substr(0, 10),
-                  time: (this.state.input.date).substr(12, 16),
-                  grouping: nutrient.group,
-                  name: nutrient.name,
-                  unit: nutrient.unit
-                }]);
-            }
-
-          }
-        }
-      }
-    })
-    API.logFood(array, foodName).then(res => {
+    let fkFoodArray = []
+    this.state.input.selected.map(item => fkFoodArray.push(item.id))
+    // console.log(this.state.selected)
+    let data = {
+      userEmail: this.state.input.userEmail,
+      fk_user: this.state.input.fk_user,
+      grams: this.state.input.grams,
+      fk_food: fkFoodArray,
+      date: (this.state.input.date.replace("T", " "))
+    };
+    
+    API.logFood(data).then(res => {
       if (res.data.error) {
         alert(res.data.error);
       }
@@ -132,32 +85,65 @@ class Food extends React.Component {
 
   }
 
+  componentWillMount() {
+    this.timer = null;
+  }
+  handleInputChange = (event) => {
+    clearTimeout(this.timer);
 
-  //function to update the state with changes to any form inputs.
-  handleInputChange = event => {
     const { input } = this.state;
-    //console.log(event.target)
+    // console.log(event.target)
     const { name, value } = event.target;
     //console.log(input)
-    input[name] = value;
-    this.setState({
-      input
-    });
-    if (name === "food") {
-      this.setState({ choices: [] });
-      if (this.state.input.food) {
-        var fdaAddressURL = `https://api.nal.usda.gov/ndb/search/?format=json&q=${this.state.input.food}&sort=r&max=50&offset=0&api_key=${APIKey}`;
-        axios.get(fdaAddressURL).then((response) => {
-          //console.log(!response.data.errors)
-          if (!response.data.errors) {
+    if (name === "grams") {
+      input[name][this.state.index] = parseFloat(value);
+      this.setState({
+        input
+      });
 
-            // const choices  = this.state;
-            // choices = data;
-            this.setState({ choices: [...this.state.choices, ...response.data.list.item] });
+    }
+   
+    else if (name === "food") {
+      console.log(input)
+      if (input.food[0]) {
+        input.food = input.food.map((item, i) => {
+          if (i === this.state.index) {
+            return value
           }
+          else
+            return item
 
-        })
+        });
       }
+      else {
+        input[name][0] = value;
+      }
+
+      this.setState({
+        input
+      });
+      this.timer = setTimeout(this.grabFood, 750);
+    }
+    else {
+      input[name] = value;
+      this.setState({
+        input
+      });
+    }
+
+  }
+  //function to update the state with changes to any form inputs.
+  grabFood = () => {
+
+
+
+    this.setState({ choices: [] });
+    if (this.state.input.food[this.state.index] && this.state.input.food[this.state.index].length >= 3) {
+      API.findFood(this.state.input.food[this.state.index]).then(res => {
+        console.log(res);
+        this.setState({ choices: [...this.state.choices, ...res.data] });
+      });
+
     }
   };
 
@@ -170,7 +156,7 @@ class Food extends React.Component {
         <Jumbotron id="food-form">
           <div>
             {/* form for logging food intake */}
-            <Form autocomplete="new-password">
+            <Form>
               <h5 className="log-heading">Food</h5>
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                 <Label for="date" className="mr-sm-2">Date</Label>
@@ -179,19 +165,31 @@ class Food extends React.Component {
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
                 <Label for="food" className="mr-sm-2">What you ate</Label>
 
-                <Input type="textarea" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
+                <Input type="textarea" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food[this.state.index]} />
                 {!this.state.choices == false ? <ul id="choices">
-                  {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.name}</li>)}
+                  {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.description} {item.brand} {item.additional_descriptions}</li>)}
                 </ul> : <div></div>}
               </FormGroup>
-              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+              <FormGroup hidden={this.state.showGrams} className="mb-2 mr-sm-2 mb-sm-0">
                 <Label for="grams" className="mr-sm-2">Grams Eaten</Label>
-                <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams} />
+                <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams[this.state.index]} />
               </FormGroup>
-
-
-
-
+              <br />
+              {!this.state.portions == false ?
+                <UncontrolledDropdown>
+                  <DropdownToggle caret>
+                    Portion
+                </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={this.showCustomPortion} className="portion-button">Custom Weight</DropdownItem>
+                    {this.state.portions.map((portion, i) =>
+                      portion.amount ? <DropdownItem key={i} onClick={() => this.portionChoice(portion.gram_weight)} className="portion-button">{portion.amount} {portion.description} {portion.gram_weight} Grams</DropdownItem>
+                        : <DropdownItem key={i} onClick={() => this.portionChoice(portion.gram_weight)} className="portion-button">{portion.description} {portion.gram_weight} Grams</DropdownItem>
+                    )}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+                : <div></div>
+              }
               <br />
               <Button id="login-button"
                 disabled={
@@ -199,8 +197,8 @@ class Food extends React.Component {
                     this.state.input.fk_user &&
                     this.state.input.date &&
                     this.state.input.food &&
-                    this.state.selected &&
-                    this.state.input.grams || this.state.input.servings
+                    this.state.input.selected &&
+                    this.state.input.grams
                   )
                 }
                 onClick={() => this.log()}

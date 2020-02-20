@@ -10,22 +10,32 @@ export default {
     return axios.post("/api/users/login", { userEmail, userPassword })
 
   },
-  logBike: (keys, values) =>{
-    return axios.post("api/log/bike",{keys, values})
-  },
-  logRun: (keys, values) =>{
-    return axios.post("/api/log/run",{keys, values})
-  },
-  logSleep: (keys, values) =>{
-    return axios.post("/api/log/sleep",{keys, values})
-  },
-  logFood: (array, foodName) =>{
-    
-    return axios.post("/api/log/food", {array, foodName})
+
+  findFood: (searchString) =>{
+
+    return axios.post("/api/log/findFood", {searchString})
   },
 
-  selectLogs: (id, table) =>{
-    return axios.get(`/api/users/logs/${id}/${table}`)
-  }
+  logFood: (data) =>{
+    
+    return axios.post("/api/log/food", {data})
+  },
+  selectPortions: (fk) =>{
+
+    return axios.get(`/api/log/findPortion/${fk}`)
+  },
+  // selectLogs: (id, table) =>{
+  //   return axios.get(`/api/user-logs/logs/${id}/${table}`)
+  // },
+
+  // selectSums: (table, id, date1, date2) =>{
+  //   console.log(date1)
+  //   return axios.get(`/api/user-logs/logs/sums/${id}/${table}/${date1}/${date2}`)
+  // },
+
+  // selectAverage: (table, id, date1, date2) =>{
+  //   console.log(date1)
+  //   return axios.get(`/api/user-logs/logs/average/${id}/${table}/${date1}/${date2}`)
+  // }
 
 };

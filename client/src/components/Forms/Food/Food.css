@@ -30,6 +30,10 @@
 
 }
 
+button.portion-button.dropdown-item{
+  color: wheat;
+}
+
 @media screen and (max-width: 980px) {
 
   #food-form{
