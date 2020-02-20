@@ -39,7 +39,7 @@ export default class NavBar extends React.Component {
     return (
       <div>
         <Navbar id="navbar" expand="md">
-          <NavbarBrand href="/">Trainer</NavbarBrand>
+          <NavbarBrand href="/">Community_Fit</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
@@ -55,19 +55,19 @@ export default class NavBar extends React.Component {
                   Log info
                 </DropdownToggle>
                 <DropdownMenu disabled ={!localStorage.getItem("email")} right>
-                  <DropdownItem onClick={()=>{localStorage.setItem("log", "bike")}} href="/log">
+                  {/* <DropdownItem onClick={()=>{localStorage.setItem("log", "bike")}} href="/log">
                     Bike
                   </DropdownItem>
                   <DropdownItem onClick={()=>{localStorage.setItem("log", "run")}} href="/log">
                     Run
                   </DropdownItem>
-                  <DropdownItem divider />
+                  <DropdownItem divider /> */}
                   <DropdownItem onClick={()=>{localStorage.setItem("log", "food")}} href="/log" >
                     Food
                   </DropdownItem>
-                  <DropdownItem onClick={()=>{localStorage.setItem("log", "sleep")}} href="/log">
+                  {/* <DropdownItem onClick={()=>{localStorage.setItem("log", "sleep")}} href="/log">
                     Sleep
-                  </DropdownItem>
+                  </DropdownItem> */}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <NavItem>

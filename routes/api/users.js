@@ -2,13 +2,18 @@ var express = require("express");
 var router = express.Router();
 var axios = require("axios");
 var bcrypt = require('bcrypt');
-var user = require("../../models/users")
+var user = require("../../models/users");
+const nutrient = require("../../models/nutrient");
 
 router.route("/login").post((req, res) => {
+    console.log(req.sessionID)
+    console.log(req.ip)
     user.selectWhere("userEmail", req.body.userEmail, function (result) {
+        let sessionID= req.sessionID;
+        let ip = req.ip;
         let password = req.body.userPassword;
-        let userID
-        let userEmail = req.body.userEmail
+        let userID;
+        let userEmail = req.body.userEmail;
         for (var i = 0; i < result.length; i++) {
             if (result[i].userEmail == userEmail) {
                 if (bcrypt.compareSync(password, result[i].userPassword)) {
@@ -41,12 +46,6 @@ router.route("/register").post((req, res) => {
         else{
             res.json({error: "Email already registered."})
         }
-    })
-})
-router.route("/logs/:id/:table").get((req, res) =>{
-    user.selectLogs(req.params.id, req.params.table, function(result){
-        
-        res.json(result)
     })
 })
 

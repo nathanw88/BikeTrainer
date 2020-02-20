@@ -8,11 +8,30 @@ var user = {
     });
   },
 
-  selectWhere: function (searchCol, val, cb) {
-    orm.selectWhereMulti("nutrient", searchCol, val, function (res) {
-      cb(res);
-    });
-  },
+  selectFoodNutrient: function (data, cb){
+    orm.selectFoodNutrient(data, function(res){
+      cb(res)
+    })
+  }
+
+  // selectDailySums: function (id, table, date1, date2, cb){
+  //   orm.selectDailySums(table, id, date1, date2, function (res){
+  //     cb(res);
+  //   });
+    
+  // },
+  // selectAverage: function (id, table, date1, date2, cb){
+  //   orm.selectAverage(table, id, date1, date2, function (res){
+  //     cb(res);
+  //   });
+    
+  // },
+
+
+
+
+ 
+
 
 
 };
