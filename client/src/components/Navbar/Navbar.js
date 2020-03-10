@@ -26,8 +26,8 @@ export default class NavBar extends React.Component {
   }
   // log out function which clears the local storage of user info
   logout(){
-    localStorage.setItem("email", "")
-    localStorage.setItem("id", "")
+    sessionStorage.setItem("email", "")
+    sessionStorage.setItem("id", "")
   }
   // toggle function opens dropdown for selecting what you want to log
   toggle() {
@@ -44,34 +44,34 @@ export default class NavBar extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/profile/">{localStorage.getItem("email")}</NavLink>
+                <NavLink href="/profile/">{sessionStorage.getItem("email")}</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/profile/" disabled ={!localStorage.getItem("email")}>Data</NavLink>
+                <NavLink href="/profile/" disabled ={!sessionStorage.getItem("email")}>Data</NavLink>
               </NavItem>
               
               <UncontrolledDropdown  nav inNavbar>
-                <DropdownToggle disabled ={!localStorage.getItem("email")}  nav caret>
+                <DropdownToggle disabled ={!sessionStorage.getItem("email")}  nav caret>
                   Log info
                 </DropdownToggle>
-                <DropdownMenu disabled ={!localStorage.getItem("email")} right>
-                  {/* <DropdownItem onClick={()=>{localStorage.setItem("log", "bike")}} href="/log">
+                <DropdownMenu disabled ={!sessionStorage.getItem("email")} right>
+                  {/* <DropdownItem onClick={()=>{sessionStorage.setItem("log", "bike")}} href="/log">
                     Bike
                   </DropdownItem>
-                  <DropdownItem onClick={()=>{localStorage.setItem("log", "run")}} href="/log">
+                  <DropdownItem onClick={()=>{sessionStorage.setItem("log", "run")}} href="/log">
                     Run
                   </DropdownItem>
                   <DropdownItem divider /> */}
-                  <DropdownItem onClick={()=>{localStorage.setItem("log", "food")}} href="/log" >
+                  <DropdownItem onClick={()=>{sessionStorage.setItem("log", "food")}} href="/log" >
                     Food
                   </DropdownItem>
-                  {/* <DropdownItem onClick={()=>{localStorage.setItem("log", "sleep")}} href="/log">
+                  {/* <DropdownItem onClick={()=>{sessionStorage.setItem("log", "sleep")}} href="/log">
                     Sleep
                   </DropdownItem> */}
                 </DropdownMenu>
               </UncontrolledDropdown>
               <NavItem>
-                <NavLink disabled ={!localStorage.getItem("email")} onClick={()=>{this.logout()}}href="/">Logout</NavLink>
+                <NavLink disabled ={!sessionStorage.getItem("email")} onClick={()=>{this.logout()}}href="/">Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

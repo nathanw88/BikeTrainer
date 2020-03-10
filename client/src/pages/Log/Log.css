@@ -1,10 +1,98 @@
-/* #log-container{
- 
-  background: url(../../images/wellness.jpg); 
+#food-form{
+  
+  float: left;
+  width: 25%;
+  margin-left: 10%;
+  margin-top: 4%;
+  background-color:  rgb(23,1,1, 0.5);
+  padding-top: 35px;
+  padding-bottom: 35px;
+  padding-left: 37.50px;
+
+}
+
+#log-edit{
+
+  margin-left: 32px;
+  width: 75px;
+
+}
+
+#logs-container{
+
+  margin-right: 10%;
+  margin-top: 4%;
+  float: right;
+  width: 50%;
+  background-color:  rgb(23,1,1, 0.5);
+  padding-top: 35px;
+  padding-bottom: 35px;
+  padding-left: 37.50px;
+
+}
+
+
+
+#logs{
+
+  background-color:  rgb(255, 255, 255, 0.5);
+
+}
+
+#food-container{
+
+  background: url(../../images/food.jpg); 
   position: fixed;
   background-size: cover;
   top: 0; 
   left: 0; 
   right: 0; 
-  bottom: 0;   
-} */
+  bottom: 0;
+  overflow-y: scroll;  
+
+}
+
+#choices{
+
+  background-color: aliceblue;
+  max-height: 300px;
+  max-width: 80%;
+  overflow: auto;
+
+}
+
+.choices:hover{
+
+  background-color: aqua;
+
+}
+
+button.portion-button.dropdown-item{
+
+  color: wheat;
+
+}
+
+@media screen and (max-width: 980px) {
+
+  #food-form{
+
+    width: 70%;
+    clear: both;
+    margin: auto;
+    margin-top: 15%;
+    background-color:  rgb(23,1,1, 0.5);
+
+  }
+  
+  #logs-container{
+
+    width: 70%;
+    clear: both;
+    margin: auto;
+    margin-top: 15%;
+    background-color:  rgb(23,1,1, 0.5);
+
+  }
+
+}

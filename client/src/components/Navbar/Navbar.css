@@ -19,3 +19,7 @@ span.navbar-toggler-icon{
   background: url(../../images/menu.png); 
     background-size: cover;
 }
+div.dropdown-menu{
+   background-color:  rgb(23,1,1, 0.6);
+ }
+ 

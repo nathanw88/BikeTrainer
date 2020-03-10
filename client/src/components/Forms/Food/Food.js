@@ -12,15 +12,15 @@ class Food extends React.Component {
 
       input: {
 
-        userEmail: localStorage.getItem("email"),
-        fk_user: localStorage.getItem("id"),
+        userEmail: sessionStorage.getItem("email"),
+        fk_user: sessionStorage.getItem("id"),
         date: new Date().toISOString().substr(0, 16),
         food: [],
         grams: [],
-        selected: []
+        selected: [],
+        portions: []
       },
-      index: 0,
-      portions: [],
+      index: 0,   
       choices: [],
       showGrams: true
     };
@@ -47,9 +47,10 @@ class Food extends React.Component {
     this.setState({ input });
 
     API.selectPortions(this.state.choices[i].id).then(res => {
-
+      const { input } = this.state;
+      input.portions[this.state.index] = [...res.data]
       this.setState({
-        portions: res.data
+        input
       })
     });
 
@@ -116,7 +117,7 @@ class Food extends React.Component {
         });
       }
       else {
-        input[name][0] = value;
+        input[name][this.state.index] = value;
       }
 
       this.setState({
@@ -139,9 +140,18 @@ class Food extends React.Component {
 
     this.setState({ choices: [] });
     if (this.state.input.food[this.state.index] && this.state.input.food[this.state.index].length >= 3) {
-      API.findFood(this.state.input.food[this.state.index]).then(res => {
+      API.findFood(this.state.input.food[this.state.index], this.state.input.fk_user).then(res => {
         console.log(res);
+        if(res.data.error){
+          alert(res.data.error)
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "")
+
+          window.location.replace('/')
+        }
+        else{
         this.setState({ choices: [...this.state.choices, ...res.data] });
+        }
       });
 
     }
@@ -175,14 +185,14 @@ class Food extends React.Component {
                 <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams[this.state.index]} />
               </FormGroup>
               <br />
-              {!this.state.portions == false ?
+              {!this.state.input.portions[this.state.index] == false ?
                 <UncontrolledDropdown>
                   <DropdownToggle caret>
                     Portion
                 </DropdownToggle>
                   <DropdownMenu>
                     <DropdownItem onClick={this.showCustomPortion} className="portion-button">Custom Weight</DropdownItem>
-                    {this.state.portions.map((portion, i) =>
+                    {this.state.input.portions[this.state.index].map((portion, i) =>
                       portion.amount ? <DropdownItem key={i} onClick={() => this.portionChoice(portion.gram_weight)} className="portion-button">{portion.amount} {portion.description} {portion.gram_weight} Grams</DropdownItem>
                         : <DropdownItem key={i} onClick={() => this.portionChoice(portion.gram_weight)} className="portion-button">{portion.description} {portion.gram_weight} Grams</DropdownItem>
                     )}

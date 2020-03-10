@@ -45,9 +45,10 @@ export default class Register extends React.Component {
   }
 // funtion for checking password length might add in regex to make password have to be complex plus check against an array of common passwords
   validatePassword(p) {
+    const regex = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
     const password = p.target.value
     const { validate } = this.state
-    if (password.length >= 8) {
+    if (password.match(regex)) {
       validate.passwordState = 'has-success'
     } else {
       validate.passwordState = 'has-danger'
@@ -56,6 +57,7 @@ export default class Register extends React.Component {
   }
   // function to make sure the confirm password matches the password
   confirmPassword(confirm) {
+  
     const password = confirm.target.value;
     const { validate } = this.state
     if (password === this.state.userPassword) {
@@ -77,8 +79,8 @@ export default class Register extends React.Component {
         alert(res.data.error)
       }
       else if (!res.data.error) {
-        localStorage.setItem("email", this.state.userEmail)
-        localStorage.setItem("id", res.data.insertId)
+        sessionStorage.setItem("email", this.state.userEmail)
+        sessionStorage.setItem("id", res.data.insertId)
         window.location.replace('/profile')
       }
 
@@ -101,7 +103,7 @@ export default class Register extends React.Component {
             invalid={this.state.validate.passwordState === 'has-danger'} type="password" name="userPassword" value={this.state.userPassword} onChange={(e) => { this.validatePassword(e); this.handleInputChange(e); }} />
           <FormText>Enter a password at least 8 characters.</FormText>
           <FormFeedback valid>That's a correct password.</FormFeedback>
-          <FormFeedback>Please enter a longer password.</FormFeedback>
+          <FormFeedback>Password Needs 8 Characters Plus A Number, Special Character And, Letter Uppercase and Lowercase</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="confirmPassword">Confirm Password</Label>
