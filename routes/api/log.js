@@ -4,6 +4,7 @@ const axios = require("axios");
 const user = require("../../models/users")
 const food = require("../../models/food");
 const nutrient = require("../../models/nutrient");
+const session = require("../../models/session")
 require('dotenv').config();
 const fs = require('fs')
 
@@ -27,19 +28,47 @@ const fs = require('fs')
 //   });
 // });
 router.route("/findFood").post((req, res) => {
-  food.findFood(req.body.searchString, function(data){
-    res.json(data);
-  })
+  // console.log(req)
+  let sessionExpires = req.session.cookie._expires;
+  let sessionID = req.sessionID;
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.body.fk_user, function(result){
+  //  console.log(result)
+    if(result.error){
+      if(result.error === "Your session has expired."){
+        // console.log("here")
+        res.json(result)
+         
+      };
+    }
+    else{
+      food.findFood(req.body.searchString, function(data){
+        res.json(data);
+      });
+    }
+  });
+  // food.findFood(req.body.searchString, function(data){
+  //   res.json(data);
+  // })
 });
 
 router.route("/findPortion/:fk").get((req, res)=>{
   food.selectFoodFK("food_portion", req.params.fk, function(data){
-    console.log(data)
+    // console.log(data)
     res.json(data);
   })
 })
 
 router.route("/food").post((req, res) => {
+  let sessionExpires = req.session.cookie._expires;
+  let sessionID = req.sessionID;
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.body.data.fk_user, function(result){
+    if(result.error){
+      if(result.error === "Your session has expired"){
+        res.redirect('/')
+         
+      };
+    }
+    else{
 // console.log(req.body.data)
 //user.selectWhere(["id"], [req.body.data.fk_user], function(result){
 
@@ -68,7 +97,9 @@ router.route("/food").post((req, res) => {
   //     res.json(data);
 
   //   })
-  })
+};
+  });
+  }); 
 
 
   

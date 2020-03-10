@@ -51,6 +51,25 @@ var orm = {
             cb(result);
         });
     },
+    update: function (table, condition, cols, vals, userID, cb) {
+        var queryString = `UPDATE ${table} SET `
+        cols.map((item, i) => {
+            if (i < cols.length - 1) {
+                queryString += `${item} = ?,`
+            }
+            else {
+                queryString += `${item} = ? WHERE ${condition} = ?`
+                connection.query(queryString, [...vals, userID], function (err, result) {
+                    if (err) throw err;
+                    cb(result);
+                });
+            }
+        })
+
+
+
+
+    },
 
     //     //insert multiple rows
     //     createMulti: function (table, array, fk, cb) {
@@ -175,62 +194,62 @@ var orm = {
     },
     postingFood: function (data, cb) {
         var resArray = [];
-        data.grams.map((item, i ) =>{
-        let arrayObjects ={
-            fk_user: data.fk_user,
-            fk_food: data.fk_food[i],
-            grams: item,
-            date: data.date.toString(),
-        }
-        console.log(arrayObjects)
-        var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`
+        data.grams.map((item, i) => {
+            let arrayObjects = {
+                fk_user: data.fk_user,
+                fk_food: data.fk_food[i],
+                grams: item,
+                date: data.date.toString(),
+            }
+            console.log(arrayObjects)
+            var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`
 
-        connection.query(queryString, Object.values(arrayObjects), function (err, res) {
-            if (err) throw err;
-            resArray.push(res);
-
-            let gramsDivided = parseFloat(data.grams) / 100;
-            var queryString2 = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
-            connection.query(queryString2, [gramsDivided, data.fk_food], function (err, result) {
+            connection.query(queryString, Object.values(arrayObjects), function (err, res) {
                 if (err) throw err;
-                resArray.push(result);
-                let vals = []
-                
-                var queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date) VALUES `
-                
-                for (let i = 0; i < result.length; i++) {
-                    let dataObject = {
-                        fk_user: data.fk_user,
-                        fk_nutrient: result[i].fk_nutrient,
-                        value: result[i].value,
-                        date: data.date.toString(),
+                resArray.push(res);
+
+                let gramsDivided = parseFloat(arrayObjects.grams) / 100;
+                var queryString2 = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
+                connection.query(queryString2, [gramsDivided, arrayObjects.fk_food], function (err, result) {
+                    if (err) throw err;
+                    resArray.push(result);
+                    let vals = []
+
+                    var queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date) VALUES `
+
+                    for (let i = 0; i < result.length; i++) {
+                        let dataObject = {
+                            fk_user: arrayObjects.fk_user,
+                            fk_nutrient: result[i].fk_nutrient,
+                            value: result[i].value,
+                            date: arrayObjects.date.toString(),
 
 
+                        }
+                        vals.push(dataObject.fk_user);
+                        vals.push(dataObject.fk_nutrient);
+                        vals.push(dataObject.value);
+                        vals.push(dataObject.date);
+
+
+                        if (i < result.length - 1) {
+                            queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)}),`
+
+                        }
+                        if (i === result.length - 1) {
+                            queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)});`
+
+                            connection.query(queryString3, vals, function (err, response) {
+                                if (err) throw err;
+                                resArray.push(response)
+                            })
+                        }
                     }
-                    vals.push(dataObject.fk_user);
-                    vals.push(dataObject.fk_nutrient);
-                    vals.push(dataObject.value);
-                    vals.push(dataObject.date);
 
-                    
-                    if (i < result.length - 1) {
-                        queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)}),`
-
-                    }
-                    if (i === result.length - 1) {
-                        queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)});`
-
-                        connection.query(queryString3, vals, function (err, response) {
-                            if (err) throw err;
-                            resArray.push(response)
-                            cb(resArray);
-                        })
-                    }
-                }
-
+                });
             });
         });
-    });
+        cb(resArray);
     },
     //Select everything from a variable table where search is value
     // selectFoodNutrient: function (data, cb) {

@@ -37,8 +37,17 @@ CREATE TABLE nutrition_plan (
 
 );
 
+CREATE TABLE session(
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    fk_user INT(11),
+    session_id LONGTEXT,
+    expires TIMESTAMP,
+    FOREIGN KEY (fk_user) REFERENCES users (id),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE nutrition_plan_nutrients (
-    id INT(11) NTO NULL AUTO_INCREMENT,
+    id INT(11) NOT NULL AUTO_INCREMENT,
     fk_nutrient INT(11) NOT NULL,
     amount INT(11) NOT NULL,
     age INT(11),

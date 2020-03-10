@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import './App.css';
 import NoMatch from "./pages/NoMatch";
-import Navbar from "./components/Navbar/Navbar.js";
+import Navbar from "./components/Navbar/Navbar";
 import Log from "./pages/Log/Log";
 
 class App extends Component {

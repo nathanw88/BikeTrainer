@@ -11,9 +11,9 @@ export default {
 
   },
 
-  findFood: (searchString) =>{
+  findFood: (searchString, fk_user) =>{
 
-    return axios.post("/api/log/findFood", {searchString})
+    return axios.post("/api/log/findFood", {searchString, fk_user})
   },
 
   logFood: (data) =>{

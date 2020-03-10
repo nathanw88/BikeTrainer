@@ -25,8 +25,8 @@ class LoginModal extends React.Component {
         alert(res.data.error)
       }
       else if (!res.data.error) {
-        localStorage.setItem("email", res.data.userEmail)
-        localStorage.setItem("id", res.data.userID)
+        sessionStorage.setItem("email", res.data.userEmail)
+        sessionStorage.setItem("id", res.data.userID)
         window.location.replace('/profile')
       }
 
