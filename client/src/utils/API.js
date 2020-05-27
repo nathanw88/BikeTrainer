@@ -15,7 +15,11 @@ export default {
 
     return axios.post("/api/log/findFood", {searchString, fk_user})
   },
+  getUserMeasurements: (userID) =>{
+    
+    return axios.get(`/api/users/measurments/${userID}`)
 
+  },
   logFood: (data) =>{
     
     return axios.post("/api/log/food", {data})
@@ -24,6 +28,19 @@ export default {
 
     return axios.get(`/api/log/findPortion/${fk}`)
   },
+
+  saveSetup: (data) =>{
+
+    return axios.post("/api/users/setup", data)
+  },
+
+  saveNutritionPlan: (data) => {
+    return axios.post("api/users/nutritionPlan", data)
+  },
+
+  profile: (id, date) => {
+    return axios.get(`/api/users/profile/${id}/${date}`)
+  }
   // selectLogs: (id, table) =>{
   //   return axios.get(`/api/user-logs/logs/${id}/${table}`)
   // },

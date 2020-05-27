@@ -81,7 +81,7 @@ export default class Register extends React.Component {
       else if (!res.data.error) {
         sessionStorage.setItem("email", this.state.userEmail)
         sessionStorage.setItem("id", res.data.insertId)
-        window.location.replace('/profile')
+        window.location.replace('/setup')
       }
 
     }).catch(err => console.log(err));
