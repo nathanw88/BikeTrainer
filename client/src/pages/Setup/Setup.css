@@ -1,0 +1,23 @@
+#Setup_container{
+  background: url(../../images/measure.jpg); 
+  position: fixed;
+  background-size: cover;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  overflow-y: scroll;  
+}
+
+.mr-sm-2{
+  font-size: 24px;
+}
+
+#Setup_form{
+  float: middle;
+  width: 40%;
+  margin-left: 20%;
+  margin-top: 8%;
+  background-color:  rgb(23,1,1, 0.5);
+  padding: 2%;
+}

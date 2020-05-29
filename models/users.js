@@ -8,6 +8,12 @@ var user = {
     });
   },
 
+  update: function(cols, vals, userID, cb){
+    orm.update("users", "id", cols, vals, userID, function(res){
+      cb(res)
+    })
+  },
+
   selectWhere: function (searchCol, val, cb) {
     orm.selectWhere("users", searchCol, val, function (res) {
       cb(res);

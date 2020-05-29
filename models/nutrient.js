@@ -2,17 +2,17 @@ var orm = require("../config/orm.js");
 
 var user = {
   // The variables cols and vals are arrays.
-  createMultiTables: function (array, fk, cb) {
-    orm.createMultiTables(array, fk, function (res) {
-      cb(res);
-    });
-  },
+  // createMultiTables: function (array, fk, cb) {
+  //   orm.createMultiTables(array, fk, function (res) {
+  //     cb(res);
+  //   });
+  // },
 
-  selectFoodNutrient: function (data, cb){
-    orm.selectFoodNutrient(data, function(res){
-      cb(res)
-    })
-  }
+  // selectFoodNutrient: function (data, cb){
+  //   orm.selectFoodNutrient(data, function(res){
+  //     cb(res)
+  //   })
+  // }
 
   // selectDailySums: function (id, table, date1, date2, cb){
   //   orm.selectDailySums(table, id, date1, date2, function (res){

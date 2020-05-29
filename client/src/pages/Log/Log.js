@@ -133,7 +133,7 @@ class Log extends Component {
       // console.log(input)
       input.food = value
       this.setState({ input });
-      this.timer = setTimeout(this.grabFood, 750);
+      this.timer = setTimeout(this.grabFood, 300);
 
     }
 
@@ -257,23 +257,32 @@ class Log extends Component {
           <div>
             {/* form for logging food intake */}
             <Form>
-              <h5 className="log-heading">Food</h5>
+              <h3 className="log-heading">Food</h3>
+
               <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+
                 <Label for="date" className="mr-sm-2">Date</Label>
                 <Input type="datetime-local" name="date" id="date" onChange={this.handleInputChange} value={this.state.input.date} />
-              </FormGroup>
-              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Label for="food" className="mr-sm-2">What you ate</Label>
 
+              </FormGroup>
+
+              <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+
+                <Label for="food" className="mr-sm-2">What you ate</Label>
                 <Input type="textarea" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
                 {!this.state.choices == false ? <ul id="choices">
                   {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.description} {item.brand} {item.additional_descriptions}</li>)}
                 </ul> : <div></div>}
+
               </FormGroup>
+
               <FormGroup hidden={this.state.hideGrams} className="mb-2 mr-sm-2 mb-sm-0">
+
                 <Label for="grams" className="mr-sm-2">Grams Eaten</Label>
                 <Input type="number" name="grams" id="grams" onChange={this.handleInputChange} value={this.state.input.grams} />
+
               </FormGroup>
+
               <br />
               {!this.state.input.portions == false ?
                 <UncontrolledDropdown>
@@ -320,7 +329,7 @@ class Log extends Component {
 
               this.state.log.fk_food.map((fkFood, i) => <div key={i}>
 
-                {this.state.log.selected[i].brand? <h4>{this.state.log.selected[i].brand}&copy;</h4>:<div></div>}
+                {this.state.log.selected[i].brand ? <h4>{this.state.log.selected[i].brand}&copy;</h4> : <div></div>}
                 <h6>  {this.state.log.selected[i].description}</h6>
                 <p>{this.state.log.selected[i].additional_descriptions}</p>
                 <p><b>Grams:</b> {this.state.log.grams[i]}</p>

@@ -7,13 +7,13 @@ var session = require('express-session');
 var bodyParser = require("body-parser");
 const uuid = require('uuid/v4');
 var MemoryStore = require('memorystore')(session);
-
+var orm = require("./config/orm")
 const PORT = process.env.PORT || 8080;
 
 app.use(session({
   genid: (req) => {
-    console.log('Inside the session middleware')
-    console.log(req.sessionID)
+    // console.log('Inside the session middleware')
+    // console.log(req.sessionID)
     return uuid() // use UUIDs for session IDs
   },
   cookie: { maxAge: 3600000 },
@@ -39,10 +39,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(passport.session());
 app.use(express.json());
 
+// orm.Nutrients();
 
 app.use(routes);
 
-
+;
 
 // Start the API server
 app.listen(PORT, () =>

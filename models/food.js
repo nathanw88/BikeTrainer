@@ -20,12 +20,12 @@ var user = {
     })
   },
 
-  createMulti: function (array, cb) {
-    console.log(array)
-    orm.createMulti("food", array, function (res) {
-      cb(res);
-    });
-  },
+  // createMulti: function (array, cb) {
+  //   console.log(array)
+  //   orm.createMulti("food", array, function (res) {
+  //     cb(res);
+  //   });
+  // },
 
   selectWhere: function (searchCol, val, cb) {
     orm.selectWhere("food", searchCol, val, function (res) {

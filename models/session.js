@@ -4,6 +4,8 @@ var orm = require("../config/orm.js");
 
 var session = {
   create: function (cols, vals, cb) {
+    // console.log(cols)
+    // console.log(vals)
     orm.create("session", cols, vals, function (res) {
       cb(res);
     });
