@@ -8,8 +8,8 @@ let nutritionPlan = {
     });
   },
 
-  createNutrients: function(obj, fkNutritionPlan, cb){
-    orm.postNutritionPlanNutrients(obj, fkNutritionPlan, function (res){
+  createNutrients: function (obj, fkNutritionPlan, cb) {
+    orm.postNutritionPlanNutrients(obj, fkNutritionPlan, function (res) {
       cb(res);
     });
   },
@@ -20,9 +20,9 @@ let nutritionPlan = {
     });
   },
 
-  selectActivePlan: (userID, date, cb)=>{
+  selectActivePlan: (userID, date, cb) => {
     // console.log("models")
-    orm.selectActivePlan(userID, date, (res)=>{
+    orm.selectActivePlan(userID, date, (res) => {
       cb(res)
     })
   }

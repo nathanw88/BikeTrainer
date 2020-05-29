@@ -71,7 +71,7 @@
 //       fk_food: fkFoodArray,
 //       date: (this.state.input.date.replace("T", " "))
 //     };
-    
+
 //     API.logFood(data).then(res => {
 //       if (res.data.error) {
 //         alert(res.data.error);
@@ -103,7 +103,7 @@
 //       });
 
 //     }
-   
+
 //     else if (name === "food") {
 //       console.log(input)
 //       if (input.food[0]) {

@@ -99,7 +99,7 @@ router.route("/register").post((req, res) => {
   }
 });
 
-router.route("/profile/:userID/:date").get((req, res)=>{
+router.route("/profile/:userID/:date").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
   // console.log("here")
@@ -108,14 +108,11 @@ router.route("/profile/:userID/:date").get((req, res)=>{
 
     if (result.error) {
 
-      if (result.error === "Your session has expired") {
-        res.redirect('/')
-
-      };
+      res.json(result)
     }
 
     else {
-      nutritionPlan.selectActivePlan(req.params.userID,  req.params.date, (result2)=>{
+      nutritionPlan.selectActivePlan(req.params.userID, req.params.date, (result2) => {
         // console.log(result2);
         res.json(result2)
       });
@@ -135,10 +132,7 @@ router.route("/setup").post((req, res) => {
 
     if (result.error) {
 
-      if (result.error === "Your session has expired") {
-        res.redirect('/')
-
-      };
+      res.json(result);
     }
 
     else {
@@ -168,43 +162,40 @@ router.route("/nutritionPlan").post((req, res) => {
 
     if (result.error) {
 
-      if (result.error === "Your session has expired") {
-        res.redirect('/')
-
-      };
-    } 
+      res.json(result);
+    }
 
     else {
-      nutritionPlan.create(["fk_user", ...Object.keys(req.body.nutritionPlanData)],[req.body.id, ...Object.values(req.body.nutritionPlanData)], function(result2){
+      nutritionPlan.create(["fk_user", ...Object.keys(req.body.nutritionPlanData)], [req.body.id, ...Object.values(req.body.nutritionPlanData)], function (result2) {
         if (result2.error) {
 
           res.json({ error: result2.error })
 
         }
-        nutritionPlan.createNutrients(req.body.nutritionPlanNutrients, result2.insertId, function (result3){
+        nutritionPlan.createNutrients(req.body.nutritionPlanNutrients, result2.insertId, function (result3) {
           if (result3.error) {
 
             res.json({ error: result3.error })
-  
+
           }
-          user.update(["fk_active_nutrition_plan"], [result2.insertId], req.body.id, function(result4){
+          user.update(["fk_active_nutrition_plan"], [result2.insertId], req.body.id, function (result4) {
             // console.log(result4)
             if (result4.error) {
 
               res.json({ error: result4.error })
-    
+
             }
-            else{
+            else {
               res.json([result, result2, result3, result4])
             }
           });
           // console.log(result3)
         });
         // console.log(result2.insertId)
-        
+
       });
 
-      
+
     }
   })
 })
@@ -218,10 +209,7 @@ router.route("/measurments/:userID").get((req, res) => {
 
     if (result.error) {
 
-      if (result.error === "Your session has expired") {
-        res.redirect('/')
-
-      };
+      res.json(result);
     }
 
     else {

@@ -25,12 +25,25 @@ class Profile extends Component {
     const today = new Date()
 
     API.profile(this.state.fk_user, today).then((result) => {
-      // console.log(result)
-      const { data } = this.state;
-      data.dailyMacros.logs = [...result.data];
 
-      this.setState({ data });
-      console.log(this.state.data);
+      if (result.data.error) {
+
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(result.data.redirect);
+        }
+
+      }
+      else {
+        // console.log(result)
+        const { data } = this.state;
+        data.dailyMacros.logs = [...result.data];
+
+        this.setState({ data });
+      }
+      // console.log(this.state.data);
       // console.log(this.state.data.dailyMacros.logs[0])
     });
     // console.log(this.state.data);
@@ -44,13 +57,24 @@ class Profile extends Component {
 
     API.profile(this.state.fk_user, date).then((result) => {
       // console.log(result)
+      if (result.data.error) {
 
-      data.dailyMacros.logs = [...result.data];
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(result.data.redirect);
+        }
 
-      this.setState({
-        data,
-        date
-      });
+      }
+      else {
+        data.dailyMacros.logs = [...result.data];
+
+        this.setState({
+          data,
+          date
+        });
+      }
       // console.log(this.state.data);
       // console.log(this.state.data.dailyMacros.logs[0])
     });

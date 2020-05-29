@@ -56,17 +56,19 @@ class Setup extends Component {
     // console.log(this.state.input);
 
     API.saveSetup(data).then((result) => {
-      if (result.error) {
+      // console.log(result)
+      if (result.data.error) {
 
-        alert(result.error)
-        if (result.error === "Your session has expired.") {
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");
-          window.location.replace('/');
+          window.location.replace(result.data.redirect);
         }
 
       }
       else {
+        window.location.replace("/nutrition_plan")
         // console.log(result);
       }
     });

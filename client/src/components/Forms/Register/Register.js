@@ -43,7 +43,7 @@ export default class Register extends React.Component {
     }
     this.setState({ validate })
   }
-// funtion for checking password length might add in regex to make password have to be complex plus check against an array of common passwords
+  // funtion for checking password length might add in regex to make password have to be complex plus check against an array of common passwords
   validatePassword(p) {
     const regex = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
     const password = p.target.value
@@ -57,7 +57,7 @@ export default class Register extends React.Component {
   }
   // function to make sure the confirm password matches the password
   confirmPassword(confirm) {
-  
+
     const password = confirm.target.value;
     const { validate } = this.state
     if (password === this.state.userPassword) {
@@ -67,7 +67,7 @@ export default class Register extends React.Component {
     }
     this.setState({ validate })
   }
-// function that passes the info to a function in api.js in utils to be passed to the back end
+  // function that passes the info to a function in api.js in utils to be passed to the back end
   register = event => {
     let user = {
       userEmail: this.state.userEmail,

@@ -97,7 +97,16 @@ class Log extends Component {
 
     API.logFood(data).then(res => {
 
-      if (res.data.error) { alert(res.data.error); }
+      if (res.data.error) {
+
+        alert(res.data.error)
+        if (res.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(res.data.redirect);
+        }
+
+      }
 
       else if (!res.data.error) { window.location.replace('/profile'); };
 
@@ -237,7 +246,7 @@ class Log extends Component {
           if (res.data.error === "Your session has expired.") {
             sessionStorage.setItem("email", "");
             sessionStorage.setItem("id", "");
-            window.location.replace('/');
+            window.location.replace(res.data.redirect);
           }
 
         }
