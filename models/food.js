@@ -2,8 +2,8 @@ var orm = require("../config/orm.js");
 
 var user = {
 
-  findFood: function(searchString, cb){
-    orm.findFood(searchString, function(res){
+  findFood: function (searchString, cb) {
+    orm.findFood(searchString, function (res) {
       cb(res);
     })
   },
@@ -14,8 +14,8 @@ var user = {
   //   });
   // },
 
-  postingFood: function (data, cb){
-    orm.postingFood(data, function(res){
+  postingFood: function (data, cb) {
+    orm.postingFood(data, function (res) {
       cb(res)
     })
   },

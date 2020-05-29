@@ -15,20 +15,20 @@ class App extends Component {
   render() {
     return (
       <Router>
-      <div>
-      <Navbar/>
-        <Switch>
+        <div>
+          <Navbar />
+          <Switch>
 
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/log" component={Log}/>
-          <Route exact path="/profile" component={Profile}/>
-          <Route exact path="/nutrition_plan" component={Nutrition_plan}/>
-          <Route exact path="/setup" component={Setup}/>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/log" component={Log} />
+            <Route exact path="/profile" component={Profile} />
+            <Route exact path="/nutrition_plan" component={Nutrition_plan} />
+            <Route exact path="/setup" component={Setup} />
 
-          <Route component={NoMatch} />
-        </Switch>
-      </div>
-    </Router>
+            <Route component={NoMatch} />
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }

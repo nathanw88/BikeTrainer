@@ -17,17 +17,20 @@ var session = {
     });
   },
 
-  checkSession: function(cols, vals, userID, cb){
-    
+  checkSession: function (cols, vals, userID, cb) {
+
     orm.selectWhere("session", "fk_user", userID, function (res) {
       var now = new Date();
-      if(res[0].expires.getTime() > now){
+      if (res[0].expires.getTime() > now) {
         orm.update("session", "fk_user", cols, vals, userID, function (res) {
           cb(res);
         });
       }
-      else{
-        cb({error:"Your session has expired."})
+      else {
+        cb({
+          error: "Your session has expired.",
+          redirect: "/"
+        })
       }
     });
   },

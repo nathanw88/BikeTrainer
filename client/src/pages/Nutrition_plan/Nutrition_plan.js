@@ -50,13 +50,13 @@ class Nutrition_plan extends Component {
 
   componentDidMount = () => {
     API.getUserMeasurements(this.state.userID).then((result) => {
-      if (result.error) {
+      if (result.data.error) {
 
-        alert(result.error)
-        if (result.error === "Your session has expired.") {
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");
-          window.location.replace('/');
+          window.location.replace(result.data.redirect);
         }
 
       }
@@ -213,8 +213,21 @@ class Nutrition_plan extends Component {
     }
 
     API.saveNutritionPlan(data).then((result) => {
+      if (result.data.error) {
 
-      console.log(result)
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(result.data.redirect);
+        }
+
+      }
+      else {
+
+        window.location.replace("/log")
+      }
+
     })
 
   }

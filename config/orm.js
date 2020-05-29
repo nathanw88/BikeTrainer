@@ -362,21 +362,21 @@ var orm = {
           console.log(result2)
           let resultArray = [];
           let maxLength2 = result2.length;
-          for(let i = 0; i < maxLength2; i++){
+          for (let i = 0; i < maxLength2; i++) {
 
-            resultArray.push({ 
-              dailySum: result2[i].dailySum, 
-              date: new Date(result2[i].date) 
+            resultArray.push({
+              dailySum: result2[i].dailySum,
+              date: new Date(result2[i].date)
             });
 
           };
-          
+
           dataArray.push({
             amount,
             max_amount,
             name,
             unit,
-            log: [... resultArray]
+            log: [...resultArray]
           });
 
           if (i === (maxLength - 1)) {

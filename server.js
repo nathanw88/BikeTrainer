@@ -1,5 +1,5 @@
 var express = require("express");
-require ("dotenv").config()
+require("dotenv").config()
 const routes = require("./routes");
 var app = express();
 require('dotenv').config();
@@ -17,9 +17,9 @@ app.use(session({
     return uuid() // use UUIDs for session IDs
   },
   cookie: { maxAge: 3600000 },
-    store: new MemoryStore({
-      checkPeriod: 3600000 // prune expired entries every 1h
-    }),
+  store: new MemoryStore({
+    checkPeriod: 3600000 // prune expired entries every 1h
+  }),
   secret: process.env.session_secret,
   resave: false,
   saveUninitialized: true

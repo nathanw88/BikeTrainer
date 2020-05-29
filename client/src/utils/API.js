@@ -11,25 +11,25 @@ export default {
 
   },
 
-  findFood: (searchString, fk_user) =>{
+  findFood: (searchString, fk_user) => {
 
-    return axios.post("/api/log/findFood", {searchString, fk_user})
+    return axios.post("/api/log/findFood", { searchString, fk_user })
   },
-  getUserMeasurements: (userID) =>{
-    
+  getUserMeasurements: (userID) => {
+
     return axios.get(`/api/users/measurments/${userID}`)
 
   },
-  logFood: (data) =>{
-    
-    return axios.post("/api/log/food", {data})
+  logFood: (data) => {
+
+    return axios.post("/api/log/food", { data })
   },
-  selectPortions: (fk) =>{
+  selectPortions: (fk) => {
 
     return axios.get(`/api/log/findPortion/${fk}`)
   },
 
-  saveSetup: (data) =>{
+  saveSetup: (data) => {
 
     return axios.post("/api/users/setup", data)
   },
