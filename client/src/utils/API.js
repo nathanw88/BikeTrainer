@@ -38,8 +38,9 @@ export default {
     return axios.post("api/users/nutritionPlan", data)
   },
 
-  profile: (id, date) => {
-    return axios.get(`/api/users/profile/${id}/${date}`)
+  dailySum: (id, date) => {
+    // console.log("here")
+    return axios.get(`/api/user-logs/dailySum/${id}/${date}`)
   }
   // selectLogs: (id, table) =>{
   //   return axios.get(`/api/user-logs/logs/${id}/${table}`)

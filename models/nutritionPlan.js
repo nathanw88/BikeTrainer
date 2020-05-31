@@ -20,9 +20,9 @@ let nutritionPlan = {
     });
   },
 
-  selectActivePlan: (userID, date, cb) => {
+  selectDailySum: (userID, date, cb) => {
     // console.log("models")
-    orm.selectActivePlan(userID, date, (res) => {
+    orm.selectDailySum(userID, date, (res) => {
       cb(res)
     })
   }

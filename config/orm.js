@@ -343,7 +343,7 @@ var orm = {
 
   },
 
-  selectActivePlan: (userID, date, cb) => {
+  selectDailySum: (userID, date, cb) => {
     let dataArray = [];
     let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ${userID};`;
 

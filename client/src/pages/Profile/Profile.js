@@ -24,7 +24,7 @@ class Profile extends Component {
   componentDidMount = () => {
     const today = new Date()
 
-    API.profile(this.state.fk_user, today).then((result) => {
+    API.dailySum(this.state.fk_user, today).then((result) => {
 
       if (result.data.error) {
 
@@ -55,7 +55,7 @@ class Profile extends Component {
     let { data } = this.state;
     date.setDate(date.getDate() + num);
 
-    API.profile(this.state.fk_user, date).then((result) => {
+    API.dailySum(this.state.fk_user, date).then((result) => {
       // console.log(result)
       if (result.data.error) {
 
