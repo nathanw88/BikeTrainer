@@ -99,30 +99,6 @@ router.route("/register").post((req, res) => {
   }
 });
 
-router.route("/profile/:userID/:date").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  // console.log("here")
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-      nutritionPlan.selectActivePlan(req.params.userID, req.params.date, (result2) => {
-        // console.log(result2);
-        res.json(result2)
-      });
-    }
-  });
-
-
-});
-
-
 router.route("/setup").post((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
