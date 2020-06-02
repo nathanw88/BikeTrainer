@@ -23,9 +23,17 @@ let nutritionPlan = {
   selectDailySum: (userID, date, cb) => {
     // console.log("models")
     orm.selectDailySum(userID, date, (res) => {
-      cb(res)
-    })
-  }
+      cb(res);
+    });
+  },
+
+  selectAverageMacros: (userID, dateFrom, dateTill, cb)=>{
+
+    orm.selectAverageMacros(userID, dateFrom, dateTill, (res) => {
+      cb(res);
+    });
+  },
+
 
 
 };

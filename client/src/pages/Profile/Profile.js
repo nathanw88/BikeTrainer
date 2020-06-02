@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Profile.css";
-import Daily_Sum_Macros from "../../components/Profile_Boxes/Daily_Sum_Macros/Daily_Sum_Macros";
+import Daily_Macros from "../../components/Profile_Boxes/Daily_Macros/Daily_Macros";
+import Average_Macros from "../../components/Profile_Boxes/Average_Macros/Average_Macros";
 
 class Profile extends Component {
 
@@ -82,7 +83,8 @@ class Profile extends Component {
   render() {
 
     return(<div id="profile-container">
-      <Daily_Sum_Macros></Daily_Sum_Macros>
+      <Daily_Macros/>
+      <Average_Macros/>
     </div>)
 
     // return (<div id="profile-container">
