@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import API from "../../utils/API";
-import { Table } from 'reactstrap';
 import "./Profile.css";
+import Daily_Macros from "../../components/Profile_Boxes/Daily_Macros/Daily_Macros";
+import Average_Macros from "../../components/Profile_Boxes/Average_Macros/Average_Macros";
 
 class Profile extends Component {
 
@@ -12,109 +12,109 @@ class Profile extends Component {
     this.state = {
 
       fk_user: sessionStorage.getItem("id"),
-      data: {
-        dailyMacros: {
-          date: new Date(),
-          logs: []
-        }
-      }
+
     }
   }
 
-  componentDidMount = () => {
-    const today = new Date()
+  // componentDidMount = () => {
+  //   const today = new Date()
 
-    API.dailySum(this.state.fk_user, today).then((result) => {
+  //   API.dailySum(this.state.fk_user, today).then((result) => {
 
-      if (result.data.error) {
+  //     if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
+  //       alert(result.data.error)
+  //       if (result.data.error === "Your session has expired.") {
+  //         sessionStorage.setItem("email", "");
+  //         sessionStorage.setItem("id", "");
+  //         window.location.replace(result.data.redirect);
+  //       }
 
-      }
-      else {
-        // console.log(result)
-        const { data } = this.state;
-        data.dailyMacros.logs = [...result.data];
+  //     }
+  //     else {
+  //       // console.log(result)
+  //       const { data } = this.state;
+  //       data.dailyMacros.logs = [...result.data];
 
-        this.setState({ data });
-      }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
-    });
-    // console.log(this.state.data);
+  //       this.setState({ data });
+  //     }
+  //     // console.log(this.state.data);
+  //     // console.log(this.state.data.dailyMacros.logs[0])
+  //   });
+  //   // console.log(this.state.data);
 
-  }
+  // }
 
-  dateClick = (num, name) => {
-    let { date } = this.state.data[name];
-    let { data } = this.state;
-    date.setDate(date.getDate() + num);
+  // dateClick = (num, name) => {
+  //   let { date } = this.state.data[name];
+  //   let { data } = this.state;
+  //   date.setDate(date.getDate() + num);
 
-    API.dailySum(this.state.fk_user, date).then((result) => {
-      // console.log(result)
-      if (result.data.error) {
+  //   API.dailySum(this.state.fk_user, date).then((result) => {
+  //     // console.log(result)
+  //     if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
+  //       alert(result.data.error)
+  //       if (result.data.error === "Your session has expired.") {
+  //         sessionStorage.setItem("email", "");
+  //         sessionStorage.setItem("id", "");
+  //         window.location.replace(result.data.redirect);
+  //       }
 
-      }
-      else {
-        data.dailyMacros.logs = [...result.data];
+  //     }
+  //     else {
+  //       data.dailyMacros.logs = [...result.data];
 
-        this.setState({
-          data,
-          date
-        });
-      }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
-    });
+  //       this.setState({
+  //         data,
+  //         date
+  //       });
+  //     }
+  //     // console.log(this.state.data);
+  //     // console.log(this.state.data.dailyMacros.logs[0])
+  //   });
 
-    // this.setState({
-    //   date
-    // });
+  //   // this.setState({
+  //   //   date
+  //   // });
 
-  }
+  // }
 
   render() {
 
-    return (<div id="profile-container">
-      <div className="profile-box">
-        <h3><span onClick={() => { this.dateClick(-1, "dailyMacros") }}> &lt; </span>{this.state.data.dailyMacros.date.toDateString()} <span onClick={() => { this.dateClick(1, "dailyMacros") }}> &gt; </span></h3>
-        {this.state.data.dailyMacros.logs[0] ?
-          <Table id="profile-table">
-            <thead>
-              <tr>
-                <th>Macros</th>
-                <th>Required</th>
-                <th>Eaten</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.data.dailyMacros.logs.map(logs =>
-                <tr>
-                  <th scope="row">{logs.name}</th>
-                  <td>{logs.amount}</td>
-                  <td>{logs.log[0] ? logs.log[0].dailySum : 0}</td>
-                </tr>)}
-            </tbody>
+    return(<div id="profile-container">
+      <Daily_Macros/>
+      <Average_Macros/>
+    </div>)
 
-          </Table> :
-          <div></div>
-        }
+    // return (<div id="profile-container">
+    //   <div className="profile-box">
+    //     <h3><span onClick={() => { this.dateClick(-1, "dailyMacros") }}> &lt; </span>{this.state.data.dailyMacros.date.toDateString()} <span onClick={() => { this.dateClick(1, "dailyMacros") }}> &gt; </span></h3>
+    //     {this.state.data.dailyMacros.logs[0] ?
+    //       <Table id="profile-table">
+    //         <thead>
+    //           <tr>
+    //             <th>Macros</th>
+    //             <th>Required</th>
+    //             <th>Eaten</th>
+    //           </tr>
+    //         </thead>
+    //         <tbody>
+    //           {this.state.data.dailyMacros.logs.map(logs =>
+    //             <tr>
+    //               <th scope="row">{logs.name}</th>
+    //               <td>{logs.amount}</td>
+    //               <td>{logs.log[0] ? logs.log[0].dailySum : 0}</td>
+    //             </tr>)}
+    //         </tbody>
 
-      </div>
+    //       </Table> :
+    //       <div></div>
+    //     }
 
-    </div>);
+    //   </div>
+
+    // </div>);
   }
 }
 

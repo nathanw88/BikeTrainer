@@ -1,4 +1,5 @@
 import axios from "axios";
+import Average_Macros from "../components/Profile_Boxes/Average_Macros/Average_Macros";
 
 
 export default {
@@ -41,7 +42,14 @@ export default {
   dailySum: (id, date) => {
     // console.log("here")
     return axios.get(`/api/user-logs/dailySum/${id}/${date}`)
+  },
+
+  averageMacros:(id, dateFrom, dateTill) =>{
+    
+
+    return axios.get(`/api/user-logs/averageMacros/${id}/${dateFrom}/${dateTill}`)
   }
+
   // selectLogs: (id, table) =>{
   //   return axios.get(`/api/user-logs/logs/${id}/${table}`)
   // },

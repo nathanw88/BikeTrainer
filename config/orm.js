@@ -359,7 +359,7 @@ var orm = {
 
         connection.query(queryString2, (err, result2) => {
           if (err) throw err;
-          console.log(result2)
+          // console.log(result2)
           let resultArray = [];
           let maxLength2 = result2.length;
           for (let i = 0; i < maxLength2; i++) {
@@ -380,7 +380,55 @@ var orm = {
           });
 
           if (i === (maxLength - 1)) {
-            console.log(dataArray)
+            // console.log(dataArray)
+            cb(dataArray)
+          };
+        })
+      }
+
+
+
+    })
+
+
+  },
+
+  selectAverageMacros: (userID, dateFrom, dateTill, cb) => {
+    let dataArray = [];
+    let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ${userID};`;
+
+    connection.query(queryString, (err, result) => {
+      if (err) throw err;
+      let maxLength = result.length;
+      for (let i = 0; i < maxLength; i++) {
+        let { amount, max_amount, name, unit, id } = result[i]
+        let maxDate = new Date(dateTill)
+        let minDate = new Date(dateFrom);
+
+        let queryString2 = `SELECT AVg(value) as dailyAverage, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ${id} AND fk_user = ${userID} AND date_time >= "${minDate.toISOString().substring(0, 10)}" AND date_time < "${maxDate.toISOString().substring(0, 10)}" GROUP BY date ORDER BY date`
+
+        connection.query(queryString2, (err, result2) => {
+          if (err) throw err;
+          let resultArray = [];
+          let maxLength2 = result2.length;
+          for (let i = 0; i < maxLength2; i++) {
+
+            resultArray.push({
+              dailyAverage: result2[i].dailyAverage,
+              date: new Date(result2[i].date)
+            });
+
+          };
+
+          dataArray.push({
+            amount,
+            max_amount,
+            name,
+            unit,
+            log: [...resultArray]
+          });
+
+          if (i === (maxLength - 1)) {
             cb(dataArray)
           };
         })
