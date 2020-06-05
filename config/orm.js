@@ -75,7 +75,7 @@ var orm = {
 
   findFood: function (searchString, cb) {
 
-    var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?);`
+    var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?) LIMIT 25;`
     // console.log(queryString)
     // console.log(vals)
     // console.log(searchString)
