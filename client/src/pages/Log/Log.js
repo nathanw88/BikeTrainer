@@ -25,7 +25,6 @@ class Log extends Component {
 
       log: {
 
-        userEmail: sessionStorage.getItem("email"),
         fk_user: sessionStorage.getItem("id"),
         portions: [],
         date: [],
@@ -87,7 +86,6 @@ class Log extends Component {
     // console.log(this.state.selected)
     let data = {
 
-      userEmail: this.state.log.userEmail,
       fk_user: this.state.log.fk_user,
       grams: this.state.log.grams,
       fk_food: this.state.log.fk_food,

@@ -1,0 +1,11 @@
+#average_macros-box{
+  float: left;
+  width: 35%;
+  margin-left: 10%;
+  margin-top: 4%;
+  color: rgb(205,205,231);
+  background-color:  rgb(23,1,1, 0.5);
+  padding-top: 35px;
+  padding-bottom: 35px;
+  padding-left: 37.50px;
+}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
-import { Table } from 'reactstrap';
-// import "./Daily_Sum_Macros.css";
+import { Table, Jumbotron } from 'reactstrap';
+import "./Average_Macros.css";
 
 class Average_Macros extends Component {
 
@@ -94,7 +94,7 @@ class Average_Macros extends Component {
   render() {
 
     return (
-      <div className="profile-box">
+      <Jumbotron id="average_macros-box" className="profile-box">
         <h3><span onClick={() => { this.dateClick(-1, "dateFrom") }}> &lt; </span>{this.state.data.dateFrom.toDateString()} <span onClick={() => { this.dateClick(1, "dateFrom") }}> &gt; </span></h3>
         <h3><span onClick={() => { this.dateClick(-1, "dateTill") }}> &lt; </span>{this.state.data.dateTill.toDateString()} <span onClick={() => { this.dateClick(1, "dateTill") }}> &gt; </span></h3>
         {this.state.data.logs[0] ?
@@ -119,7 +119,7 @@ class Average_Macros extends Component {
           <div></div>
         }
 
-      </div>);
+      </Jumbotron>);
   }
 }
 

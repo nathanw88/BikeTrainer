@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var session = require("../../models/session");
 var nutritionPlan = require("../../models/nutritionPlan");
+const check = require("../../utils/check");
 
 
 router.route("/dailySum/:userID/:date").get((req, res) => {
@@ -31,6 +32,13 @@ router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
   const { userID, dateFrom, dateTill } = req.params;
+
+  if(!check.isNumber(userID)){
+    res.json({error: "User ID Isn't A Number!"});
+  }
+  else if(!check.isDate(dateFrom) && !check.isDate(dateTill)){
+    res.json({error: "Dates Aren't Dates"});
+  }
   
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
