@@ -135,23 +135,23 @@ var orm = {
     }
   },
 
-  //Select daily sums from a date range.
-  selectDailySums: function (table, id, date1, maxDate, cb) {
-    var queryString = "SELECT SUM(value) as dailySum, date, name FROM ?? WHERE date BETWEEN ? and ? and fk_user = ? GROUP BY date ORDER BY date;";
-    connection.query(queryString, [table, date1, maxDate, id], function (err, result) {
-      if (err) throw err;
-      cb(result);
-    });
-  },
+  // //Select daily sums from a date range.
+  // selectDailySums: function (table, id, date1, maxDate, cb) {
+  //   var queryString = "SELECT SUM(value) as dailySum, date, name FROM ?? WHERE date BETWEEN ? and ? and fk_user = ? GROUP BY date ORDER BY date;";
+  //   connection.query(queryString, [table, date1, maxDate, id], function (err, result) {
+  //     if (err) throw err;
+  //     cb(result);
+  //   });
+  // },
 
-  //Selecting the average from a date range.
-  selectAverage: function (table, id, date1, date2, cb) {
-    var queryString = "SELECT AVG(dailySum) as average, name FROM (SELECT SUM(value) as dailySum, date, name FROM ?? WHERE date BETWEEN ? and ? and fk_user = ? GROUP BY date ORDER BY date) as averaging;";
-    connection.query(queryString, [table, date1, date2, id], function (err, result) {
-      if (err) throw err;
-      cb(result);
-    });
-  },
+  // //Selecting the average from a date range.
+  // selectAverage: function (table, id, date1, date2, cb) {
+  //   var queryString = "SELECT AVG(dailySum) as average, name FROM (SELECT SUM(value) as dailySum, date, name FROM ?? WHERE date BETWEEN ? and ? and fk_user = ? GROUP BY date ORDER BY date) as averaging;";
+  //   connection.query(queryString, [table, date1, date2, id], function (err, result) {
+  //     if (err) throw err;
+  //     cb(result);
+  //   });
+  // },
 
 
   postingFood: function (data, cb) {
@@ -290,9 +290,9 @@ var orm = {
 
   selectDailySum: (userID, date, cb) => {
     let dataArray = [];
-    let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ${userID};`;
-
-    connection.query(queryString, (err, result) => {
+    let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
+    let val = [userID]
+    connection.query(queryString, val, (err, result) => {
       if (err) throw err;
       let maxLength = result.length;
       for (let i = 0; i < maxLength; i++) {
@@ -300,9 +300,10 @@ var orm = {
         let maxDate = new Date()
         let minDate = new Date(date);
         maxDate.setDate(minDate.getDate() + 1);
-        let queryString2 = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ${id} AND fk_user = ${userID} AND date_time >= "${minDate.toISOString().substring(0, 10)}" AND date_time < "${maxDate.toISOString().substring(0, 10)}" GROUP BY date ORDER BY date`
+        let queryString2 = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date`
 
-        connection.query(queryString2, (err, result2) => {
+        let vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
+        connection.query(queryString2, vals, (err, result2) => {
           if (err) throw err;
           // console.log(result2)
           let resultArray = [];
@@ -340,23 +341,24 @@ var orm = {
 
   selectAverageMacros: (userID, dateFrom, dateTill, cb) => {
     let dataArray = [];
-    let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ${userID};`;
-
-    connection.query(queryString, (err, result) => {
+    let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
+    let val = [userID]
+    connection.query(queryString, val, (err, result) => {
       if (err) throw err;
       let maxLength = result.length;
       for (let i = 0; i < maxLength; i++) {
         let { amount, max_amount, name, unit, id } = result[i]
         let maxDate = new Date(dateTill)
+        maxDate.setDate(maxDate.getDate() + 1);
         let minDate = new Date(dateFrom);
 
-        let queryString2 = `SELECT AVG(dailySum) as dailyAverage, date FROM (SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ${id} AND fk_user = ${userID} AND date_time >= "${minDate.toISOString().substring(0, 10)}" AND date_time < "${maxDate.toISOString().substring(0, 10)}" GROUP BY date ORDER BY date) as average`
-
-        connection.query(queryString2, (err, result2) => {
+        let queryString2 = `SELECT AVG(dailySum) as dailyAverage, date FROM (SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date) as average`
+        let vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
+        connection.query(queryString2, vals, (err, result2) => {
           if (err) throw err;
           let resultArray = [];
           let maxLength2 = result2.length;
-          console.log(result2)
+          // console.log(result2)
           for (let i = 0; i < maxLength2; i++) {
 
             resultArray.push({
