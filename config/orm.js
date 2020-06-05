@@ -350,12 +350,13 @@ var orm = {
         let maxDate = new Date(dateTill)
         let minDate = new Date(dateFrom);
 
-        let queryString2 = `SELECT AVg(value) as dailyAverage, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ${id} AND fk_user = ${userID} AND date_time >= "${minDate.toISOString().substring(0, 10)}" AND date_time < "${maxDate.toISOString().substring(0, 10)}" GROUP BY date ORDER BY date`
+        let queryString2 = `SELECT AVG(dailySum) as dailyAverage, date FROM (SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ${id} AND fk_user = ${userID} AND date_time >= "${minDate.toISOString().substring(0, 10)}" AND date_time < "${maxDate.toISOString().substring(0, 10)}" GROUP BY date ORDER BY date) as average`
 
         connection.query(queryString2, (err, result2) => {
           if (err) throw err;
           let resultArray = [];
           let maxLength2 = result2.length;
+          console.log(result2)
           for (let i = 0; i < maxLength2; i++) {
 
             resultArray.push({
