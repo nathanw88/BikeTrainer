@@ -72,66 +72,23 @@ var orm = {
 
   },
 
-  //   //insert multiple rows
-  //   createMulti: function (table, array, fk, cb) {
 
-  //     var vals = [];
-  //     var queryString = "INSERT INTO " + table;
-  //     queryString += " (";
-  //     queryString += Object.keys(array[0]).toString();
-  //     queryString += ",fk_food"
-  //     queryString += `) VALUES ${array.map((nutrient)=>{
-  //       vals.push(...Object.values(nutrient));
-  //       vals.push(fk)
-  //       return `(${printQuestionMarks((Object.values(nutrient).length) + 1)})`;
-  //     })}`;
-
-  //     queryString += ";";
-  // //console.log(queryString)
-  // //console.log(vals)
-
-  //     connection.query(queryString, vals, function (err, result) {
-  //       if (err) throw err;
-  //       cb(result);
-  //     });
-  //   },
   findFood: function (searchString, cb) {
 
     var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?);`
     // console.log(queryString)
     // console.log(vals)
-    console.log(searchString)
+    // console.log(searchString)
     connection.query(queryString, [searchString], function (err, result) {
       //result from  food table where searchString was found
       if (err) throw err;
-      console.log(`result: ${result}`)
+      // console.log(`result: ${result}`)
       cb(result)
 
     });
   },
 
-  // createMultiTables: function (array, fk, cb) {
-  //   res = [ ];
-  //   array.map((nutrient)=>{
-  //     var vals = [];
-  //     vals.push(...Object.values(nutrient[1]));
-  //     vals.push(fk);
-  //     var queryString = "INSERT INTO `" + nutrient[0] +"`"; 
-  //     queryString += " (";
-  //     queryString += Object.keys(nutrient[1]).toString();
-  //     queryString += ",fk_food"
-  //     queryString += `) VALUES (${printQuestionMarks((Object.values(nutrient[1]).length) + 1)})`
-  //     // console.log(queryString)
-  //     // console.log(vals)
 
-  //     connection.query(queryString, vals, function (err, result) {
-  //       res.push(result);
-  //       if (err) throw err;
-
-  //      });
-  //   })
-  // cb(res)
-  // },
   //delete from table function
   delete: function (table, cols, vals, cb) {
     var queryString = "DELETE FROM ?? WHERE "
@@ -206,7 +163,7 @@ var orm = {
         grams: item,
         date: data.date.toString(),
       }
-      console.log(arrayObjects)
+      // console.log(arrayObjects)
       var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`
 
       connection.query(queryString, Object.values(arrayObjects), function (err, res) {
@@ -257,18 +214,6 @@ var orm = {
     cb(resArray);
   },
 
-  // selectFoodNutrient: function (data, cb) {
-
-  //     // gramsDivided grams eaten divided by 100 to muliply with amount of nutrients contained in 100 grams of food
-  //     let gramsDivided = parseFloat(data.grams)/100
-  //     var queryString = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
-  //     connection.query(queryString, [gramsDivided, data.fk_food], function (err, result) {
-  //       if (err) throw err;
-  //       cb(result);
-  //     });
-  //   },
-
-  //Select everything from a variable table where search is val
   selectWhere: function (table, searchCol, val, cb) {
     if (searchCol.length <= 0) {
       err = "Number of Columns is 0";
@@ -441,35 +386,6 @@ var orm = {
 
   }
 
-  // Nutrients : function () {
-
-  //   var queryString = `SELECT * FROM food_nutrient WHERE fk_nutrient = 1085;`
-  //   console.log(queryString)
-  //   connection.query(queryString, function(err, result){
-  //     // console.log(result);
-  //     let lastIndexOfArray = result.length -1;
-  //     for (let i = 0; i <= lastIndexOfArray; i++){
-
-  //        queryString = `SELECT * FROM food_nutrient WHERE fk_food = ${result[i].fk_food} AND fk_nutrient = 1004;`
-
-  //        connection.query(queryString, function(err, data){
-  //       //   if(data == false){
-  //       //     // console.log(result[i])
-  //       //     let queryString2 = "UPDATE `nutrient` SET `use` = 0 WHERE `id` = " + result[i].id + ";"
-  //       //     console.log(queryString2);
-  //       //     connection.query(queryString2, function(err, res){
-  //       //       console.log(err)
-  //       //       console.log(res)
-  //       //     } )
-  //           console.log(result[i]);
-  //           console.log(data);
-  //       //   }
-  //         })
-
-  //      }
-  //   })
-
-  // }
 
 
 
