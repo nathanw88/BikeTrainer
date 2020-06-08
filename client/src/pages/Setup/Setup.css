@@ -15,9 +15,19 @@
 
 #Setup_form{
   float: middle;
-  width: 40%;
+  width: 60%;
   margin-left: 20%;
   margin-top: 8%;
   background-color:  rgb(23,1,1, 0.5);
   padding: 2%;
+}
+
+
+@media screen and (max-width: 980px) {
+  
+  #Setup_form{
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 18%;
+  }
 }
