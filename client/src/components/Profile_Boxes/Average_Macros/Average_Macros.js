@@ -95,8 +95,8 @@ class Average_Macros extends Component {
 
     return (
       <Jumbotron id="average_macros-box" className="profile-box">
-        <h3><span onClick={() => { this.dateClick(-1, "dateFrom") }}> &lt; </span>{this.state.data.dateFrom.toDateString()} <span onClick={() => { this.dateClick(1, "dateFrom") }}> &gt; </span></h3>
-        <h3><span onClick={() => { this.dateClick(-1, "dateTill") }}> &lt; </span>{this.state.data.dateTill.toDateString()} <span onClick={() => { this.dateClick(1, "dateTill") }}> &gt; </span></h3>
+        <h3 className="average_macros-date"><span onClick={() => { this.dateClick(-1, "dateFrom") }}> &lt; </span>{this.state.data.dateFrom.toDateString()} <span onClick={() => { this.dateClick(1, "dateFrom") }}> &gt; </span></h3>
+        <h3 className="average_macros-date"><span onClick={() => { this.dateClick(-1, "dateTill") }}> &lt; </span>{this.state.data.dateTill.toDateString()} <span onClick={() => { this.dateClick(1, "dateTill") }}> &gt; </span></h3>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>

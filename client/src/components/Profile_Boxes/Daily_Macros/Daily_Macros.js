@@ -87,7 +87,7 @@ class Daily_Macros extends Component {
 
     return (
       <Jumbotron id="daily_macros-box" className="profile-box">
-        <h3><span onClick={() => { this.dateClick(-1) }}> &lt; </span>{this.state.data.date.toDateString()} <span onClick={() => { this.dateClick(1) }}> &gt; </span></h3>
+        <h3 className="daily_macros-date"><span onClick={() => { this.dateClick(-1) }}> &lt; </span>{this.state.data.date.toDateString()} <span onClick={() => { this.dateClick(1) }}> &gt; </span></h3>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>

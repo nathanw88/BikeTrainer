@@ -53,7 +53,8 @@ router.route("/login").post((req, res) => {
       })
 
       res.json({ userEmail, userID });
-    } else if (cleanedEmail === -4) {
+    } 
+    else if (cleanedEmail === -4) {
       res.json({ error: "Incorrect Password" });
     } else {
       res.json({ error: "Email Does Not Exist" });
