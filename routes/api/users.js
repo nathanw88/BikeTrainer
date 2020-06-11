@@ -88,7 +88,7 @@ router.route("/register").post((req, res) => {
     user.selectWhere("userEmail", userEmail, function (result) {
       if (result == false) {
         bcrypt.hash(userPassword, 12).then(function (hash) {
-          user.create(Object.keys(data), [userEmail, hash, userBirthday], function (response) {
+          user.create(Object.keys(data), [hash, userEmail, userBirthday], function (response) {
             // console.log(response)
             userID = response.insertId
             // console.log(userID)

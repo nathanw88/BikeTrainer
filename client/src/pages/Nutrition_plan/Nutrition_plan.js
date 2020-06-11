@@ -72,7 +72,7 @@ class Nutrition_plan extends Component {
 
         this.setState({ user });
 
-        console.log(this.state.user)
+        // console.log(this.state.user)
 
 
 
@@ -131,19 +131,19 @@ class Nutrition_plan extends Component {
 
     percentSliders[namesUnchangedArray[0]] += percentChanged / 2;
     percentSliders[namesUnchangedArray[1]] += percentChanged / 2;
-    console.log(percentSliders)
+    // console.log(percentSliders)
 
     if (percentSliders[namesUnchangedArray[0]] < 0) {
 
       percentSliders[namesUnchangedArray[1]] += percentSliders[namesUnchangedArray[0]];
       percentSliders[namesUnchangedArray[0]] = 0;
-      console.log(percentSliders)
+      // console.log(percentSliders)
     }
     else if (percentSliders[namesUnchangedArray[1]] < 0) {
 
       percentSliders[namesUnchangedArray[0]] += percentSliders[namesUnchangedArray[1]];
       percentSliders[namesUnchangedArray[1]] = 0;
-      console.log(percentSliders)
+      // console.log(percentSliders)
     }
 
     diet.carbs.amount = parseInt(diet.calories.amount * (percentSliders.carbs / 100) / 4);
