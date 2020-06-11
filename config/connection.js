@@ -2,8 +2,14 @@
 var mysql = require("mysql");
 
 var connection;
-if (process.env.JAWSDB_URL) {
-    connection = mysql.createConnection(process.env.JAWSDB_URL);
+if (process.env.RDS_HOSTNAME) {
+    connection = mysql.createConnection({
+      host: process.env.RDS_HOSTNAME,
+      port: process.env.RDS_PORT,
+      user: process.env.RDS_USERNAME,
+      password: process.env.RDS_PASSWORD,
+      database: process.env.RDS_DB_NAME
+  });
 } else {
     connection = mysql.createConnection({
         host: "localhost",
@@ -23,5 +29,5 @@ connection.connect(function (err) {
     console.log("connected as id " + connection.threadId);
 });
 
-// Export connection for our ORM to use
+// Export connection for our ORM to use 
 module.exports = connection;
