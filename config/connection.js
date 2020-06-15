@@ -22,7 +22,6 @@ if (process.env.RDS_HOSTNAME) {
 
 // Make connection
 connection.connect(function (err) {
-  // console.log(process.env.RDS_PASSWORD)
     if (err) {
         console.error("error connecting: " + err.stack);
         return;
