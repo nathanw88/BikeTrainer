@@ -1,8 +1,11 @@
 {
-  "name": "bike_trainer",
+  "name": "Trainer",
   "version": "1.0.0",
   "private": true,
-  "proxy": "http://localhost:8080/",
+<<<<<<< HEAD
+  "proxy": "http://3.128.70.69:8080/",
+=======
+>>>>>>> 40eba18a528376e57e2a561f34fc22544424ecc1
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
