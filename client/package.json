@@ -2,7 +2,7 @@
   "name": "trainer",
   "version": "1.0.0",
   "private": true,
-  "proxy": "3.128.70.69:8080/",
+  "proxy": "http://3.128.70.69:8080/",
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
