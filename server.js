@@ -39,6 +39,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(passport.session());
 app.use(express.json());
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "Diet-1548649358.us-east-2.elb.amazonaws.com"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // orm.Nutrients();
 
 app.use(routes);
