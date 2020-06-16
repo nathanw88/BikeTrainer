@@ -34,12 +34,18 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-app.set('trust proxy', "ec2-3-128-70-69.us-east-2.compute.amazonaws.com")
 // app.use(session({ secret: process.env.session_secret }));
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(passport.initialize());
 // app.use(passport.session());
 app.use(express.json());
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "ec2-3-128-70-69.us-east-2.compute.amazonaws.com"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 app.use(routes);
 
