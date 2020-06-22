@@ -10,7 +10,8 @@ if (process.env.RDS_HOSTNAME) {
       password: process.env.RDS_PASSWORD,
       database: process.env.RDS_DB_NAME
   });
-} else {
+} 
+else {
     connection = mysql.createConnection({
         host: "localhost",
         port: 3307,
@@ -22,6 +23,7 @@ if (process.env.RDS_HOSTNAME) {
 
 // Make connection
 connection.connect(function (err) {
+
     if (err) {
         console.error("error connecting: " + err.stack);
         return;
