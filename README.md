@@ -2,12 +2,8 @@
 
 ## Description
 
-a trainer to log your workouts your food intake and your sleep. with the ability to show you your data on a graph so you can see you effort along a time line.
-Live Link: https://wellness-trainer.herokuapp.com/ for testing use the following login info email: test@test.com password: 12345678
-
-## to Get Started
-
-Clone repo down, set up MySQL using the scheema file with the folliwing info port: 3307, user: root, password:root, database: trainer_db; then use the npm install script on the root directory of the repo, after the install finishes, run npm start and you will be ready to go.
+a trainer to log your diet. 
+Live Link: https://community_diet.com for testing use the following login info email: qwq@qwq.qwq password: qwe123QWE!@#
 
 ## Available Scripts
 
