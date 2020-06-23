@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
-import { Table, Jumbotron } from 'reactstrap';
+import { Table, Jumbotron, FormGroup, Label, Input } from 'reactstrap';
 import "./Daily_Macros.css";
 
 class Daily_Macros extends Component {
@@ -48,13 +48,17 @@ class Daily_Macros extends Component {
 
   }
 
-  dateClick = (num) => {
+  dateClick = (event) => {
+    let year = event.target.value.substr(0,4);
+    let month = event.target.value.substr(5, 2) -1;
+    let day = event.target.value.substr(8, 2);
     let { date } = this.state.data;
     let { data } = this.state;
-    date.setDate(date.getDate() + num);
+    date.setUTCFullYear(year, month, day)
+    console.log(date)
 
     API.dailySum(this.state.fk_user, date).then((result) => {
-      // console.log(result)
+      
       if (result.data.error) {
 
         alert(result.data.error)
@@ -73,21 +77,25 @@ class Daily_Macros extends Component {
           date
         });
       }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
     });
-
-    // this.setState({
-    //   date
-    // });
-
   }
+
+  // dateClick(event){
+  //   console.log(event.target.value);
+  //   console.log(this.state.data.date)
+  // }
 
   render() {
 
     return (
       <Jumbotron id="daily_macros-box" className="profile-box">
-        <h3 className="daily_macros-date"><span onClick={() => { this.dateClick(-1) }}> &lt; </span>{this.state.data.date.toDateString()} <span onClick={() => { this.dateClick(1) }}> &gt; </span></h3>
+        {/* <h3 className="daily_macros-date"><span onClick={() => { this.dateClick(-1) }}> &lt; </span>{this.state.data.date.toDateString()} <span onClick={() => { this.dateClick(1) }}> &gt; </span></h3> */}
+        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+
+          <Label for="date" className="mr-sm-2">Date</Label>
+          <Input type="date" name="date" id="date" onChange={this.dateClick} value={this.state.data.date.toISOString().substr(0, 10)} />
+
+        </FormGroup>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>
