@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
-import { Table, Jumbotron } from 'reactstrap';
+import { Table, Jumbotron, FormGroup, Label, Input } from 'reactstrap';
 import "./Average_Macros.css";
 
 class Average_Macros extends Component {
@@ -36,10 +36,8 @@ class Average_Macros extends Component {
           sessionStorage.setItem("id", "");
           window.location.replace(result.data.redirect);
         }
-
       }
       else {
-        // console.log(result)
         data.logs = [...result.data];
 
         this.setState({
@@ -47,32 +45,30 @@ class Average_Macros extends Component {
           dateFrom
         });
       }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
     });
-
-
   }
 
-  dateClick = (num, name) => {
+  dateClick = (event, name) => {
+    let year = event.target.value.substr(0, 4);
+    let month = event.target.value.substr(5, 2) - 1;
+    let day = event.target.value.substr(8, 2);
     let { data } = this.state;
-    data[name].setDate(data[name].getDate() + num);
+    data[name].setUTCFullYear(year, month, day);
 
     this.setState({
       data
     });
 
     API.averageMacros(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
-      // console.log(result)
+      
       if (result.data.error) {
-
         alert(result.data.error)
+
         if (result.data.error === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");
           window.location.replace(result.data.redirect);
         }
-
       }
       else {
         data.logs = [...result.data];
@@ -81,22 +77,22 @@ class Average_Macros extends Component {
           data
         });
       }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
     });
-
-    // this.setState({
-    //   date
-    // });
-
   }
 
   render() {
 
     return (
       <Jumbotron id="average_macros-box" className="profile-box">
-        <h3 className="average_macros-date"><span onClick={() => { this.dateClick(-1, "dateFrom") }}> &lt; </span>{this.state.data.dateFrom.toDateString()} <span onClick={() => { this.dateClick(1, "dateFrom") }}> &gt; </span></h3>
-        <h3 className="average_macros-date"><span onClick={() => { this.dateClick(-1, "dateTill") }}> &lt; </span>{this.state.data.dateTill.toDateString()} <span onClick={() => { this.dateClick(1, "dateTill") }}> &gt; </span></h3>
+        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+
+          <Label for="date" className="mr-sm-2">Date From</Label>
+          <Input type="date" name="date" id="date" onChange={(event) => { this.dateClick(event, "dateFrom") }} value={this.state.data.dateFrom.toISOString().substr(0, 10)} />
+
+          <Label for="date" className="mr-sm-2">Date To</Label>
+          <Input type="date" name="date" id="date" onChange={(event) => { this.dateClick(event, "dateTill") }} value={this.state.data.dateTill.toISOString().substr(0, 10)} />
+
+        </FormGroup>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>
@@ -118,7 +114,7 @@ class Average_Macros extends Component {
           </Table> :
           <div></div>
         }
-
+        <h5>* Only Averages From Days With At Least One Log</h5>
       </Jumbotron>);
   }
 }
