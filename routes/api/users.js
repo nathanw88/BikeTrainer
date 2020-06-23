@@ -80,8 +80,9 @@ router.route("/register").post((req, res) => {
     res.json({ error: "Incorrect Date For Birthday!" })
   }
   else if (!check.isPassword(userPassword)) {
+    console.log(userPassword)
 
-    res.json({ error: "Invalid Password Needs To Have A Special Character, Number And, Letter(Uppercase And Lowercase) With A Legnth Of 8 Characters" })
+    res.json({ error: "Invalid Password Needs To Have 8 Characters" })
   }
 
   else {

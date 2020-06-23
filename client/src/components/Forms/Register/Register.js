@@ -45,7 +45,9 @@ export default class Register extends React.Component {
   }
   // funtion for checking password length might add in regex to make password have to be complex plus check against an array of common passwords
   validatePassword(p) {
-    const regex = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
+    // const regex = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
+    const regex = /^\S{8,}$/;
+
     const password = p.target.value
     const { validate } = this.state
     if (password.match(regex)) {
@@ -103,7 +105,7 @@ export default class Register extends React.Component {
             invalid={this.state.validate.passwordState === 'has-danger'} type="password" name="userPassword" value={this.state.userPassword} onChange={(e) => { this.validatePassword(e); this.handleInputChange(e); }} />
           <FormText>Enter a password at least 8 characters.</FormText>
           <FormFeedback valid>That's a correct password.</FormFeedback>
-          <FormFeedback>Password Needs 8 Characters Plus A Number, Special Character And, Letter Uppercase and Lowercase</FormFeedback>
+          <FormFeedback>Password Needs 8 Characters</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="confirmPassword">Confirm Password</Label>
