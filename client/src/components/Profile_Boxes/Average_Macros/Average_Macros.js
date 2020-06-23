@@ -93,6 +93,7 @@ class Average_Macros extends Component {
           <Input type="date" name="date" id="date" onChange={(event) => { this.dateClick(event, "dateTill") }} value={this.state.data.dateTill.toISOString().substr(0, 10)} />
 
         </FormGroup>
+        <br></br>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>

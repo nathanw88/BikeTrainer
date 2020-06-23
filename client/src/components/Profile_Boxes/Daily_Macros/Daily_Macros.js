@@ -96,6 +96,7 @@ class Daily_Macros extends Component {
           <Input type="date" name="date" id="date" onChange={this.dateClick} value={this.state.data.date.toISOString().substr(0, 10)} />
 
         </FormGroup>
+        <br></br>
         {this.state.data.logs[0] ?
           <Table id="profile-table">
             <thead>
