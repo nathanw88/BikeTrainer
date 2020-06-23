@@ -109,7 +109,7 @@ class Setup extends Component {
                 </DropdownMenu>
 
               </UncontrolledDropdown>
-              <br />
+              
               <UncontrolledDropdown>
                 <DropdownToggle caret>
                   {parseInt(this.state.input.metric) ? "Metric Measurements" :
