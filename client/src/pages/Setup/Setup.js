@@ -109,7 +109,7 @@ class Setup extends Component {
                 </DropdownMenu>
 
               </UncontrolledDropdown>
-              
+
               <UncontrolledDropdown>
                 <DropdownToggle caret>
                   {parseInt(this.state.input.metric) ? "Metric Measurements" :
@@ -138,12 +138,14 @@ class Setup extends Component {
                   <div>
                     <Label for="weight" className="mr-sm-2">Weight In Pounds</Label>
                     <Input type="number" name="weight" id="weight" onChange={this.handleInputChange} value={this.state.input.weight} />
+                      <Label for="height" className="mr-sm-2">Height</Label>
+                    <div className="imperial-height">
+                      <Input type="number" className="height" name="heightFeet" id="heightFeet" onChange={this.handleInputChange} value={this.state.input.heightFeet} />
+                      <Label for="heightFeet" className="mr-sm-2, height-indicator">Feet</Label>
 
-                    <Label for="heightFeet" className="mr-sm-2">Height In Feet</Label>
-                    <Input type="number" name="heightFeet" id="heightFeet" onChange={this.handleInputChange} value={this.state.input.heightFeet} />
-
-                    <Label for="heightInches" className="mr-sm-2">Height In Inches</Label>
-                    <Input type="number" name="heightInches" id="heightInches" onChange={this.handleInputChange} value={this.state.input.heightInches} />
+                      <Input type="number" name="heightInches" className="height" id="heightInches" onChange={this.handleInputChange} value={this.state.input.heightInches} />
+                      <Label for="heightInches" className="mr-sm-2, height-indicator">Inches</Label>
+                    </div>
                   </div>
                   :
                   <div>
