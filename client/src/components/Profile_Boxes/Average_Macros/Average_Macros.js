@@ -60,7 +60,7 @@ class Average_Macros extends Component {
     });
 
     API.averageMacros(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
-      
+
       if (result.data.error) {
         alert(result.data.error)
 
@@ -84,14 +84,17 @@ class Average_Macros extends Component {
 
     return (
       <Jumbotron id="average_macros-box" className="profile-box">
+        <h2 className="text-center">Average Macros</h2>
+        <br/>
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-
-          <Label for="date" className="mr-sm-2">Date From</Label>
-          <Input type="date" name="date" id="date" onChange={(event) => { this.dateClick(event, "dateFrom") }} value={this.state.data.dateFrom.toISOString().substr(0, 10)} />
-
-          <Label for="date" className="mr-sm-2">Date To</Label>
-          <Input type="date" name="date" id="date" onChange={(event) => { this.dateClick(event, "dateTill") }} value={this.state.data.dateTill.toISOString().substr(0, 10)} />
-
+          <div className="table">
+            <Label for="date" className="mr-sm-2, table-cell">From</Label>
+            <Input type="date" name="date" id="date"  className="table-cell" onChange={(event) => { this.dateClick(event, "dateFrom") }} value={this.state.data.dateFrom.toISOString().substr(0, 10)} />
+          </div>
+          <div className="table">
+            <Label for="date" className="mr-sm-2, table-cell">To &nbsp; &nbsp;</Label>
+            <Input type="date" name="date" id="date" className="table-cell" onChange={(event) => { this.dateClick(event, "dateTill") }} value={this.state.data.dateTill.toISOString().substr(0, 10)} />
+          </div>
         </FormGroup>
         <br></br>
         {this.state.data.logs[0] ?
