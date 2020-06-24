@@ -92,7 +92,7 @@ class Average_Macros extends Component {
             <Input type="date" name="date" id="date"  className="table-cell" onChange={(event) => { this.dateClick(event, "dateFrom") }} value={this.state.data.dateFrom.toISOString().substr(0, 10)} />
           </div>
           <div className="table">
-            <Label for="date" className="mr-sm-2, table-cell">To &nbsp; &nbsp;</Label>
+            <Label for="date" className="mr-sm-2, table-cell"> &#8202; To &#8239; &#8239; </Label>
             <Input type="date" name="date" id="date" className="table-cell" onChange={(event) => { this.dateClick(event, "dateTill") }} value={this.state.data.dateTill.toISOString().substr(0, 10)} />
           </div>
         </FormGroup>
