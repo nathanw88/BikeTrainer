@@ -32,20 +32,14 @@ class Daily_Macros extends Component {
           sessionStorage.setItem("id", "");
           window.location.replace(result.data.redirect);
         }
-
       }
       else {
-        // console.log(result)
         const { data } = this.state;
         data.logs = [...result.data];
 
         this.setState({ data });
       }
-      // console.log(this.state.data);
-      // console.log(this.state.data.dailyMacros.logs[0])
     });
-    // console.log(this.state.data);
-
   }
 
   dateClick = (event) => {
@@ -67,7 +61,6 @@ class Daily_Macros extends Component {
           sessionStorage.setItem("id", "");
           window.location.replace(result.data.redirect);
         }
-
       }
       else {
         data.logs = [...result.data];
@@ -80,21 +73,14 @@ class Daily_Macros extends Component {
     });
   }
 
-  // dateClick(event){
-  //   console.log(event.target.value);
-  //   console.log(this.state.data.date)
-  // }
-
   render() {
 
     return (
       <Jumbotron id="daily_macros-box" className="profile-box">
-        {/* <h3 className="daily_macros-date"><span onClick={() => { this.dateClick(-1) }}> &lt; </span>{this.state.data.date.toDateString()} <span onClick={() => { this.dateClick(1) }}> &gt; </span></h3> */}
+        <h2 className="text-center">Daily Macros</h2>
+        <br/>
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-
-          <Label for="date" className="mr-sm-2">Date</Label>
           <Input type="date" name="date" id="date" onChange={this.dateClick} value={this.state.data.date.toISOString().substr(0, 10)} />
-
         </FormGroup>
         <br></br>
         {this.state.data.logs[0] ?

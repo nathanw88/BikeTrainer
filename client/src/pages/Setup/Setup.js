@@ -91,7 +91,6 @@ class Setup extends Component {
 
       <Jumbotron id="Setup_form">
         <div>
-          {/* form for logging food intake */}
           <Form>
             <h3 className="log-heading">Setup Profile</h3>
 
@@ -138,7 +137,7 @@ class Setup extends Component {
                   <div>
                     <Label for="weight" className="mr-sm-2">Weight In Pounds</Label>
                     <Input type="number" name="weight" id="weight" onChange={this.handleInputChange} value={this.state.input.weight} />
-                      <Label for="height" className="mr-sm-2">Height</Label>
+                    <Label for="height" className="mr-sm-2">Height</Label>
                     <div className="imperial-height">
                       <Input type="number" className="height" name="heightFeet" id="heightFeet" onChange={this.handleInputChange} value={this.state.input.heightFeet} />
                       <Label for="heightFeet" className="mr-sm-2, height-indicator">Feet</Label>

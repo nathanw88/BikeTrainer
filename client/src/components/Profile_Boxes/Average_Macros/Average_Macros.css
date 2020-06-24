@@ -10,9 +10,17 @@
   padding-left: 1rem;
 }
 
+.table{
+  display: table;
+}
 
+.table-cell{
+  display: table-cell;
+}
 
-
+.text-center{
+  text-align: center;
+}
 
 @media screen and (max-width: 980px) {
   #average_macros-box{
