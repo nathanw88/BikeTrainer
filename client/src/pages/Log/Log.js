@@ -89,7 +89,7 @@ class Log extends Component {
       fk_user: this.state.log.fk_user,
       grams: this.state.log.grams,
       fk_food: this.state.log.fk_food,
-      date: (this.state.input.date.replace("T", " "))
+      date: this.state.log.date
 
     };
 
@@ -152,8 +152,7 @@ class Log extends Component {
     };
   };
   moveData = () => {
-    const { log } = this.state,
-      { input } = this.state;
+    const { log, input } = this.state;
     log.grams = log.grams.concat(input.grams);
     log.food = log.food.concat(input.food);
     log.fk_food = log.fk_food.concat(input.selected.id);
