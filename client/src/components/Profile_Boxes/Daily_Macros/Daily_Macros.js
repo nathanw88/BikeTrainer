@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
-import { Table, Jumbotron, FormGroup, Label, Input } from 'reactstrap';
+import { Table, Jumbotron, FormGroup, Input } from 'reactstrap';
 import "./Daily_Macros.css";
 
 class Daily_Macros extends Component {

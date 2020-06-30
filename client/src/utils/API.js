@@ -1,6 +1,4 @@
 import axios from "axios";
-import Average_Macros from "../components/Profile_Boxes/Average_Macros/Average_Macros";
-
 
 export default {
   register: (user) => {

@@ -17,6 +17,12 @@ class Profile extends Component {
     }
   }
 
+  componentDidMount(){
+    if(!sessionStorage.getItem("id")){
+      alert("Please Login") 
+      window.location.replace("/")
+    };
+  }
 
   render() {
 

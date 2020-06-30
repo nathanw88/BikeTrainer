@@ -49,6 +49,11 @@ class Nutrition_plan extends Component {
   };
 
   componentDidMount = () => {
+    if(!sessionStorage.getItem("id")){
+      alert("Please Login") 
+      window.location.replace("/")
+    };
+
     API.getUserMeasurements(this.state.userID).then((result) => {
       if (result.data.error) {
 

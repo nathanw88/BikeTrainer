@@ -21,6 +21,13 @@ class Setup extends Component {
     };
   };
 
+  componentDidMount(){
+    if(!sessionStorage.getItem("id")){
+      alert("Please Login") 
+      window.location.replace("/")
+    };
+  }
+
   handleInputChange = event => {
 
     const { input } = this.state;
