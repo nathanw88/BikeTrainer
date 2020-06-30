@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Jumbotron, FormGroup, Input } from 'reactstrap';
 import "./Daily_Macros_Bar.css";
-import {
-  VictoryBar, VictoryChart, VictoryAxis,
-  VictoryLegend, VictoryStack, VictoryTooltip
-} from 'victory';
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryLegend, VictoryStack, VictoryTooltip, VictoryZoomContainer } from 'victory';
 
 class Daily_Macros_Bar extends Component {
 
@@ -94,6 +91,7 @@ class Daily_Macros_Bar extends Component {
         {logs[0] ?
           <VictoryChart
             domainPadding={25}
+            containerComponent={<VictoryZoomContainer zoomDimension="y" />}
           >
             <VictoryAxis
               style={{ tickLabels: { fill: "rgb(205,205,231)" } }}
@@ -102,7 +100,6 @@ class Daily_Macros_Bar extends Component {
             <VictoryAxis
               style={{ tickLabels: { fill: "rgb(205,205,231)" } }}
               dependentAxis
-              tickFormat={(x) => (x)}
             />
             <VictoryLegend x={200} y={0}
               orientation="horizontal"
