@@ -116,6 +116,11 @@ class Log extends Component {
 
   componentWillMount() {
 
+    if(!sessionStorage.getItem("id")){
+      alert("Please Login") 
+      window.location.replace("/")
+    };
+
     this.timer = null;
 
   }
