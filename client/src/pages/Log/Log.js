@@ -166,7 +166,6 @@ class Log extends Component {
     log.selected = log.selected.concat(input.selected);
     input.grams = 0;
     input.food = "";
-    input.date = new Date();
     input.portions = [];
     input.selected = {};
 

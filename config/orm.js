@@ -181,7 +181,7 @@ var orm = {
           fk_user: data.fk_user,
           fk_food: data.fk_food[i],
           grams: item,
-          date: data.date.toString(),
+          date: data.date[i].toString(),
         };
 
         var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`

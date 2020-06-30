@@ -81,7 +81,7 @@ router.route("/food").post((req, res) => {
   else if (!data.fk_food.every(check.isNumber)){
     res.json({error: "Not All Food IDs Are A Number!"})
   }
-  else if (!check.isDate(data.date)){
+  else if (!data.date.every(check.isDate)){
     res.json({error: "Date Isn't A Date!"})
   }
 
