@@ -1,5 +1,4 @@
-#daily_macros-box{
-  font-size: 1rem;
+#average_nutrients-box{
   float: left;
   width: 35%;
   margin-left: 10%;
@@ -11,17 +10,25 @@
   padding-left: 1rem;
 }
 
+.table{
+  display: table;
+}
+
+.table-cell{
+  display: table-cell;
+}
+
+.text-center{
+  text-align: center;
+}
 
 @media screen and (max-width: 980px) {
-  #daily_macros-box{
+  #average_macros-box{
     width: 90%;
     margin-left: 5%;
     margin-bottom: -2rem;
     font-size: .5rem;
   }
-
- div.profile-box>h3{
-    font-size: 1.5rem;
-  }
+  h3.average_marcos-date{font-size: .5rem;}
 }
 

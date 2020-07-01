@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Jumbotron, FormGroup, Input } from 'reactstrap';
-import "./Daily_Macros_Bar.css";
+import "./DAILY_NUTRIENTS_BAR.css";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryLegend, VictoryStack, VictoryTooltip, VictoryZoomContainer } from 'victory';
 
-class Daily_Macros_Bar extends Component {
+class DAILY_NUTRIENTS_BAR extends Component {
 
   constructor(props) {
 
@@ -101,7 +101,7 @@ class Daily_Macros_Bar extends Component {
     const { logs } = this.state.data;
 
     return (
-      <Jumbotron id="daily_macros-box" className="profile-box">
+      <Jumbotron id="daily_nutrients-box" className="profile-box">
         <h2 className="text-center">Daily Nutrition Bar Chart</h2>
         <br />
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -152,4 +152,4 @@ class Daily_Macros_Bar extends Component {
   }
 }
 
-export default Daily_Macros_Bar
+export default DAILY_NUTRIENTS_BAR

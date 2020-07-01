@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Table, Jumbotron, FormGroup, Label, Input } from 'reactstrap';
-import "./Average_Macros.css";
+import "./AVERAGE_NUTRIENTS.css";
 
-class Average_Macros extends Component {
+class AVERAGE_NUTRIENTS extends Component {
 
   constructor(props) {
 
@@ -83,7 +83,7 @@ class Average_Macros extends Component {
   render() {
 
     return (
-      <Jumbotron id="average_macros-box" className="profile-box">
+      <Jumbotron id="average_nutrients-box" className="profile-box">
         <h2 className="text-center">Average Daily Nutrients</h2>
         <br/>
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
@@ -123,4 +123,4 @@ class Average_Macros extends Component {
   }
 }
 
-export default Average_Macros
+export default AVERAGE_NUTRIENTS
