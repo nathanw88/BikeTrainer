@@ -34,6 +34,7 @@ class Daily_Macros extends Component {
         }
       }
       else {
+        console.log(result.data);
         const { data } = this.state;
         data.logs = [...result.data];
 
@@ -77,7 +78,7 @@ class Daily_Macros extends Component {
 
     return (
       <Jumbotron id="daily_macros-box" className="profile-box">
-        <h2 className="text-center">Daily Macros</h2>
+        <h2 className="text-center">Daily Nutrients</h2>
         <br/>
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <Input type="date" name="date" id="date" onChange={this.dateClick} value={this.state.data.date.toISOString().substr(0, 10)} />

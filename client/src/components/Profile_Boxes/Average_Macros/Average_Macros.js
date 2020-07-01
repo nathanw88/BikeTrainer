@@ -84,7 +84,7 @@ class Average_Macros extends Component {
 
     return (
       <Jumbotron id="average_macros-box" className="profile-box">
-        <h2 className="text-center">Average Macros</h2>
+        <h2 className="text-center">Average Daily Nutrients</h2>
         <br/>
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <div className="table">

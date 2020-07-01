@@ -11,10 +11,11 @@ class Daily_Macros_Bar extends Component {
     super(props);
 
     this.state = {
-
-      useCanvas: false,
       fk_user: sessionStorage.getItem("id"),
       data: {
+        eatenObjects:[],
+        neededObjects:[],
+        xValues:[],
         date: new Date(),
         logs: []
       }
@@ -38,6 +39,17 @@ class Daily_Macros_Bar extends Component {
       else {
         const { data } = this.state;
         data.logs = [...result.data];
+        let  eatenObject = {};
+        let neededObject ={};
+        
+
+        result.data.map((dataObject)=>{
+          eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
+          neededObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount, label: `${dataObject.name} Left To Eat: ${dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount}` };
+          data.xValues = data.xValues.concat(dataObject.name);
+          data.neededObjects = data.neededObjects.concat(neededObject);
+          data.eatenObjects = data.eatenObjects.concat(eatenObject);
+        })
 
         this.setState({ data });
       }
@@ -67,6 +79,14 @@ class Daily_Macros_Bar extends Component {
       else {
         data.logs = [...result.data];
 
+        let  eatenObject = {};
+        data.eatenObjects = []
+
+        result.data.map((dataObject)=>{
+          eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
+          data.eatenObjects = data.eatenObjects.concat(eatenObject);
+        })
+        console.log(data);
         this.setState({
           data,
           date
@@ -82,7 +102,7 @@ class Daily_Macros_Bar extends Component {
 
     return (
       <Jumbotron id="daily_macros-box" className="profile-box">
-        <h2 className="text-center">Daily Macros Bar Chart</h2>
+        <h2 className="text-center">Daily Nutrition Bar Chart</h2>
         <br />
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <Input type="date" name="date" id="date" onChange={this.dateClick} value={this.state.data.date.toISOString().substr(0, 10)} />
@@ -95,7 +115,7 @@ class Daily_Macros_Bar extends Component {
           >
             <VictoryAxis
               style={{ tickLabels: { fill: "rgb(205,205,231)" } }}
-              tickValues={["Calories", "Fats", "Carbs", "Protien"]}
+              tickValues={[...this.state.data.xValues]}
             />
             <VictoryAxis
               style={{ tickLabels: { fill: "rgb(205,205,231)" } }}
@@ -118,22 +138,12 @@ class Daily_Macros_Bar extends Component {
               {/* Amount Eaten */}
               <VictoryBar
                 labelComponent={<VictoryTooltip />}
-                data={[
-                  { x: "Calories", y: logs[0].log[0] ? logs[0].log[0].dailySum : 0, label: `Calories Eaten: ${logs[0].log[0]?.dailySum}` },
-                  { x: "Fats", y: logs[1].log[0] ? logs[1].log[0].dailySum : 0, label: `Fats Eaten: ${logs[1].log[0]?.dailySum}` },
-                  { x: "Carbs", y: logs[2].log[0] ? logs[2].log[0].dailySum : 0, label: `Carbs Eaten: ${logs[2].log[0]?.dailySum}` },
-                  { x: "Protien", y: logs[3].log[0] ? logs[3].log[0].dailySum : 0, label: `Protien Eaten: ${logs[3].log[0]?.dailySum}` }
-                ]}
+                data={[ ...this.state.data.eatenObjects ]}
               />
               {/* Amount Still Needed */}
               <VictoryBar
                 labelComponent={<VictoryTooltip />}
-                data={[
-                  { x: "Calories", y: logs[0].log[0] ? logs[0].amount - logs[0].log[0].dailySum : logs[0].amount, label: `Calories Left To Eat: ${logs[0].log[0] ? logs[0].amount - logs[0].log[0].dailySum : logs[0].amount}` },
-                  { x: "Fats", y: logs[1].log[0] ? logs[1].amount - logs[1].log[0].dailySum : logs[1].amount, label: `Fats Left To Eat: ${logs[1].log[0] ? logs[1].amount - logs[1].log[0].dailySum : logs[1].amount}` },
-                  { x: "Carbs", y: logs[2].log[0] ? logs[2].amount - logs[2].log[0].dailySum : logs[2].amount, label: `Carbs Left To Eat: ${logs[2].log[0] ? logs[2].amount - logs[2].log[0].dailySum : logs[2].amount}` },
-                  { x: "Protien", y: logs[3].log[0] ? logs[3].amount - logs[3].log[0].dailySum : logs[3].amount, label: `Protien Left To Eat: ${logs[3].log[0] ? logs[3].amount - logs[3].log[0].dailySum : logs[3].amount}` }
-                ]}
+                data={[ ...this.state.data.neededObjects ]}
               />
 
             </VictoryStack>
@@ -143,22 +153,3 @@ class Daily_Macros_Bar extends Component {
 }
 
 export default Daily_Macros_Bar
-
-
-
-// <VictoryBar
-// data={[
-//   { Nutrients: 'Calories', Amount: logs[0].amount, label: ` Needed ` },
-//   { Nutrients: 'Calories', Amount: logs[0].log[0] ? logs[0].log[0].dailySum : 0, label: ` Ate ` },
-//   { Nutrients: 'Fats', Amount: logs[1].amount, label: ` Needed ` },
-//   { Nutrients: 'Fats', Amount: logs[1].log[0] ? logs[1].log[0].dailySum : 0, label: ` Ate ` },
-//   { Nutrients: 'Carbs', Amount: logs[2].amount, label: ` Needed ` },
-//   { Nutrients: 'Carbs', Amount: logs[2].log[0] ? logs[2].log[0].dailySum : 0, label: ` Ate ` },
-//   { Nutrients: 'Protien', Amount: logs[3].amount, label: ` Needed ` },
-//   { Nutrients: 'Protien', Amount: logs[3].log[0] ? logs[3].log[0].dailySum : 0, label: ` Ate ` }
-// ]}
-// style={{ labels: { fill: "white" } }}
-// labelComponent={<VictoryLabel angle={0} verticalAnchor="middle" textAnchor="end" />}
-// x="Nutrients"
-// y="Amount"
-// />
