@@ -34,6 +34,12 @@ let nutritionPlan = {
     });
   },
 
+  userNutrientsTimeline: (userID, dateFrom, dateTill, cb)=>{
+
+    orm.userNutrientsTimeline(userID, dateFrom, dateTill, (res) => {
+      cb(res);
+    });
+  }
 
 
 };

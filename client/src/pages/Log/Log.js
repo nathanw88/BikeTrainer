@@ -280,7 +280,7 @@ class Log extends Component {
 
                 <Label for="food" className="mr-sm-2">What you ate</Label>
                 <Input type="textarea" name="food" id="food" onChange={this.handleInputChange} value={this.state.input.food} />
-                {!this.state.choices == false ? <ul id="choices">
+                {this.state.choices.length > 0 ? <ul id="choices">
                   {this.state.choices.map((item, i) => <li className="choices" key={i} onClick={() => this.selectChoice(i)} id={i}>{item.description} {item.brand} {item.additional_descriptions}</li>)}
                 </ul> : <div></div>}
 
@@ -294,7 +294,7 @@ class Log extends Component {
               </FormGroup>
 
               <br />
-              {!this.state.input.portions == false ?
+              {this.state.input.portions.length > 0 ?
                 <UncontrolledDropdown>
                   <DropdownToggle caret>
                     Portion
@@ -331,7 +331,7 @@ class Log extends Component {
           </div>
         </Jumbotron>
 
-        {!this.state.log.fk_food == false ?
+        {this.state.log.fk_food.length > 0 ?
 
           <Jumbotron id="logs-container">
             <Jumbotron id="logs">{

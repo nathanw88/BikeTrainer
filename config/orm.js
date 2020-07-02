@@ -454,7 +454,66 @@ var orm = {
       })
       connection.release();
     });
+  },
+
+  userNutrientsTimeline: (userID, dateFrom, dateTill, cb) => {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) {
+        connection.release();
+        console.log(' Error getting mysqlPool connection: ' + err);
+        throw err;
+      }
+      let dataArray = [];
+      let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
+      let val = [userID]
+
+      connection.query(queryString, val, (err, result) => {
+        if (err) throw err;
+        let maxLength = result.length;
+
+        for (let i = 0; i < maxLength; i++) {
+          let { amount, max_amount, name, unit, id } = result[i]
+          let maxDate = new Date(dateTill)
+          maxDate.setDate(maxDate.getDate() + 1);
+          let minDate = new Date(dateFrom);
+          let queryString2 = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date`
+          let vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)];
+
+          
+
+          connection.query(queryString2, vals, (err, result2) => {
+            if (err) throw err;
+
+            let resultArray = [];
+            let maxLength2 = result2.length;
+
+            for (let i = 0; i < maxLength2; i++) {
+
+              resultArray.push({
+                dailySum: result2[i].dailySum,
+                date: new Date(result2[i].date)
+              });
+
+            };
+
+            dataArray.push({
+              amount,
+              max_amount,
+              name,
+              unit,
+              log: [...resultArray]
+            });
+
+            if (i === (maxLength - 1)) {
+              cb(dataArray)
+            };
+          })
+        }
+      })
+      connection.release();
+    });
   }
+
 };
 
 module.exports = orm;
