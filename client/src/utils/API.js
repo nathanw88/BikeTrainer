@@ -38,14 +38,15 @@ export default {
   },
 
   dailySum: (id, date) => {
-    // console.log("here")
     return axios.get(`/api/user-logs/dailySum/${id}/${date}`)
   },
 
   averageMacros:(id, dateFrom, dateTill) =>{
-    
-
     return axios.get(`/api/user-logs/averageMacros/${id}/${dateFrom}/${dateTill}`)
+  },
+
+  userNutrientsTimeline:(id, dateFrom, dateTill) =>{
+    return axios.get(`/api/user-logs/userNutrientsTimeline/${id}/${dateFrom}/${dateTill}`)
   }
 
   // selectLogs: (id, table) =>{

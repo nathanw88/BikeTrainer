@@ -1,4 +1,4 @@
-#average_nutrients-box{
+#nutrients_timeline-box{
   float: left;
   width: 35%;
   margin-left: 10%;
@@ -10,25 +10,16 @@
   padding-left: 1rem;
 }
 
-.table{
-  display: table;
-}
-
-.table-cell{
-  display: table-cell;
-}
-
-.text-center{
-  text-align: center;
+.hidden-z-index{
+  z-index: -1;
 }
 
 @media screen and (max-width: 980px) {
-  #average_nutrients-box{
+  #nutrients_timeline-box{
     width: 90%;
     margin-left: 5%;
     margin-bottom: -2rem;
     font-size: .5rem;
   }
-  h3.average_marcos-date{font-size: .5rem;}
-}
 
+}

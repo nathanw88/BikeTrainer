@@ -107,8 +107,8 @@ class AVERAGE_NUTRIENTS extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.data.logs.map(logs =>
-                <tr>
+              {this.state.data.logs.map((logs, i) =>
+                <tr key={i}>
                   <th scope="row">{logs.name}</th>
                   <td>{logs.amount}</td>
                   <td>{logs.log[0] ? logs.log[0].dailyAverage : 0}</td>

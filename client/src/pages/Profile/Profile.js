@@ -3,6 +3,7 @@ import "./Profile.css";
 import DAILY_NUTRIENTS from "../../components/Profile_Boxes/DAILY_NUTRIENTS/DAILY_NUTRIENTS";
 import AVERAGE_NUTRIENTS from "../../components/Profile_Boxes/AVERAGE_NUTRIENTS/AVERAGE_NUTRIENTS";
 import DAILY_NUTRIENTS_BAR from "../../components/Profile_Boxes/DAILY_NUTRIENTS_BAR/DAILY_NUTRIENTS_BAR";
+import NUTRIENTS_TIMELINE from "../../components/Profile_Boxes/NUTRIENTS_TIMELINE/NUTRIENTS_TIMELINE";
 
 class Profile extends Component {
 
@@ -30,6 +31,7 @@ class Profile extends Component {
       <DAILY_NUTRIENTS/>
       <AVERAGE_NUTRIENTS/>
       <DAILY_NUTRIENTS_BAR/>
+      <NUTRIENTS_TIMELINE/>
     </div>)
 
 

@@ -1,4 +1,4 @@
-#daily_macros_bar-box{
+#daily_nutrients_bar-box{
   font-size: 1rem;
   float: left;
   width: 35%;
@@ -14,7 +14,7 @@
 
 
 @media screen and (max-width: 980px) {
-  #daily_macros_bar-box{
+  #daily_nutrients_bar-box{
     width: 90%;
     margin-left: 5%;
     margin-bottom: -2rem;
