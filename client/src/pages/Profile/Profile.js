@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./Profile.css";
-import Daily_Macros from "../../components/Profile_Boxes/Daily_Macros/Daily_Macros";
-import Average_Macros from "../../components/Profile_Boxes/Average_Macros/Average_Macros";
-import Daily_Macros_Bar from "../../components/Profile_Boxes/Daily_Macros_Bar/Daily_Macros_Bar";
+import DAILY_NUTRIENTS from "../../components/Profile_Boxes/DAILY_NUTRIENTS/DAILY_NUTRIENTS";
+import AVERAGE_NUTRIENTS from "../../components/Profile_Boxes/AVERAGE_NUTRIENTS/AVERAGE_NUTRIENTS";
+import DAILY_NUTRIENTS_BAR from "../../components/Profile_Boxes/DAILY_NUTRIENTS_BAR/DAILY_NUTRIENTS_BAR";
 
 class Profile extends Component {
 
@@ -27,9 +27,9 @@ class Profile extends Component {
   render() {
 
     return(<div id="profile-container">
-      <Daily_Macros/>
-      <Average_Macros/>
-      <Daily_Macros_Bar/>
+      <DAILY_NUTRIENTS/>
+      <AVERAGE_NUTRIENTS/>
+      <DAILY_NUTRIENTS_BAR/>
     </div>)
 
 
