@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Jumbotron, FormGroup, Label, Input, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
-import { VictoryChart, VictoryLine, VictoryAxis, VictoryLegend } from 'victory'
+import { VictoryChart, VictoryLine, VictoryAxis, VictoryLegend, VictoryVoronoiContainer } from 'victory'
 import "./NUTRIENTS_TIMELINE.css";
 
 
@@ -27,7 +27,7 @@ class AVERAGE_NUTRIENTS extends Component {
   }
 
   componentDidMount = () => {
-    const { data } = this.state;
+    const { data, selectedNutrients } = this.state;
     let { dateFrom } = this.state.data
     const today = new Date();
     dateFrom.setDate(today.getDate() - 7);
@@ -50,15 +50,16 @@ class AVERAGE_NUTRIENTS extends Component {
           let eatenArray = [];
           let neededArray = [];
           dataObject.log.map((log) => {
-            eatenArray.push({ x: new Date(log.date).toISOString().substr(0, 10), y: log.dailySum, label: `${log.dailySum}` })
-            neededArray.push({ x: new Date(log.date).toISOString().substr(0, 10), y: dataObject.amount, label: `${dataObject.amount}` });
+            eatenArray.push({ x: new Date(log.date), y: log.dailySum })
+            neededArray.push({ x: new Date(log.date), y: dataObject.amount });
           });
           data.neededArrayObjects[i] = [...neededArray];
           data.eatenArrayObjects[i] = [...eatenArray];
         })
-
+        selectedNutrients[data.logs[0].name] = 0
         this.setState({
           data,
+          selectedNutrients,
           dateFrom
         });
       }
@@ -93,8 +94,8 @@ class AVERAGE_NUTRIENTS extends Component {
           let eatenArray = [];
           let neededArray = [];
           dataObject.log.map((log) => {
-            eatenArray.push({ x: new Date(log.date).toISOString().substr(0, 10), y: log.dailySum, label: `${log.dailySum}` })
-            neededArray.push({ x: new Date(log.date).toISOString().substr(0, 10), y: dataObject.amount, label: `${dataObject.amount}` });
+            eatenArray.push({ x: new Date(log.date), y: log.dailySum, label: `${log.dailySum}` })
+            neededArray.push({ x: new Date(log.date), y: dataObject.amount, label: `${dataObject.amount}` });
           });
           data.neededArrayObjects[i] = [...neededArray];
           data.eatenArrayObjects[i] = [...eatenArray];
@@ -163,7 +164,14 @@ class AVERAGE_NUTRIENTS extends Component {
             <h3 className="text-center">{data.logs[index].name}</h3>
             <br />
             {(neededArrayObjects[index].length > 0) ?
-              <VictoryChart>
+              <VictoryChart
+                scale={{ x: "time" }}
+                containerComponent={
+                  <VictoryVoronoiContainer
+                    labels={({ datum }) => `${datum.x.toDateString()}, ${data.logs[index].name}: ${Math.round(datum.y, 2)}`}
+                  />
+                }
+              >
                 <VictoryLegend x={200} y={0}
 
                   orientation="horizontal"
@@ -182,13 +190,12 @@ class AVERAGE_NUTRIENTS extends Component {
                   style={{ tickLabels: { fill: "rgb(205,205,231)" } }}
                   dependentAxis
                 />
-
                 <VictoryLine style={{ labels: { fill: "gold" }, data: { stroke: "gold" } }}
                   data={[...neededArrayObjects[index]]}
                 />
-
                 <VictoryLine style={{ labels: { fill: "tomato" }, data: { stroke: "tomato" } }}
                   data={[...eatenArrayObjects[index]]} />
+
 
               </VictoryChart> :
               <h5 className="text-center">No Logs For Selected Date</h5>}
