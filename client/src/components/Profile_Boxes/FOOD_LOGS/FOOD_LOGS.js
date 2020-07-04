@@ -76,12 +76,7 @@ class FOOD_LOGS extends Component {
       }
     });
   }
-
-  editLog = (index) => {
-    console.log(index);
-
-  }
-
+  
   deleteLog = (index) => {
     const { fk_food, grams, date } = this.state.data.logs[index]
     const sendData = { fk_food, grams, date, id: this.state.fk_user }
@@ -136,8 +131,7 @@ class FOOD_LOGS extends Component {
             <p><b>Grams:</b> {log.grams}</p>
             <p><b>Date:</b> {log.date.replace("T", " ").replace(".000Z", "")}</p>
             <br />
-            <p><Button id="log-delete" onClick={() => this.deleteLog(i)}>Delete</Button>
-              <Button id="log-edit" onClick={() => this.editLog(i)}>Edit</Button></p>
+            <p><Button id="log-delete" onClick={() => this.deleteLog(i)}>Delete</Button></p>
             <br />
             <p className="text-center"> - - - - - - - - - - - - - </p>
             <br />
