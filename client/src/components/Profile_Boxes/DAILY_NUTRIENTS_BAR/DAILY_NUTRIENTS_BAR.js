@@ -63,7 +63,6 @@ class DAILY_NUTRIENTS_BAR extends Component {
     let { date } = this.state.data;
     let { data } = this.state;
     date.setUTCFullYear(year, month, day)
-    console.log(date)
 
     API.dailySum(this.state.fk_user, date).then((result) => {
 
@@ -86,7 +85,7 @@ class DAILY_NUTRIENTS_BAR extends Component {
           eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
           data.eatenObjects = data.eatenObjects.concat(eatenObject);
         })
-        console.log(data);
+        
         this.setState({
           data,
           date

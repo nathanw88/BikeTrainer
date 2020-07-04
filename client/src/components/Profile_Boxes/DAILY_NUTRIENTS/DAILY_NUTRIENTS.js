@@ -34,7 +34,6 @@ class DAILY_NUTRIENTS extends Component {
         }
       }
       else {
-        console.log(result.data);
         const { data } = this.state;
         data.logs = [...result.data];
 
@@ -50,7 +49,6 @@ class DAILY_NUTRIENTS extends Component {
     let { date } = this.state.data;
     let { data } = this.state;
     date.setUTCFullYear(year, month, day)
-    console.log(date)
 
     API.dailySum(this.state.fk_user, date).then((result) => {
       

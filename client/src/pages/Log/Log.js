@@ -15,7 +15,7 @@ class Log extends Component {
 
       input: {
 
-        date: new Date().toISOString().substr(0, 16),
+        date: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000 ).toISOString().substr(0, 16),
         food: "",
         grams: 0,
         selected: {},
@@ -114,7 +114,7 @@ class Log extends Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
 
     if(!sessionStorage.getItem("id")){
       alert("Please Login") 
@@ -334,7 +334,7 @@ class Log extends Component {
         {this.state.log.fk_food.length > 0 ?
 
           <Jumbotron id="logs-container">
-            <Jumbotron id="logs">{
+            <Jumbotron className="logs-box">{
 
 
               this.state.log.fk_food.map((fkFood, i) => <div key={i}>

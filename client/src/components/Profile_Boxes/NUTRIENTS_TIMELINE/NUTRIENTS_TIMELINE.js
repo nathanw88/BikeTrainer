@@ -5,7 +5,7 @@ import { VictoryChart, VictoryLine, VictoryAxis, VictoryLegend, VictoryVoronoiCo
 import "./NUTRIENTS_TIMELINE.css";
 
 
-class AVERAGE_NUTRIENTS extends Component {
+class NUTRIENTS_TIMELINE extends Component {
 
   constructor(props) {
 
@@ -222,4 +222,4 @@ class AVERAGE_NUTRIENTS extends Component {
   }
 }
 
-export default AVERAGE_NUTRIENTS
+export default NUTRIENTS_TIMELINE

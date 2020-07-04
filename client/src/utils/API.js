@@ -47,6 +47,15 @@ export default {
 
   userNutrientsTimeline:(id, dateFrom, dateTill) =>{
     return axios.get(`/api/user-logs/userNutrientsTimeline/${id}/${dateFrom}/${dateTill}`)
+  },
+
+  userFoodLogs:(id, dateFrom, dateTill) =>{
+    return axios.get(`/api/user-logs/userFoodLogs/${id}/${dateFrom}/${dateTill}`)
+  },
+
+  deleteUserLogs:(data)=>{
+    console.log(data)
+    return axios.delete(`/api/user-logs/deleteUserLogs`, { data })
   }
 
   // selectLogs: (id, table) =>{
