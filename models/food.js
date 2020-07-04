@@ -39,6 +39,20 @@ var user = {
     });
   },
 
+  userFoodLogs: (userID, dateFrom, dateTill, cb)=>{
+
+    orm.userFoodLogs(userID, dateFrom, dateTill, (res) => {
+      cb(res);
+    });
+  },
+
+  deleteUserLogs: (data, cb)=>{
+
+    orm.deleteUserLogs(data, (res) => {
+      cb(res);
+    })
+  }
+
 
 };
 

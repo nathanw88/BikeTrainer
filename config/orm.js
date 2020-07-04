@@ -291,22 +291,22 @@ var orm = {
     });
   },
 
-  selectLogs: function (FK, table, cb) {
-    mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
-      var queryString = "SELECT * FROM ?? WHERE ??.fk_user = ? ORDER BY date"
+  // selectLogs: function (FK, table, cb) {
+  //   mysqlPool.getConnection(function (err, connection) {
+  //     if (err) {
+  //       connection.release();
+  //       console.log(' Error getting mysqlPool connection: ' + err);
+  //       throw err;
+  //     }
+  //     var queryString = "SELECT * FROM ?? WHERE ??.fk_user = ? ORDER BY date"
 
-      connection.query(queryString, [table, table, FK], function (err, result) {
-        if (err) throw err;
-        cb(result)
-      })
-      connection.release();
-    });
-  },
+  //     connection.query(queryString, [table, table, FK], function (err, result) {
+  //       if (err) throw err;
+  //       cb(result)
+  //     })
+  //     connection.release();
+  //   });
+  // },
 
   postNutritionPlanNutrients: (obj, fkNutritionPlan, cb) => {
     mysqlPool.getConnection(function (err, connection) {
@@ -456,6 +456,28 @@ var orm = {
     });
   },
 
+  userFoodLogs: (userId, dateFrom, dateTill, cb) => {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) {
+        connection.release();
+        console.log(' Error getting mysqlPool connection: ' + err);
+        throw err;
+      }
+      let maxDate = new Date(dateTill)
+      maxDate.setDate(maxDate.getDate() + 1);
+      let minDate = new Date(dateFrom);
+      let val = [userId, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
+      let queryString = `SELECT user_food.fk_food, user_food.grams, user_food.date, food.description, food.brand FROM user_food INNER JOIN food ON user_food.fk_food = food.id WHERE user_food.fk_user = ? AND date >= ? AND date < ?`
+
+      connection.query(queryString, val, (err, result) => {
+        if (err) throw err;
+        // console.log(result);
+        cb(result);
+      })
+      connection.release();
+    });
+  },
+
   userNutrientsTimeline: (userID, dateFrom, dateTill, cb) => {
     mysqlPool.getConnection(function (err, connection) {
       if (err) {
@@ -479,7 +501,7 @@ var orm = {
           let queryString2 = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date`
           let vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)];
 
-          
+
 
           connection.query(queryString2, vals, (err, result2) => {
             if (err) throw err;
@@ -512,6 +534,61 @@ var orm = {
       })
       connection.release();
     });
+  },
+
+  deleteUserLogs: function (data, cb) {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) {
+        connection.release();
+        console.log(' Error getting mysqlPool connection: ' + err);
+        throw err;
+      }
+      let gramsDivided = parseFloat(data.grams) / 100;
+      var queryString = "SELECT fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
+
+      connection.query(queryString, [gramsDivided, data.fk_food], function (err, result) {
+        // console.log(result)
+        if (err) throw err;
+        
+        let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;  `
+
+        for (let i = 0; i < result.length; i++) {
+          let date 
+          let vals = []
+          let dataObject = {
+            fk_user: data.id,
+            fk_nutrient: result[i].fk_nutrient,
+            value: parseFloat(result[i].value.toFixed(3)),
+            date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000 ).toISOString().substr(0, 10)
+          }
+    
+          vals.push(dataObject.fk_user);
+          vals.push(dataObject.fk_nutrient);
+          vals.push(parseFloat(dataObject.value).toFixed(3));
+          vals.push(dataObject.date);
+          console.log(vals);
+
+          connection.query(queryString2, vals, function (err, response) {
+            if (err) throw err;
+          })
+
+          if (i === result.length - 1) {
+            let queryString3 = `DELETE FROM user_food WHERE fk_user = ? and DATE(date) = ? and fk_food = ? and grams = ? LIMIT 1;`
+
+            connection.query(queryString3, [data.id, dataObject.date, data.fk_food, data.grams], function (err, response3) {
+
+            })
+
+          }
+        }
+      })
+
+
+
+      cb("done");
+      connection.release();
+    });
+
   }
 
 };
