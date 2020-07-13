@@ -39,9 +39,9 @@ var user = {
     });
   },
 
-  userFoodLogs: (userID, dateFrom, dateTill, cb)=>{
+  userFoodLogs: (userID, dateFrom, dateTill, limit, offset, cb)=>{
 
-    orm.userFoodLogs(userID, dateFrom, dateTill, (res) => {
+    orm.userFoodLogs(userID, dateFrom, dateTill, limit, offset, (res) => {
       cb(res);
     });
   },

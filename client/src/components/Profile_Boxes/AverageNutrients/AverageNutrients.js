@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Table, Jumbotron, FormGroup, Label, Input } from 'reactstrap';
-import "./AVERAGE_NUTRIENTS.css";
+import "./AverageNutrients.css";
 
-class AVERAGE_NUTRIENTS extends Component {
+class AverageNutrients extends Component {
 
   constructor(props) {
 
@@ -123,4 +123,4 @@ class AVERAGE_NUTRIENTS extends Component {
   }
 }
 
-export default AVERAGE_NUTRIENTS
+export default AverageNutrients

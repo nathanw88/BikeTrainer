@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Jumbotron, FormGroup, Label, Input, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { VictoryChart, VictoryLine, VictoryAxis, VictoryLegend, VictoryVoronoiContainer } from 'victory'
-import "./NUTRIENTS_TIMELINE.css";
+import "./NutrientsTimeline.css";
 
 
-class NUTRIENTS_TIMELINE extends Component {
+class NutrientsTimeline extends Component {
 
   constructor(props) {
 
@@ -222,4 +222,4 @@ class NUTRIENTS_TIMELINE extends Component {
   }
 }
 
-export default NUTRIENTS_TIMELINE
+export default NutrientsTimeline

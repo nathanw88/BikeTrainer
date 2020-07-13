@@ -1,4 +1,4 @@
-#nutrients_timeline-box{
+#FoodLogs-box{
   float: left;
   width: 35%;
   margin-left: 10%;
@@ -10,12 +10,9 @@
   padding-left: 1rem;
 }
 
-.hidden-z-index{
-  z-index: -1;
-}
 
 @media screen and (max-width: 980px) {
-  #nutrients_timeline-box{
+  #FoodLogs-box{
     width: 90%;
     margin-left: 5%;
     margin-bottom: -2rem;

@@ -39,6 +39,13 @@ let nutritionPlan = {
     orm.userNutrientsTimeline(userID, dateFrom, dateTill, (res) => {
       cb(res);
     });
+  },
+
+  delete: (planID, userID, cb)=>{
+
+    orm.deleteNutritionPlan(planID, userID, (res)=>{
+      cb(res);
+    })
   }
 
 

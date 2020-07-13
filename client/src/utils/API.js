@@ -49,14 +49,27 @@ export default {
     return axios.get(`/api/user-logs/userNutrientsTimeline/${id}/${dateFrom}/${dateTill}`)
   },
 
-  userFoodLogs:(id, dateFrom, dateTill) =>{
-    return axios.get(`/api/user-logs/userFoodLogs/${id}/${dateFrom}/${dateTill}`)
+  userFoodLogs:(id, dateFrom, dateTill, limit, offset) =>{
+    return axios.get(`/api/user-logs/userFoodLogs/${id}/${dateFrom}/${dateTill}/${limit}/${offset}`)
   },
 
   deleteUserLogs:(data)=>{
-    console.log(data)
     return axios.delete(`/api/user-logs/deleteUserLogs`, { data })
+  },
+
+  getUserPersonalInfo:(userId)=>{
+    return axios.get(`/api/users/getPersonalInfo/${userId}`)
+  },
+
+  getUserNutritionPlan: (userId)=>{
+    return axios.get(`/api/users/getUserNutritionPlan/${userId}`)
+  },
+
+  deleteNutritionPlan: (planID, userID)=>{
+    return axios.delete(`/api/users/nutritionPlan/${planID}/${userID}`)
   }
+
+
 
   // selectLogs: (id, table) =>{
   //   return axios.get(`/api/user-logs/logs/${id}/${table}`)

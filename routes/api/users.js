@@ -53,7 +53,7 @@ router.route("/login").post((req, res) => {
       })
 
       res.json({ userEmail, userID });
-    } 
+    }
     else if (cleanedEmail === -4) {
       res.json({ error: "Incorrect Password" });
     } else {
@@ -207,7 +207,33 @@ router.route("/nutritionPlan").post((req, res) => {
 
     }
   })
-})
+});
+
+router.route("/nutritionPlan/:planID/:userID").delete((req, res )=>{
+  let sessionExpires = req.session.cookie._expires;
+  let sessionID = req.sessionID;
+  const { userID, planID} = req.params
+
+  if (!check.isNumber(userID)) {
+    res.json({ error: "User ID Isn't A Number!" })
+  }
+
+
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+
+    if (result.error) {
+
+      res.json(result);
+    }
+
+    else {
+      nutritionPlan.delete(planID, userID, function(result2){
+        res.json(result2)
+      })
+      
+    }
+  });
+});
 
 router.route("/measurments/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
@@ -235,16 +261,88 @@ router.route("/measurments/:userID").get((req, res) => {
           height: result[0].height,
           metric: result[0].metric,
           userBirthday: result[0].userBirthday,
-          nutritionPlan: {}
+          nutritionPlan: {},
+          nutritionPlanData: []
         }
-        if (result[0].fk_active_nutrition_plan) {
-          nutritionPlan.selectWhere("id", result[0].fk_active_nutrition_plan, function (result2) {
+          res.json(data)
+      })
+    }
+  });
+});
 
-            data.nutritionPlan = result2[0]
+router.route("/getUserNutritionPlan/:userID").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires;
+  let sessionID = req.sessionID;
 
+  if (!check.isNumber(req.params.userID)) {
+    res.json({ error: "User ID Isn't A Number!" })
+  }
+
+
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
+
+    if (result.error) {
+
+      res.json(result);
+    }
+
+    else {
+
+      user.selectWhere("id", req.params.userID, function (result2) {
+
+        let data = {
+          nutritionPlan: {},
+          nutritionPlanData: []
+        }
+      if (result2[0].fk_active_nutrition_plan) {
+        nutritionPlan.selectWhere("id", result2[0].fk_active_nutrition_plan, function (result3) {
+          data.nutritionPlan = result3[0]
+          data.nutritionPlan.description = data.nutritionPlan.description.toString();
+          user.selectActiveNutritionPlan(req.params.userID, function (result4) {
+            data.nutritionPlanData = [...result4];
+            res.json(data)
           })
+        })
+      }
+      else{  
+        // console.log(data);
+        res.json(data)
+      }
+      })
+    }
 
+  });
+});
+
+router.route("/getPersonalInfo/:userID").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires;
+  let sessionID = req.sessionID;
+
+  if (!check.isNumber(req.params.userID)) {
+    res.json({ error: "User ID Isn't A Number!" })
+  }
+
+
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
+
+    if (result.error) {
+
+      res.json(result);
+    }
+
+    else {
+
+      user.selectWhere("id", req.params.userID, function (result2) {
+
+        let data = {
+          gender: result2[0].gender,
+          weight: result2[0].weight,
+          height: result2[0].height,
+          metric: result2[0].metric,
+          userBirthday: result2[0].userBirthday,
+          userEmail: result2[0].userEmail
         }
+
         // console.log(data);
         res.json(data)
       })
