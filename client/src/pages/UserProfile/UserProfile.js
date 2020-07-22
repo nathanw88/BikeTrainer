@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import UserNutritionPlan from "../../components/UserProfileBoxes/UserNutritionPlan/UserNutritionPlan";
 import UserPersonalInfo from "../../components/UserProfileBoxes/UserPersonalInfo/UserPersonalInfo";
+import UserMeasurements from "../../components/UserProfileBoxes/UserMeasurements/UserMeasurements"
 import "./UserProfile.css";
 
 class UserProfile extends Component {
@@ -28,6 +29,7 @@ class UserProfile extends Component {
 
     return (<div id="user-profile-container">
       <UserNutritionPlan/>
+      <UserMeasurements/>
       <UserPersonalInfo/>
     </div>);
   }

@@ -1,0 +1,231 @@
+import React, { Component } from "react";
+import { Jumbotron, Label, Input, Button, Form, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, FormGroup } from 'reactstrap';
+import API from '../../../utils/API';
+import "./UserMeasurements.css";
+
+class UserMeasurements extends Component {
+
+  constructor(props) {
+
+    super(props);
+
+    this.state = {
+      userID: sessionStorage.getItem("id"),
+      userMeasurements: {}
+
+    };
+  };
+
+  componentDidMount = () => {
+    let poundsToKilograms = 2.2046;
+    if (!sessionStorage.getItem("id")) {
+      alert("Please Login")
+      window.location.replace("/")
+    };
+
+    API.getUserMeasurements(this.state.userID).then((result) => {
+      if (result.data.error) {
+
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(result.data.redirect);
+        }
+
+      }
+      else {
+        const { userMeasurements } = this.state;
+        let values = Object.values(result.data);
+        let keys = Object.keys(result.data);
+        let length = keys.length;
+
+        for (let i = 0; i < length; i++) {
+          userMeasurements[keys[i]] = values[i]
+        };
+        if (!userMeasurements.metric) {
+          userMeasurements.weight = Math.round(userMeasurements.weight * poundsToKilograms);
+          userMeasurements.heightFeet = parseInt((userMeasurements.height / 2.54) / 12)
+          userMeasurements.heightInches = parseInt((userMeasurements.height / 2.54) % 12)
+
+        }
+        // console.log(userMeasurements);
+        this.setState({ userMeasurements });
+      }
+    });
+  };
+
+
+  handleInputChange = event => {
+
+    const { userMeasurements } = this.state;
+    // console.log(event.target)
+    const { name, value } = event.target;
+    //console.log(userMeasurements)
+    userMeasurements[name] = value;
+    this.setState({ userMeasurements });
+
+  };
+
+  save = () => {
+    let inchToCentimeter = 2.54;
+    let feetToInches = 12;
+    let poundsToKilograms = 2.2046;
+    let data = {
+      gender: this.state.userMeasurements.gender,
+      userID: sessionStorage.getItem("id"),
+      weight: 0,
+      height: 0,
+      metric: parseInt(this.state.userMeasurements.metric)
+    };
+
+    if (data.metric) {
+      data.weight = this.state.userMeasurements.weight;
+      data.height = this.state.userMeasurements.height;
+    }
+    else if (!data.metric) {
+      data.weight = parseFloat((parseFloat(this.state.userMeasurements.weight) / poundsToKilograms).toFixed(3));
+      data.height = (this.state.userMeasurements.heightFeet * feetToInches + parseFloat(this.state.userMeasurements.heightInches)) * inchToCentimeter;
+    }
+    // console.log(data);
+    // console.log(this.state.userMeasurements);
+
+    API.saveSetup(data).then((result) => {
+      // console.log(result)
+      if (result.data.error) {
+
+        alert(result.data.error)
+        if (result.data.error === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace(result.data.redirect);
+        }
+
+      }
+      else {
+        window.location.replace("/user_profile")
+        // console.log(result);
+      }
+    });
+  };
+
+  clickHandler = event => {
+
+    const { userMeasurements } = this.state;
+    const { name, value } = event.target;
+    // console.log(value)
+    userMeasurements[name] = value;
+    this.setState({ userMeasurements });
+    // console.log(this.state.userMeasurements.metric)
+
+  };
+
+  metricHandler = event => {
+    let poundsToKilograms = 2.2046;
+    const { userMeasurements } = this.state;
+    const { value } = event.target;
+    // console.log(userMeasurements.metric)
+    if (parseInt(value) !== parseInt(userMeasurements.metric)) {
+      if (parseInt(value)) {
+        // console.log("KG")
+        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) / poundsToKilograms).toFixed(3));
+      }
+      else if (!parseInt(value)) {
+        // console.log("pounds")
+        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) * parseFloat(poundsToKilograms)).toFixed(1));
+      }
+      userMeasurements.metric = parseInt(value);
+      this.setState({ userMeasurements });
+    }
+
+  }
+
+
+
+  render() {
+    const { userMeasurements } = this.state;
+
+    return (
+
+      <Jumbotron id="UserMeasurements-box" className="profile-box">
+        <h2 className="text-center">Measurements</h2>
+        <div>
+          <Form>
+            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+
+              <UncontrolledDropdown>
+                <DropdownToggle caret>
+                  {userMeasurements.gender}
+                </DropdownToggle>
+
+                <DropdownMenu>
+                  <DropdownItem active={userMeasurements.gender === "male"} onClick={this.clickHandler} value="male" name="gender" className="portion-button"> Male </DropdownItem>
+                  <DropdownItem active={userMeasurements.gender === "female"} onClick={this.clickHandler} value="female" name="gender" className="portion-button"> Female</DropdownItem>
+                  <DropdownItem active={userMeasurements.gender === "other"} onClick={this.clickHandler} value="other" name="gender" className="portion-button">Other</DropdownItem>
+                </DropdownMenu>
+
+              </UncontrolledDropdown>
+              <br />
+              <UncontrolledDropdown>
+                <DropdownToggle caret>
+                  {parseInt(userMeasurements.metric) ? "Metric Measurements" :
+                    "Imperial Measurements"
+                  }
+                </DropdownToggle>
+
+                <DropdownMenu>
+                  <DropdownItem active={userMeasurements.metric === "1"} onClick={this.metricHandler} value={1} name="metric" className="portion-button">Metric</DropdownItem>
+                  <DropdownItem active={userMeasurements.metric === "0"} onClick={this.metricHandler} value={0} name="metric" className="portion-button">Imperial</DropdownItem>
+
+                </DropdownMenu>
+
+              </UncontrolledDropdown>
+              {parseInt(userMeasurements.metric) ?
+
+                <div>
+                  <Label for="weight" className="mr-sm-2">Weight In Kilos</Label>
+                  <Input type="number" name="weight" id="weight" onChange={this.handleInputChange} value={userMeasurements.weight || 0} />
+
+                  <Label for="height" className="mr-sm-2">Height In Centimeters</Label>
+                  <Input type="number" name="height" id="height" onChange={this.handleInputChange} value={userMeasurements.height || 0} />
+                </div>
+                : !parseInt(userMeasurements.metric) ?
+
+                  <div>
+                    <Label for="weight" className="mr-sm-2">Weight In Pounds</Label>
+                    <Input type="number" name="weight" id="weight" className="weight" onChange={this.handleInputChange} value={userMeasurements.weight || 0} />
+                    <Label for="height" className="mr-sm-2">Height</Label>
+                    <div className="imperial-height">
+                      <Input type="number" className="height" name="heightFeet" id="heightFeet" onChange={this.handleInputChange} value={userMeasurements.heightFeet || 0} />
+                      <Label for="heightFeet" className="mr-sm-2, height-indicator">Feet</Label>
+
+                      <Input type="number" name="heightInches" className="height" id="heightInches" onChange={this.handleInputChange} value={userMeasurements.heightInches || 0} />
+                      <Label for="heightInches" className="mr-sm-2, height-indicator">Inches</Label>
+                    </div>
+                  </div>
+                  :
+                  <div>
+
+                  </div>
+              }
+
+
+            </FormGroup>
+            <br />
+
+
+            <Button id="login-button" onClick={() => this.save()}> save </Button>
+
+          </Form>
+          <br />
+          <div>
+
+          </div>
+        </div>
+
+      </Jumbotron>
+    );
+  }
+}
+
+export default UserMeasurements;

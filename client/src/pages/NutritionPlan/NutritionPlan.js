@@ -54,7 +54,7 @@ class NutritionPlan extends Component {
       window.location.replace("/")
     };
 
-    API.getUserMeasurements(this.state.userID).then((result) => {
+    API.getUserInfo(this.state.userID).then((result) => {
       if (result.data.error) {
 
         alert(result.data.error)
