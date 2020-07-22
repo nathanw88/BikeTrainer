@@ -44,7 +44,7 @@ export default class NavBar extends React.Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/profile/">{sessionStorage.getItem("email")}</NavLink>
+                <NavLink href="/user_profile/">{sessionStorage.getItem("email")}</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink href="/profile/" disabled ={!sessionStorage.getItem("email")}>Data</NavLink>

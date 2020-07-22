@@ -8,8 +8,9 @@ CREATE TABLE users (
     userBirthday VARCHAR(11),
     weight INT(11),
     height INT(11),
+    gender VARCHAR(255),
     fk_active_nutrition_plan INT(11),
-    measurementType VARCHAR(255),
+    metric BOOLEAN,
     FOREIGN KEY (fk_active_nutrition_plan) REFERENCES nutrition_plan (id),
     PRIMARY KEY (id)
 );

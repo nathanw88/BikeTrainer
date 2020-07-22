@@ -133,6 +133,32 @@ var orm = {
     });
   },
 
+  deleteNutritionPlan: function (planID, userID, cb) {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) {
+        connection.release();
+        console.log(' Error getting mysqlPool connection: ' + err);
+        throw err;
+      }
+      let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ?;`
+      connection.query(queryString, [userID], function (err, result) {
+        if (err) throw err;
+
+        let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
+        connection.query(queryString2, [planID], function (err, result) {
+          if (err) throw err
+          
+          let queryString3 = `DELETE FROM nutrition_plan WHERE id = ? AND fk_user = ?;`
+          connection.query(queryString3, [planID, userID], function(err, result){
+            cb(result);
+          })
+        })
+      })
+      connection.release();
+    })
+
+  },
+
   selectWhereMulti: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) {
@@ -456,7 +482,7 @@ var orm = {
     });
   },
 
-  userFoodLogs: (userId, dateFrom, dateTill, cb) => {
+  userFoodLogs: (userId, dateFrom, dateTill, limit, offset, cb) => {
     mysqlPool.getConnection(function (err, connection) {
       if (err) {
         connection.release();
@@ -466,8 +492,8 @@ var orm = {
       let maxDate = new Date(dateTill)
       maxDate.setDate(maxDate.getDate() + 1);
       let minDate = new Date(dateFrom);
-      let val = [userId, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
-      let queryString = `SELECT user_food.fk_food, user_food.grams, user_food.date, food.description, food.brand FROM user_food INNER JOIN food ON user_food.fk_food = food.id WHERE user_food.fk_user = ? AND date >= ? AND date < ?`
+      let val = [userId, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10), parseInt(offset), parseInt(limit)]
+      let queryString = `SELECT user_food.fk_food, user_food.grams, user_food.date, food.description, food.brand FROM user_food INNER JOIN food ON user_food.fk_food = food.id WHERE user_food.fk_user = ? AND date >= ? AND date < ? ORDER BY user_food.date LIMIT ?, ?;`
 
       connection.query(queryString, val, (err, result) => {
         if (err) throw err;
@@ -549,19 +575,19 @@ var orm = {
       connection.query(queryString, [gramsDivided, data.fk_food], function (err, result) {
         // console.log(result)
         if (err) throw err;
-        
+
         let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;  `
 
         for (let i = 0; i < result.length; i++) {
-          let date 
+          let date
           let vals = []
           let dataObject = {
             fk_user: data.id,
             fk_nutrient: result[i].fk_nutrient,
             value: parseFloat(result[i].value.toFixed(3)),
-            date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000 ).toISOString().substr(0, 10)
+            date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000).toISOString().substr(0, 10)
           }
-    
+
           vals.push(dataObject.fk_user);
           vals.push(dataObject.fk_nutrient);
           vals.push(parseFloat(dataObject.value).toFixed(3));
@@ -589,6 +615,24 @@ var orm = {
       connection.release();
     });
 
+  },
+
+  selectActiveNutritionPlan: function (userID, cb) {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) {
+        connection.release();
+        console.log(' Error getting mysqlPool connection: ' + err);
+        throw err;
+      }
+      let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
+      let val = [userID];
+
+      connection.query(queryString, val, (err, result) => {
+        if (err) throw err;
+        cb(result);
+      })
+      connection.release();
+    });
   }
 
 };

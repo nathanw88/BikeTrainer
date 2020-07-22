@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Jumbotron, FormGroup, Input } from 'reactstrap';
-import "./DAILY_NUTRIENTS_BAR.css";
+import "./DailyNutrientsBar.css";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryLegend, VictoryStack, VictoryTooltip, VictoryZoomContainer } from 'victory';
 
-class DAILY_NUTRIENTS_BAR extends Component {
+class DailyNutrientsBar extends Component {
 
   constructor(props) {
 
@@ -151,4 +151,4 @@ class DAILY_NUTRIENTS_BAR extends Component {
   }
 }
 
-export default DAILY_NUTRIENTS_BAR
+export default DailyNutrientsBar

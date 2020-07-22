@@ -98,10 +98,10 @@ router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res
 });
 
 
-router.route("/userFoodLogs/:userID/:dateFrom/:dateTill").get((req, res)=>{
+router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((req, res)=>{
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill } = req.params;
+  const { userID, dateFrom, dateTill, limit, offset } = req.params;
 
   if(!check.isNumber(userID)){
     res.json({error: "User ID Isn't A Number!"});
@@ -120,7 +120,7 @@ router.route("/userFoodLogs/:userID/:dateFrom/:dateTill").get((req, res)=>{
     else {
 
 
-        food.userFoodLogs(userID, dateFrom, dateTill, (result2) => {
+        food.userFoodLogs(userID, dateFrom, dateTill, limit, offset, (result2) => {
           // console.log(result2);
           res.json(result2)
         });

@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Jumbotron, Button, Form, FormGroup, Label, Input, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import API from '../../utils/API';
-import "./Nutrition_plan.css"
+import "./NutritionPlan.css"
 
-class Nutrition_plan extends Component {
+class NutritionPlan extends Component {
 
   constructor(props) {
 
@@ -49,12 +49,12 @@ class Nutrition_plan extends Component {
   };
 
   componentDidMount = () => {
-    if(!sessionStorage.getItem("id")){
-      alert("Please Login") 
+    if (!sessionStorage.getItem("id")) {
+      alert("Please Login")
       window.location.replace("/")
     };
 
-    API.getUserMeasurements(this.state.userID).then((result) => {
+    API.getUserInfo(this.state.userID).then((result) => {
       if (result.data.error) {
 
         alert(result.data.error)
@@ -70,16 +70,11 @@ class Nutrition_plan extends Component {
         let values = Object.values(result.data);
         let keys = Object.keys(result.data);
         let length = keys.length;
-
+        console.log(user)
         for (let i = 0; i < length; i++) {
           user[keys[i]] = values[i]
         };
-
-        this.setState({ user });
-
-        // console.log(this.state.user)
-
-
+          this.setState({ user });
 
       }
     });
@@ -342,4 +337,4 @@ class Nutrition_plan extends Component {
   }
 }
 
-export default Nutrition_plan;
+export default NutritionPlan;

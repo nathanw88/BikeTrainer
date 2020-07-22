@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import API from "../../../utils/API";
 import { Table, Jumbotron, FormGroup, Input } from 'reactstrap';
-import "./DAILY_NUTRIENTS.css";
+import "./DailyNutrients.css";
 
-class DAILY_NUTRIENTS extends Component {
+class DailyNutrients extends Component {
 
   constructor(props) {
 
@@ -108,4 +108,4 @@ class DAILY_NUTRIENTS extends Component {
   }
 }
 
-export default DAILY_NUTRIENTS
+export default DailyNutrients

@@ -24,6 +24,13 @@ var user = {
     orm.selectLogs(userId, table, function(res){
       cb(res);
     })
+  },
+
+  selectActiveNutritionPlan: (userID, cb) => {
+
+    orm.selectActiveNutritionPlan(userID, (res)=>{
+      cb(res);
+    });
   }
 
 };
