@@ -38,7 +38,7 @@
   "main": "server.js",
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.4"
   },
   "repository": {
     "type": "git",
