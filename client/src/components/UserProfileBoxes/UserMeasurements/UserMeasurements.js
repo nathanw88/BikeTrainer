@@ -19,7 +19,7 @@ class UserMeasurements extends Component {
   componentDidMount = () => {
     let poundsToKilograms = 2.2046;
     if (!sessionStorage.getItem("id")) {
-      alert("Please Login")
+      // alert("Please Login")
       window.location.replace("/")
     };
 

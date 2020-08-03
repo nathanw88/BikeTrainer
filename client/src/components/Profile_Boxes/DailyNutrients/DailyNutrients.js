@@ -26,7 +26,7 @@ class DailyNutrients extends Component {
 
       if (result.data.error) {
 
-        alert(result.data.error)
+        // alert(result.data.error)
         if (result.data.error === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");
