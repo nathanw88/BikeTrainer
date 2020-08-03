@@ -19,13 +19,13 @@ class UserNutritionPlan extends Component {
 
   componentDidMount = () => {
     if (!sessionStorage.getItem("id")) {
-      alert("Please Login")
+      // alert("Please Login")
       window.location.replace("/")
     };
     API.getUserNutritionPlan(this.state.userID).then((result) => {
       if (result.data.error) {
 
-        alert(result.data.error)
+        // alert(result.data.error)
         if (result.data.error === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");
