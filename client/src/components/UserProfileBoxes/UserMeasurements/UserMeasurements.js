@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Jumbotron, Label, Input, Button, Form, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, FormGroup } from 'reactstrap';
 import API from '../../../utils/API';
 import "./UserMeasurements.css";
+import convert, { cmToFtRemainderInInches } from "../../../utils/convert.js";
 
 class UserMeasurements extends Component {
 
@@ -17,9 +18,7 @@ class UserMeasurements extends Component {
   };
 
   componentDidMount = () => {
-    let poundsToKilograms = 2.2046;
     if (!sessionStorage.getItem("id")) {
-      // alert("Please Login")
       window.location.replace("/")
     };
 
@@ -44,12 +43,12 @@ class UserMeasurements extends Component {
           userMeasurements[keys[i]] = values[i]
         };
         if (!userMeasurements.metric) {
-          userMeasurements.weight = Math.round(userMeasurements.weight * poundsToKilograms);
-          userMeasurements.heightFeet = parseInt((userMeasurements.height / 2.54) / 12)
-          userMeasurements.heightInches = parseInt((userMeasurements.height / 2.54) % 12)
+          var { ft, inches } = convert.cmToFtRemainderInInches(userMeasurements.height);
+          userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
+          userMeasurements.heightFeet = ft;
+          userMeasurements.heightInches = inches;
 
         }
-        // console.log(userMeasurements);
         this.setState({ userMeasurements });
       }
     });
@@ -57,20 +56,14 @@ class UserMeasurements extends Component {
 
 
   handleInputChange = event => {
-
     const { userMeasurements } = this.state;
-    // console.log(event.target)
     const { name, value } = event.target;
-    //console.log(userMeasurements)
     userMeasurements[name] = value;
     this.setState({ userMeasurements });
 
   };
 
   save = () => {
-    let inchToCentimeter = 2.54;
-    let feetToInches = 12;
-    let poundsToKilograms = 2.2046;
     let data = {
       gender: this.state.userMeasurements.gender,
       userID: sessionStorage.getItem("id"),
@@ -84,14 +77,11 @@ class UserMeasurements extends Component {
       data.height = this.state.userMeasurements.height;
     }
     else if (!data.metric) {
-      data.weight = parseFloat((parseFloat(this.state.userMeasurements.weight) / poundsToKilograms).toFixed(3));
-      data.height = (this.state.userMeasurements.heightFeet * feetToInches + parseFloat(this.state.userMeasurements.heightInches)) * inchToCentimeter;
+      data.weight = convert.lbsToKg(this.state.userMeasurements.weight);
+      data.height = convert.ftAndInchesToCm(this.state.userMeasurements.heightFeet, this.state.userMeasurements.heightInches);
     }
-    // console.log(data);
-    // console.log(this.state.userMeasurements);
 
     API.saveSetup(data).then((result) => {
-      // console.log(result)
       if (result.data.error) {
 
         alert(result.data.error)
@@ -104,7 +94,6 @@ class UserMeasurements extends Component {
       }
       else {
         window.location.replace("/user_profile")
-        // console.log(result);
       }
     });
   };
@@ -113,26 +102,20 @@ class UserMeasurements extends Component {
 
     const { userMeasurements } = this.state;
     const { name, value } = event.target;
-    // console.log(value)
     userMeasurements[name] = value;
     this.setState({ userMeasurements });
-    // console.log(this.state.userMeasurements.metric)
 
   };
 
   metricHandler = event => {
-    let poundsToKilograms = 2.2046;
     const { userMeasurements } = this.state;
     const { value } = event.target;
-    // console.log(userMeasurements.metric)
     if (parseInt(value) !== parseInt(userMeasurements.metric)) {
       if (parseInt(value)) {
-        // console.log("KG")
-        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) / poundsToKilograms).toFixed(3));
+        userMeasurements.weight = convert.lbsToKg(userMeasurements.weight);
       }
       else if (!parseInt(value)) {
-        // console.log("pounds")
-        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) * parseFloat(poundsToKilograms)).toFixed(1));
+        userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
       }
       userMeasurements.metric = parseInt(value);
       this.setState({ userMeasurements });
