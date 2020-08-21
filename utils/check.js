@@ -1,15 +1,31 @@
 let check = {
-  
-  isNumber: (num) => /^-?[\d.]+(?:e-?\d+)?$/.test(num),
 
-  isString: (str) => typeof str == "string" || (typeof str == "object" && str.constructor === String),
+  isNumber: (num) => typeof num === 'number',
 
-  isDate: (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date)),
+  isString: (str) => {
+    if (str === null) return false;
 
-  isPassword: (password) => /^\S{8,}$/.test(password),
-    
-  isEmail: (email) => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)
+    return typeof str == "string" || (typeof str == "object" && str.constructor === String)
+  },
 
+  isDate: (date) => {
+    if (date === null || Array.isArray(date) || check.isNumber(date)) return false;
+    date = new Date(date)
+
+    return (date.getTime() === date.getTime());
+  },
+
+  isPassword: (password) =>{
+    if(password === undefined || Array.isArray(password)) return false;
+
+    return /^\S{8,}$/.test(password);
+  },
+
+  isEmail: (email) =>{
+    if(Array.isArray(email))return false
+
+    return (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))
+  }
 }
 
-module.exports = check ; 
+module.exports = check; 
