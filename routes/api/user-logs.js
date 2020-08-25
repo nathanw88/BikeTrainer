@@ -32,7 +32,8 @@ router.route("/dailySum/:userID/:date").get((req, res) => {
 router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill } = req.params;
+  let { userID, dateFrom, dateTill } = req.params;
+  userID = parseInt(userID)
 
   if(!check.isNumber(userID)){
     res.json({error: "User ID Isn't A Number!"});
@@ -66,7 +67,8 @@ router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
 router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res)=>{
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill } = req.params;
+  let { userID, dateFrom, dateTill } = req.params;
+  userID = parseInt(userID)
 
   if(!check.isNumber(userID)){
     res.json({error: "User ID Isn't A Number!"});
@@ -101,8 +103,8 @@ router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res
 router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((req, res)=>{
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill, limit, offset } = req.params;
-
+  let { userID, dateFrom, dateTill, limit, offset } = req.params;
+  userID = parseInt(userID) 
   if(!check.isNumber(userID)){
     res.json({error: "User ID Isn't A Number!"});
   }
@@ -121,7 +123,6 @@ router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((re
 
 
         food.userFoodLogs(userID, dateFrom, dateTill, limit, offset, (result2) => {
-          // console.log(result2);
           res.json(result2)
         });
    
@@ -134,8 +135,8 @@ router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((re
 
 
 router.route("/deleteUserLogs").delete((req, res)=>{
-  // console.log(req.body)
-  const { id } = req.body;
+  let { id } = req.body;
+  id = parseInt(id);
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
 

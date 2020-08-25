@@ -11,7 +11,7 @@ class DailyNutrients extends Component {
 
     this.state = {
 
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
         date: new Date(),
         logs: []

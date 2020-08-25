@@ -4,8 +4,6 @@ var orm = require("../config/orm.js");
 
 var session = {
   create: function (cols, vals, cb) {
-    // console.log(cols)
-    // console.log(vals)
     orm.create("session", cols, vals, function (res) {
       cb(res);
     });
@@ -38,8 +36,6 @@ var session = {
   selectWhere: function (searchCol, val, cb) {
     orm.selectWhere("session", searchCol, val, function (res) {
       var now = new Date();
-      // console.log(res[0].expires.getTime() > now)
-      // console.log(res)
       cb(res);
     });
   }

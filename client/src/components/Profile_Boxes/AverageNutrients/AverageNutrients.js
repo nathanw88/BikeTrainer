@@ -11,7 +11,7 @@ class AverageNutrients extends Component {
 
     this.state = {
 
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
         dateFrom: new Date(),
         dateTill: new Date(),

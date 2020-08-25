@@ -7,25 +7,12 @@ var user = {
       cb(res);
     })
   },
-  // The variables cols and vals are arrays.
-  // create: function (cols, vals, cb) {
-  //   orm.create("user_food", cols, vals, function (res) {
-  //     cb(res);
-  //   });
-  // },
 
   postingFood: function (data, cb) {
     orm.postingFood(data, function (res) {
       cb(res)
     })
   },
-
-  // createMulti: function (array, cb) {
-  //   console.log(array)
-  //   orm.createMulti("food", array, function (res) {
-  //     cb(res);
-  //   });
-  // },
 
   selectWhere: function (searchCol, val, cb) {
     orm.selectWhere("food", searchCol, val, function (res) {

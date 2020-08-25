@@ -11,9 +11,9 @@
     "express-session": "^1.17.1",
     "if-env": "^1.0.4",
     "inquirer": "^7.1.0",
-    "jest": "^26.4.1",
     "memorystore": "^1.6.2",
     "mysql": "^2.18.1",
+    "react-scripts": "^3.4.3",
     "uuid": "^3.4.0"
   },
   "scripts": {

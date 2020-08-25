@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Jumbotron, Label, Input, Button, Form, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, FormGroup } from 'reactstrap';
 import API from '../../../utils/API';
 import "./UserMeasurements.css";
-import convert, { cmToFtRemainderInInches } from "../../../utils/convert.js";
+import convert from "../../../utils/convert.js";
 
 class UserMeasurements extends Component {
 
@@ -11,7 +11,7 @@ class UserMeasurements extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       userMeasurements: {}
 
     };

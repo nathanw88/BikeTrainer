@@ -25,7 +25,7 @@ class Log extends Component {
 
       log: {
 
-        fk_user: sessionStorage.getItem("id"),
+        fk_user: parseInt(sessionStorage.getItem("id")),
         portions: [],
         date: [],
         food: [],

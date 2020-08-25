@@ -11,7 +11,7 @@ class DailyNutrientsBar extends Component {
     super(props);
 
     this.state = {
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
         eatenObjects:[],
         neededObjects:[],

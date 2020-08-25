@@ -10,7 +10,7 @@ class UserNutritionPlan extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       userNutritionPlan: {},
       userNutritionPlanData: []
 

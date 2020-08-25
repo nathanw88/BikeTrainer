@@ -45,7 +45,7 @@ class Setup extends Component {
     let poundsToKilograms = 2.2046;
     let data = {
       gender: this.state.input.gender,
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       weight: 0,
       height: 0,
       metric: parseInt(this.state.input.metric)

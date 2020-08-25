@@ -11,7 +11,7 @@ class NutritionPlan extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       user: {},
       input: {
         name: "",

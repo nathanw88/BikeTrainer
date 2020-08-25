@@ -11,7 +11,7 @@ class FoodLogs extends Component {
     super(props);
 
     this.state = {
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       limit: 5,
       offset: 0,
       data: {
@@ -27,6 +27,8 @@ class FoodLogs extends Component {
     let { dateFrom } = this.state.data
     const today = new Date();
     dateFrom.setDate(today.getDate() - 7);
+
+    console.log(typeof this.state.fk_user)
 
     API.userFoodLogs(this.state.fk_user, dateFrom, today, this.state.limit, this.state.offset).then((result) => {
 

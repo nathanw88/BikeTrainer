@@ -13,7 +13,7 @@ class NutrientsTimeline extends Component {
 
     this.state = {
 
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       selectedNutrients: {},
       data: {
         graphArrays: [],

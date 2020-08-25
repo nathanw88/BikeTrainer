@@ -7,9 +7,6 @@ var nutritionPlan = require("../../models/nutritionPlan");
 const check = require("../../utils/check")
 
 router.route("/login").post((req, res) => {
-  // console.log(req.body)
-  // console.log(req.sessionID)
-  // console.log(req.session.cookie._expires)
   let { userPassword, userEmail } = req.body;
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
@@ -41,15 +38,14 @@ router.route("/login").post((req, res) => {
       session.selectWhere("fk_user", userID, function (result) {
         if (result.length === 0) {
           session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], function (result) {
-            // console.log(result);
           })
         }
         else {
           session.update(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-            // console.log(result);
+
           })
         }
-        // console.log(result);
+
       })
 
       res.json({ userEmail, userID });
@@ -90,11 +86,8 @@ router.route("/register").post((req, res) => {
       if (result == false) {
         bcrypt.hash(userPassword, 12).then(function (hash) {
           user.create(Object.keys(data), [hash, userEmail, userBirthday], function (response) {
-            // console.log(response)
             userID = response.insertId
-            // console.log(userID)
             session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], function (result) {
-              // console.log(result);
             })
             res.json(response)
           })
@@ -124,7 +117,6 @@ router.route("/setup").post((req, res) => {
   else if (!data.metric === 0 || !data.metric === 1) {
     res.json({ error: "Metric Should Be A 0 Or A 1!" })
   }
-  // console.log(req.body);
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.body.userID, function (result) {
 
@@ -152,7 +144,7 @@ router.route("/setup").post((req, res) => {
 router.route("/nutritionPlan").post((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  let userID = req.body.id
+  let userID = parseInt(req.body.id);
   if (!check.isNumber(userID)) {
     res.json({ error: "User Id Isn't A Number!" })
   }
@@ -188,7 +180,6 @@ router.route("/nutritionPlan").post((req, res) => {
 
           }
           user.update(["fk_active_nutrition_plan"], [result2.insertId], userID, function (result4) {
-            // console.log(result4)
             if (result4.error) {
 
               res.json({ error: result4.error })
@@ -198,13 +189,8 @@ router.route("/nutritionPlan").post((req, res) => {
               res.json([result, result2, result3, result4])
             }
           });
-          // console.log(result3)
         });
-        // console.log(result2.insertId)
-
       });
-
-
     }
   })
 });
@@ -212,13 +198,11 @@ router.route("/nutritionPlan").post((req, res) => {
 router.route("/nutritionPlan/:planID/:userID").delete((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-  const { userID, planID } = req.params
-
+  let { userID, planID } = req.params;
+  userID = parseInt(userID);
   if (!check.isNumber(userID)) {
     res.json({ error: "User ID Isn't A Number!" })
   }
-
-
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
     if (result.error) {
@@ -238,13 +222,14 @@ router.route("/nutritionPlan/:planID/:userID").delete((req, res) => {
 router.route("/measurments/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
+  let userID = parseInt(req.params.userID);
 
-  if (!check.isNumber(req.params.userID)) {
+  if (!check.isNumber(userID)) {
     res.json({ error: "User ID Isn't A Number!" })
   }
 
 
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
     if (result.error) {
 
@@ -253,7 +238,7 @@ router.route("/measurments/:userID").get((req, res) => {
 
     else {
 
-      user.selectWhere("id", req.params.userID, function (result) {
+      user.selectWhere("id", userID, function (result) {
 
         let data = {
           gender: result[0].gender,
@@ -270,13 +255,11 @@ router.route("/measurments/:userID").get((req, res) => {
   });
 });
 
-
-
 router.route("/getUserNutritionPlan/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
 
-  if (!check.isNumber(req.params.userID)) {
+  if (!check.isNumber(parseInt(req.params.userID))) {
     res.json({ error: "User ID Isn't A Number!" })
   }
 
@@ -320,7 +303,7 @@ router.route("/getMeasurements/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
 
-  if (!check.isNumber(req.params.userID)) {
+  if (!check.isNumber(parseInt(req.params.userID))) {
     res.json({ error: "User ID Isn't A Number!" })
   }
 
@@ -342,8 +325,6 @@ router.route("/getMeasurements/:userID").get((req, res) => {
           height: result2[0].height,
           metric: result2[0].metric,
         }
-
-        // console.log(data);
         res.json(data)
       })
     }
@@ -355,7 +336,7 @@ router.route("/getPersonalInfo/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
 
-  if (!check.isNumber(req.params.userID)) {
+  if (!check.isNumber(parseInt(req.params.userID))) {
     res.json({ error: "User ID Isn't A Number!" })
   }
 
@@ -373,7 +354,6 @@ router.route("/getPersonalInfo/:userID").get((req, res) => {
           userBirthday: result2[0].userBirthday,
           userEmail: result2[0].userEmail
         }
-        // console.log(data);
         res.json(data)
       })
     }
@@ -382,11 +362,11 @@ router.route("/getPersonalInfo/:userID").get((req, res) => {
 });
 
 router.route("/updatePersonalInfo").put((req, res) => {
-console.log(req.body)
+  console.log(req.body)
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
   let { id, userEmail, userBirthday } = req.body
-  if (!check.isNumber(id)) {
+  if (!check.isNumber(parseInt(id))) {
     res.json({ error: "User Id Isn't A Number!" })
   }
 
@@ -398,7 +378,7 @@ console.log(req.body)
     }
 
     else {
-      user.update(["userEmail", "userBirthday"], [userEmail, userBirthday], id, function (result2){
+      user.update(["userEmail", "userBirthday"], [userEmail, userBirthday], id, function (result2) {
 
         console.log(result2)
         res.json(result2)
