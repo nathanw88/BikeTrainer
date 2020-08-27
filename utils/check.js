@@ -2,6 +2,13 @@ let check = {
 
   isNumber: (num) => typeof num === 'number',
 
+  isNumberString: (str) => {
+    if (str == null || Array.isArray(str)|| typeof str === 'number') return false;
+    else if (Number.isNaN(parseInt(str))) return false;
+    else if (typeof str == "string" || (typeof str == "object" && str.constructor === String))
+    return typeof parseInt(str) ==='number';
+  },
+
   isString: (str) => {
     if (str === null) return false;
 

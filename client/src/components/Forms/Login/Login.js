@@ -21,17 +21,13 @@ class LoginModal extends React.Component {
   login = event => {
 
     API.login(this.state.userEmail, this.state.userPassword).then(res => {
-      if (res.data.error) {
-        alert(res.data.error)
-      }
-      else if (!res.data.error) {
         sessionStorage.setItem("email", res.data.userEmail)
         sessionStorage.setItem("id", res.data.userID)
         window.location.replace('/profile')
-      }
-
-
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      console.log(err)
+      alert("Please Make Sure Password And Email Are Correct")
+    });
 
   }
   //function to update the state as the login for is changed

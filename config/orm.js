@@ -317,23 +317,6 @@ var orm = {
     });
   },
 
-  // selectLogs: function (FK, table, cb) {
-  //   mysqlPool.getConnection(function (err, connection) {
-  //     if (err) {
-  //       connection.release();
-  //       console.log(' Error getting mysqlPool connection: ' + err);
-  //       throw err;
-  //     }
-  //     var queryString = "SELECT * FROM ?? WHERE ??.fk_user = ? ORDER BY date"
-
-  //     connection.query(queryString, [table, table, FK], function (err, result) {
-  //       if (err) throw err;
-  //       cb(result)
-  //     })
-  //     connection.release();
-  //   });
-  // },
-
   postNutritionPlanNutrients: (obj, fkNutritionPlan, cb) => {
     mysqlPool.getConnection(function (err, connection) {
       if (err) {
@@ -417,7 +400,6 @@ var orm = {
             });
 
             if (i === (maxLength - 1)) {
-              // console.log(dataArray)
               cb(dataArray)
             };
           })
@@ -608,9 +590,6 @@ var orm = {
           }
         }
       })
-
-
-
       cb("done");
       connection.release();
     });

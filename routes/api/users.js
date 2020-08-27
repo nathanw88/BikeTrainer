@@ -5,57 +5,25 @@ var user = require("../../models/users");
 var session = require("../../models/session");
 var nutritionPlan = require("../../models/nutritionPlan");
 const check = require("../../utils/check")
+const createError = require('http-errors')
 
 router.route("/login").post((req, res) => {
-  let { userPassword, userEmail } = req.body;
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let userID;
-  if (!check.isString(userPassword)) {
-    res.json({ error: "Password Isn't A String!" })
-  }
-  else if (!check.isEmail(userEmail)) {
-    res.json({ error: "Email Isn't Correct!" })
-  }
-
-  user.selectWhere("userEmail", userEmail, function (result) {
-
-
-    let cleanedEmail = userEmail.toLowerCase();
-    // console.log(cleanedEmail)
-    for (var i = 0; i < result.length; i++) {
-      if (result[i].userEmail == cleanedEmail) {
-        if (bcrypt.compareSync(userPassword, result[i].userPassword)) {
-          userID = result[i].id;
-        } else {
-          cleanedEmail = -4;
-        }
-        break;
-      }
-    }
-
-    if (cleanedEmail && userID) {
+  let { userPassword, userEmail } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID;
+  if (userEmail === undefined || userPassword === undefined) throw createError(400, "Data must include userPassword and userEmail")
+  if (!check.isString(userPassword)) throw createError(400, "Password Isn't A String")
+  else if (!check.isEmail(userEmail)) throw createError(400, "Email Isn't Correct")
+  let cleanedEmail = userEmail.toLowerCase();
+  user.selectWhere("userEmail", cleanedEmail, function (result) {
+    if (result.length === 0) return res.status(400).json({ message: "Email Does Not Exist" })
+    if (bcrypt.compareSync(userPassword, result[0].userPassword)) userID = result[0].id;
+    else return res.status(400).json({ message: "Incorrect Password" })
+    if (userID) {
       session.selectWhere("fk_user", userID, function (result) {
-        if (result.length === 0) {
-          session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], function (result) {
-          })
-        }
-        else {
-          session.update(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-          })
-        }
-
+        if (result.length === 0) session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], (result) => { })
+        else session.update(["session_id", "expires"], [sessionID, sessionExpires], userID, (result) => { })
       })
-
-      res.json({ userEmail, userID });
+     return res.json({ userEmail, userID });
     }
-    else if (cleanedEmail === -4) {
-      res.json({ error: "Incorrect Password" });
-    } else {
-      res.json({ error: "Email Does Not Exist" });
-    }
-
   })
 
 
@@ -150,14 +118,10 @@ router.route("/nutritionPlan").post((req, res) => {
   }
   let nutritionPlanData = { name, description, exercise_amount } = req.body.nutritionPlanData;
 
-  if (!(Object.values(nutritionPlanData)).every(check.isString)) {
-    res.json({ error: "Name, Description, And Exercise Amount Need To Be Strings!" })
-  }
+  if (!(Object.values(nutritionPlanData)).every(check.isString)) res.json({ error: "Name, Description, And Exercise Amount Need To Be Strings!" })
 
   let nutritionPlanNutrients = req.body.nutritionPlanNutrients
-  if (!(Object.keys(Object.keys(nutritionPlanNutrients))).every(check.isNumber)) {
-    res.json({ error: "Id And Amount Of Each Nutrient Must Be A Number!" })
-  }
+  if (!(Object.keys(Object.keys(nutritionPlanNutrients))).every(check.isNumberString)) res.json({ error: "Id And Amount Of Each Nutrient Must Be A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
@@ -174,20 +138,11 @@ router.route("/nutritionPlan").post((req, res) => {
 
         }
         nutritionPlan.createNutrients(nutritionPlanNutrients, result2.insertId, function (result3) {
-          if (result3.error) {
+          if (result3.error) res.json({ error: result3.error });
 
-            res.json({ error: result3.error })
-
-          }
           user.update(["fk_active_nutrition_plan"], [result2.insertId], userID, function (result4) {
-            if (result4.error) {
-
-              res.json({ error: result4.error })
-
-            }
-            else {
-              res.json([result, result2, result3, result4])
-            }
+            if (result4.error) res.json({ error: result4.error });
+            else res.json([result, result2, result3, result4]);
           });
         });
       });
@@ -200,21 +155,12 @@ router.route("/nutritionPlan/:planID/:userID").delete((req, res) => {
   let sessionID = req.sessionID;
   let { userID, planID } = req.params;
   userID = parseInt(userID);
-  if (!check.isNumber(userID)) {
-    res.json({ error: "User ID Isn't A Number!" })
-  }
+  if (!check.isNumber(userID)) res.json({ error: "User ID Isn't A Number!" });
+
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result);
-    }
-
+    if (result.error) res.json(result);
     else {
-      nutritionPlan.delete(planID, userID, function (result2) {
-        res.json(result2)
-      })
-
+      nutritionPlan.delete(planID, userID, (result2) => res.json(result2));
     }
   });
 });
@@ -223,19 +169,11 @@ router.route("/measurments/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
   let userID = parseInt(req.params.userID);
-
-  if (!check.isNumber(userID)) {
-    res.json({ error: "User ID Isn't A Number!" })
-  }
-
+  if (!check.isNumber(userID)) res.json({ error: "User ID Isn't A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result);
-    }
-
+    if (result.error) res.json(result);
     else {
 
       user.selectWhere("id", userID, function (result) {
@@ -258,21 +196,13 @@ router.route("/measurments/:userID").get((req, res) => {
 router.route("/getUserNutritionPlan/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-
-  if (!check.isNumber(parseInt(req.params.userID))) {
-    res.json({ error: "User ID Isn't A Number!" })
-  }
-
+  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result);
-    }
+    if (result.error) res.json(result);
 
     else {
-
       user.selectWhere("id", req.params.userID, function (result2) {
 
         let data = {
@@ -289,10 +219,7 @@ router.route("/getUserNutritionPlan/:userID").get((req, res) => {
             })
           })
         }
-        else {
-          // console.log(data);
-          res.json(data)
-        }
+        else res.json(data)
       })
     }
 
@@ -302,21 +229,12 @@ router.route("/getUserNutritionPlan/:userID").get((req, res) => {
 router.route("/getMeasurements/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-
-  if (!check.isNumber(parseInt(req.params.userID))) {
-    res.json({ error: "User ID Isn't A Number!" })
-  }
-
+  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result);
-    }
-
+    if (result.error) res.json(result);
     else {
-
       user.selectWhere("id", req.params.userID, function (result2) {
 
         let data = {
@@ -335,18 +253,10 @@ router.route("/getMeasurements/:userID").get((req, res) => {
 router.route("/getPersonalInfo/:userID").get((req, res) => {
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
-
-  if (!check.isNumber(parseInt(req.params.userID))) {
-    res.json({ error: "User ID Isn't A Number!" })
-  }
-
+  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result);
-    }
+    if (result.error) res.json(result);
 
     else {
       user.selectWhere("id", req.params.userID, function (result2) {
@@ -357,34 +267,23 @@ router.route("/getPersonalInfo/:userID").get((req, res) => {
         res.json(data)
       })
     }
-
   });
 });
 
 router.route("/updatePersonalInfo").put((req, res) => {
-  console.log(req.body)
   let sessionExpires = req.session.cookie._expires;
   let sessionID = req.sessionID;
   let { id, userEmail, userBirthday } = req.body
-  if (!check.isNumber(parseInt(id))) {
-    res.json({ error: "User Id Isn't A Number!" })
-  }
+
+  if (!check.isNumber(parseInt(id))) res.json({ error: "User Id Isn't A Number!" })
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], id, function (result) {
-
-    if (result.error) {
-
-      res.json(result);
-    }
-
+    if (result.error) res.json(result);
     else {
       user.update(["userEmail", "userBirthday"], [userEmail, userBirthday], id, function (result2) {
-
-        console.log(result2)
         res.json(result2)
       })
     }
-
   });
 });
 

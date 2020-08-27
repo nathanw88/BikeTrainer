@@ -89,4 +89,23 @@ describe('Check if passed parameter is an email', () => {
   });
 })
 
+describe('Check if passed parameter is a string containing numbers', () => {
+  test('Checking if passing in incorrect parameter returns false', () => {
+    expect(check.isNumberString("string")).toBe(false);
+    expect(check.isNumberString([123])).toBe(false);
+    expect(check.isNumberString([])).toBe(false);
+    expect(check.isNumberString({ 1: 1 })).toBe(false);
+    expect(check.isNumberString({})).toBe(false);
+    expect(check.isNumberString(null)).toBe(false);
+    expect(check.isNumberString()).toBe(false);
+    expect(check.isNumberString(undefined)).toBe(false);
+    expect(check.isNumberString(true)).toBe(false);
+    expect(check.isNumberString(false)).toBe(false);
+    expect(check.isNumberString(123)).toBe(false);
+    expect(check.isNumberString(0)).toBe(false);
+  });
+  test('Checking if passing in correct parameter return true', () => {
+    expect(check.isNumberString('123')).toBe(true);
+  });
+});
 
