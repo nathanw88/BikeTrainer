@@ -9,6 +9,12 @@ var session = {
     });
   },
 
+  delete: function (userID, cb) {
+    orm.delete("session", ["fk_user"], [userID], function (res) {
+      cb(res);
+    });
+  },
+
   update: function (cols, vals, userID, cb) {
     orm.update("session", "fk_user", cols, vals, userID, function (res) {
       cb(res);
@@ -16,20 +22,18 @@ var session = {
   },
 
   checkSession: function (cols, vals, userID, cb) {
-
+    let clientsSessionID = vals[0]
     orm.selectWhere("session", "fk_user", userID, function (res) {
-      var now = new Date();
-      if (res[0] && res[0].expires.getTime() > now) {
-        orm.update("session", "fk_user", cols, vals, userID, function (res) {
-          cb(res);
-        });
+      if (res[0]) {
+        var databaseSessionID = res[0].session_id, now = new Date();
+        if (res[0].expires.getTime() > now && clientsSessionID === databaseSessionID) {
+          orm.update("session", "fk_user", cols, vals, userID, function (res) {
+            cb(res);
+          });
+        }
+        else return cb({ error: "Your session has expired." })
       }
-      else {
-        cb({
-          error: "Your session has expired.",
-          redirect: "/"
-        })
-      }
+      else return cb({ error: "Your session has expired." })
     });
   },
 

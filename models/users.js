@@ -8,6 +8,14 @@ var user = {
     });
   },
 
+  deleteTestUser: function (cols, vals, cb){
+    orm.delete("session", ["fk_user"], vals, function(sessionRes){
+      orm.delete("users", cols, vals, function(res){
+        cb(res)
+      })
+    })
+  },
+
   update: function(cols, vals, userID, cb){
     orm.update("users", "id", cols, vals, userID, function(res){
       cb(res)

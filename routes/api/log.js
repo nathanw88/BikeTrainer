@@ -19,9 +19,7 @@ router.route("/findFood").post((req, res) => {
   }
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-    if (result.error) {
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
     else {
       food.findFood(req.body.searchString, function (data) {
         res.json(data);
@@ -62,9 +60,7 @@ router.route("/food").post((req, res) => {
   }
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], data.fk_user, function (result) {
-    if (result.error) {
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
     else {
       if (data.fk_food.length === data.grams.length) {
         food.postingFood(data, function (response) {

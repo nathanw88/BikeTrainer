@@ -12,278 +12,200 @@ router.route("/login").post((req, res) => {
   if (userEmail === undefined || userPassword === undefined) throw createError(400, "Data must include userPassword and userEmail")
   if (!check.isString(userPassword)) throw createError(400, "Password Isn't A String")
   else if (!check.isEmail(userEmail)) throw createError(400, "Email Isn't Correct")
-  let cleanedEmail = userEmail.toLowerCase();
-  user.selectWhere("userEmail", cleanedEmail, function (result) {
+  let lowercaseEmail = userEmail.toLowerCase();
+  user.selectWhere("userEmail", lowercaseEmail, function (result) {
     if (result.length === 0) return res.status(400).json({ message: "Email Does Not Exist" })
-    if (bcrypt.compareSync(userPassword, result[0].userPassword)) userID = result[0].id;
+    let databasePassword = result[0].userPassword;
+    if (bcrypt.compareSync(userPassword, databasePassword)) userID = result[0].id;
     else return res.status(400).json({ message: "Incorrect Password" })
-    if (userID) {
-      session.selectWhere("fk_user", userID, function (result) {
-        if (result.length === 0) session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], (result) => { })
-        else session.update(["session_id", "expires"], [sessionID, sessionExpires], userID, (result) => { })
-      })
-     return res.json({ userEmail, userID });
-    }
+    session.selectWhere("fk_user", userID, function (result) {
+      if (result.length === 0) session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], (result) => { })
+      else session.update(["session_id", "expires"], [sessionID, sessionExpires], userID, (result) => { })
+      return res.json({ userEmail, userID });
+    })
   })
-
-
 });
 
+router.route('/logout').delete((req, res) => {
+  let userID = req.body.userID
+  if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number")
+  session.delete(userID, function (result) {
+   return res.json(result)
+  })
+})
+
 router.route("/register").post((req, res) => {
-  let { userPassword, userEmail, userBirthday } = req.body;
-  let data = { userPassword, userEmail, userBirthday }
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let userID;
-  // console.log()
-
-  if (!check.isEmail(userEmail)) {
-    res.json({ error: "Invalid Email" })
-  }
-  else if (!check.isDate(userBirthday)) {
-    res.json({ error: "Incorrect Date For Birthday!" })
-  }
-  else if (!check.isPassword(userPassword)) {
-    console.log(userPassword)
-
-    res.json({ error: "Invalid Password Needs To Have 8 Characters" })
-  }
-
-  else {
-    user.selectWhere("userEmail", userEmail, function (result) {
-      if (result == false) {
-        bcrypt.hash(userPassword, 12).then(function (hash) {
-          user.create(Object.keys(data), [hash, userEmail, userBirthday], function (response) {
-            userID = response.insertId
-            session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], function (result) {
-            })
-            res.json(response)
+  let { userPassword, userEmail, userBirthday } = req.body, lowercaseEmail = userEmail.toLowerCase(), salt = 12, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID;
+  if (userEmail === undefined || userPassword === undefined || userBirthday === undefined) throw createError(400, "Input must have userEmail, userPassword, and userBirthday");
+  if (!check.isEmail(userEmail)) throw createError(400, "Email Isn't Correct")
+  else if (!check.isDate(userBirthday)) throw createError(400, "Incorrect Date For Birthday")
+  else if (!check.isPassword(userPassword)) throw createError(400, "Invalid Password Needs To Have 8 Characters")
+  user.selectWhere("userEmail", lowercaseEmail, function (result) {
+    if (result.length === 0) {
+      bcrypt.hash(userPassword, salt).then(function (hashedPassword) {
+        user.create(["userPassword", "userEmail", "userBirthday"], [hashedPassword, lowercaseEmail, userBirthday], function (response) {
+          userID = response.insertId
+          session.create(["fk_user", "session_id", "expires"], [userID, sessionID, sessionExpires], function (result) {
           })
-        })
-      }
-      else {
-        res.json({ error: "Email Already Registered" })
-      }
-    })
-  }
+          return res.json(response);
+        });
+      });
+    }
+    else return res.status(400).json({ message: "Email Already Registered" });
+  })
+});
+
+router.route("/deleteTestUser").delete((req, res) => {
+  let { userPassword, userEmail } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID;
+  if (userEmail === undefined || userPassword === undefined) throw createError(400, "Data must include userPassword and userEmail")
+  if (!check.isString(userPassword)) throw createError(400, "Password Isn't A String")
+  else if (!check.isEmail(userEmail)) throw createError(400, "Email Isn't Correct")
+  let lowercaseEmail = userEmail.toLowerCase();
+  user.selectWhere("userEmail", lowercaseEmail, function (result) {
+    if (result.length === 0) return res.status(400).json({ message: "Email Does Not Exist" })
+    let databasePassword = result[0].userPassword;
+    if (bcrypt.compareSync(userPassword, databasePassword)) userID = result[0].id;
+    else return res.status(400).json({ message: "Incorrect Password" })
+    if (userID) {
+      user.deleteTestUser(["id"], [userID], function (deletedRow) {
+        return res.json({ message: `Deleted User ${lowercaseEmail}` });
+      })
+    }
+  })
 });
 
 router.route("/setup").post((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let data = { gender, weight, height, metric } = req.body
-
-  if (!check.isString(data.gender)) {
-    res.json({ error: "Gender Isn't A String!" })
-  }
-  else if (!check.isNumber(data.weight)) {
-    res.json({ error: "Weight Isn't A Number!" })
-  }
-  else if (!check.isNumber(data.height)) {
-    res.json({ error: "Height Isn't A Number!" })
-  }
-  else if (!data.metric === 0 || !data.metric === 1) {
-    res.json({ error: "Metric Should Be A 0 Or A 1!" })
-  }
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.body.userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result);
-    }
-
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID = parseInt(req.body.userID), data = { gender, weight, height, metric } = req.body
+  if (!check.isString(data.gender)) throw createError(400, "Gender Isn't A String")
+  else if (!check.isNumber(data.weight)) throw createError(400, "Weight Isn't A Number")
+  else if (!check.isNumber(data.height)) throw createError(400, "Height Isn't A Number")
+  else if (!data.metric === 0 || !data.metric === 1 || data.metric == undefined) throw createError(400, "Metric Should Be 0 Or 1")
+  else if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number")
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+    if (result.error) return res.status(400).json({ message: result.error });
     else {
-
       user.update(["gender", "weight", "height", "metric"], [data.gender, data.weight, data.height, data.metric], data.userID, function (result) {
-
-        if (result.error) {
-
-          res.json({ error: result.error })
-
-        }
-        else res.json(result);
-
+        if (result.error) return res.status(400).json({ message: result.error });
+        return res.json(result);
       });
     };
   });
 });
 
 router.route("/nutritionPlan").post((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let userID = parseInt(req.body.id);
-  if (!check.isNumber(userID)) {
-    res.json({ error: "User Id Isn't A Number!" })
-  }
-  let nutritionPlanData = { name, description, exercise_amount } = req.body.nutritionPlanData;
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID = parseInt(req.body.id);
+  if (req.body.nutritionPlanData === undefined || req.body.nutritionPlanData === null) throw createError(400, "nutritionPlanData Needs To Have name, descripption, and exercise_amount");
+  else if (req.body.nutritionPlanNutrients === undefined || req.body.nutritionPlanNutrients === null) throw createError(400, "nutritionPlanNutrients Must Contain Nutrients With id and amount For Each");
+  let nutritionPlanData = { name, description, exercise_amount } = req.body.nutritionPlanData, nutritionPlanNutrients = req.body.nutritionPlanNutrients;
+  if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number");
+  else if (!(Object.values(nutritionPlanData)).every(check.isString)) throw createError(400, "Name, Description, And Exercise Amount Need To Be Strings");
 
-  if (!(Object.values(nutritionPlanData)).every(check.isString)) res.json({ error: "Name, Description, And Exercise Amount Need To Be Strings!" })
-
-  let nutritionPlanNutrients = req.body.nutritionPlanNutrients
-  if (!(Object.keys(Object.keys(nutritionPlanNutrients))).every(check.isNumberString)) res.json({ error: "Id And Amount Of Each Nutrient Must Be A Number!" })
-
+  Object.values(nutritionPlanNutrients).forEach(nutrientObject => {
+    if (!Object.values(nutrientObject).every(check.isNumberString)) throw createError(400, "id And Amount Of Each Nutrient Must Be A Number");
+  })
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result);
-    }
-
+    if (result.error) return res.status(400).json({message: result.error});
     else {
       nutritionPlan.create(["fk_user", ...Object.keys(nutritionPlanData)], [userID, ...Object.values(nutritionPlanData)], function (result2) {
-        if (result2.error) {
-
-          res.json({ error: result2.error })
-
-        }
+        if (result2.error) return res.status(400).json({ message: result2.error });
         nutritionPlan.createNutrients(nutritionPlanNutrients, result2.insertId, function (result3) {
-          if (result3.error) res.json({ error: result3.error });
-
+          if (result3.error) return res.status(400).json({ message: result3.error });
           user.update(["fk_active_nutrition_plan"], [result2.insertId], userID, function (result4) {
-            if (result4.error) res.json({ error: result4.error });
-            else res.json([result, result2, result3, result4]);
+            if (result4.error) return res.status(400).json({ message: result4.error });
+            return res.json(result2);
           });
         });
       });
-    }
-  })
-});
-
-router.route("/nutritionPlan/:planID/:userID").delete((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let { userID, planID } = req.params;
-  userID = parseInt(userID);
-  if (!check.isNumber(userID)) res.json({ error: "User ID Isn't A Number!" });
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-    if (result.error) res.json(result);
-    else {
-      nutritionPlan.delete(planID, userID, (result2) => res.json(result2));
-    }
+    };
   });
 });
 
-router.route("/measurments/:userID").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let userID = parseInt(req.params.userID);
-  if (!check.isNumber(userID)) res.json({ error: "User ID Isn't A Number!" })
-
+router.route("/nutritionPlan/:planID/:userID").delete((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, planID } = req.params;
+  userID = parseInt(userID), planID = parseInt(planID)
+  if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number");
+  if (!check.isNumber(planID)) throw createError(400, "planID Should Be A Number");
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+    if (result.error) return res.status(400).json({message: result.error});
+    else nutritionPlan.delete(planID, userID, (result2) => {
+      if (result2.error) return res.status(400).json({meesage: result2.error})
+      else if (result2.affectedRows === 0) return res.status(400).json({message: "No nutrition plan to delete"})
+      else return res.json(result2);
+    })
+  });
+});
 
-    if (result.error) res.json(result);
+router.route("/measurements/:userID").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID = parseInt(req.params.userID);
+  if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number");
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+    if (result.error) return res.status(400).json({message: result.error});
     else {
-
       user.selectWhere("id", userID, function (result) {
-
         let data = {
           gender: result[0].gender,
           weight: result[0].weight,
           height: result[0].height,
           metric: result[0].metric,
           userBirthday: result[0].userBirthday,
-          nutritionPlan: {},
-          nutritionPlanData: []
         }
-        res.json(data)
+        return res.json(data)
       })
     }
   });
 });
 
-router.route("/getUserNutritionPlan/:userID").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
-
+router.route("/nutritionPlan/:userID").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
+  if (!check.isNumber(parseInt(req.params.userID))) throw createError(400, "userID Should Be A Number")
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-
-    if (result.error) res.json(result);
-
+    if (result.error) res.status(400).json({ message: result.error });
     else {
       user.selectWhere("id", req.params.userID, function (result2) {
-
-        let data = {
-          nutritionPlan: {},
-          nutritionPlanData: []
-        }
+        let data = { nutritionPlan: {}, nutritionPlanData: [] }
         if (result2[0].fk_active_nutrition_plan) {
           nutritionPlan.selectWhere("id", result2[0].fk_active_nutrition_plan, function (result3) {
             data.nutritionPlan = result3[0]
             data.nutritionPlan.description = data.nutritionPlan.description.toString();
             user.selectActiveNutritionPlan(req.params.userID, function (result4) {
               data.nutritionPlanData = [...result4];
-              res.json(data)
+              return res.json(data)
             })
           })
         }
-        else res.json(data)
+        else return res.status(400).json({ message: "User Has No Active Nutrition Plan" })
       })
     }
 
   });
 });
 
-router.route("/getMeasurements/:userID").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
-
+router.route("/personalInfo/:userID").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
+  if (!check.isNumber(parseInt(req.params.userID))) throw createError(400, "userID Should Be A Number");
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-
-    if (result.error) res.json(result);
-    else {
-      user.selectWhere("id", req.params.userID, function (result2) {
-
-        let data = {
-          gender: result2[0].gender,
-          weight: result2[0].weight,
-          height: result2[0].height,
-          metric: result2[0].metric,
-        }
-        res.json(data)
-      })
-    }
-
+    if (result.error) return res.status(400).json({ message: result.error });
+    user.selectWhere("id", req.params.userID, function (result2) {
+      let data = {
+        userBirthday: result2[0].userBirthday,
+        userEmail: result2[0].userEmail
+      }
+      return res.json(data);
+    });
   });
 });
 
-router.route("/getPersonalInfo/:userID").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  if (!check.isNumber(parseInt(req.params.userID))) res.json({ error: "User ID Isn't A Number!" })
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-    if (result.error) res.json(result);
-
-    else {
-      user.selectWhere("id", req.params.userID, function (result2) {
-        let data = {
-          userBirthday: result2[0].userBirthday,
-          userEmail: result2[0].userEmail
-        }
-        res.json(data)
-      })
-    }
-  });
-});
-
-router.route("/updatePersonalInfo").put((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  let { id, userEmail, userBirthday } = req.body
-
-  if (!check.isNumber(parseInt(id))) res.json({ error: "User Id Isn't A Number!" })
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], id, function (result) {
-    if (result.error) res.json(result);
-    else {
-      user.update(["userEmail", "userBirthday"], [userEmail, userBirthday], id, function (result2) {
-        res.json(result2)
-      })
-    }
+router.route("/personalInfo").put((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, userEmail, userBirthday } = req.body
+  if(userID == null || userEmail == null || userBirthday == null) throw createError(400, "Data must contain userID, userEmail, and userBirthday" )
+  else if (!check.isNumber(parseInt(userID))) throw createError(400, "userID Should Be A Number" )
+  else if (!check.isEmail(userEmail)) throw createError(400, "Email Isn't Correct")
+  else if(!check.isDate(userBirthday)) throw createError(400, "Incorrect Date For Birthday")
+  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+    if (result.error) return res.status(400).json({message: result.error});
+      user.update(["userEmail", "userBirthday"], [userEmail, userBirthday], userID, function (result2) {
+        return res.json(result2)
+      });
   });
 });
 

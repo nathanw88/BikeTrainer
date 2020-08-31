@@ -13,6 +13,7 @@ describe('Check if passed parameter is a number', () => {
     expect(check.isNumber(undefined)).toBe(false);
     expect(check.isNumber(true)).toBe(false);
     expect(check.isNumber(false)).toBe(false);
+    expect(check.isNumber(NaN)).toBe(false);
   });
   test('Checking if passing in correct parameter return true', () => {
     expect(check.isNumber(123)).toBe(true);
@@ -101,10 +102,10 @@ describe('Check if passed parameter is a string containing numbers', () => {
     expect(check.isNumberString(undefined)).toBe(false);
     expect(check.isNumberString(true)).toBe(false);
     expect(check.isNumberString(false)).toBe(false);
-    expect(check.isNumberString(123)).toBe(false);
-    expect(check.isNumberString(0)).toBe(false);
   });
   test('Checking if passing in correct parameter return true', () => {
+    expect(check.isNumberString(0)).toBe(true);
+    expect(check.isNumberString(123)).toBe(true);
     expect(check.isNumberString('123')).toBe(true);
   });
 });

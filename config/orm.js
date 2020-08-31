@@ -140,19 +140,19 @@ var orm = {
         console.log(' Error getting mysqlPool connection: ' + err);
         throw err;
       }
-      let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ?;`
-      connection.query(queryString, [userID], function (err, result) {
+      let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
+      connection.query(queryString, [userID, planID], function (err, result) {
         if (err) throw err;
-
+        if (result.affectedRows === 0) return cb(result)
         let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
         connection.query(queryString2, [planID], function (err, result) {
-          if (err) throw err
-          
+          if (err) throw err     
           let queryString3 = `DELETE FROM nutrition_plan WHERE id = ? AND fk_user = ?;`
-          connection.query(queryString3, [planID, userID], function(err, result){
+          connection.query(queryString3, [planID, userID], function (err, result) {
+            if (err) throw err;
             cb(result);
           })
-        })
+          })
       })
       connection.release();
     })

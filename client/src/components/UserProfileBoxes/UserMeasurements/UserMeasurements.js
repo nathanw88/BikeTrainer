@@ -23,34 +23,31 @@ class UserMeasurements extends Component {
     };
 
     API.getUserMeasurements(this.state.userID).then((result) => {
-      if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
+      const { userMeasurements } = this.state;
+      let values = Object.values(result.data);
+      let keys = Object.keys(result.data);
+      let length = keys.length;
+
+      for (let i = 0; i < length; i++) {
+        userMeasurements[keys[i]] = values[i]
+      };
+      if (!userMeasurements.metric) {
+        var { ft, inches } = convert.cmToFtRemainderInInches(userMeasurements.height);
+        userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
+        userMeasurements.heightFeet = ft;
+        userMeasurements.heightInches = inches;
 
       }
-      else {
-        const { userMeasurements } = this.state;
-        let values = Object.values(result.data);
-        let keys = Object.keys(result.data);
-        let length = keys.length;
+      this.setState({ userMeasurements });
 
-        for (let i = 0; i < length; i++) {
-          userMeasurements[keys[i]] = values[i]
-        };
-        if (!userMeasurements.metric) {
-          var { ft, inches } = convert.cmToFtRemainderInInches(userMeasurements.height);
-          userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
-          userMeasurements.heightFeet = ft;
-          userMeasurements.heightInches = inches;
-
-        }
-        this.setState({ userMeasurements });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
@@ -82,19 +79,14 @@ class UserMeasurements extends Component {
     }
 
     API.saveSetup(data).then((result) => {
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        window.location.replace("/user_profile")
-      }
+      window.location.replace("/user_profile");
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 

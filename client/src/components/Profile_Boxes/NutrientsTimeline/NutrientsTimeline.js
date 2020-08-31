@@ -33,36 +33,32 @@ class NutrientsTimeline extends Component {
     dateFrom.setDate(today.getDate() - 7);
 
     API.userNutrientsTimeline(this.state.fk_user, dateFrom, today).then((result) => {
+      data.logs = [...result.data];
 
-      if (result.data.error) {
-        // alert(result.data.error)
-
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-
-        result.data.map((dataObject, i) => {
-          let eatenArray = [];
-          let neededArray = [];
-          dataObject.log.map((log) => {
-            eatenArray.push({ x: new Date(log.date), y: log.dailySum })
-            neededArray.push({ x: new Date(log.date), y: dataObject.amount });
-          });
-          data.neededArrayObjects[i] = [...neededArray];
-          data.eatenArrayObjects[i] = [...eatenArray];
-        })
-        selectedNutrients[data.logs[0].name] = 0
-        this.setState({
-          data,
-          selectedNutrients,
-          dateFrom
+      result.data.map((dataObject, i) => {
+        let eatenArray = [];
+        let neededArray = [];
+        dataObject.log.map((log) => {
+          eatenArray.push({ x: new Date(log.date), y: log.dailySum })
+          neededArray.push({ x: new Date(log.date), y: dataObject.amount });
         });
-      }
+        data.neededArrayObjects[i] = [...neededArray];
+        data.eatenArrayObjects[i] = [...eatenArray];
+      })
+      selectedNutrients[data.logs[0].name] = 0
+      this.setState({
+        data,
+        selectedNutrients,
+        dateFrom
+      });
+
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -78,53 +74,43 @@ class NutrientsTimeline extends Component {
     });
 
     API.userNutrientsTimeline(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
-
-      if (result.data.error) {
-        alert(result.data.error)
-
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-        result.data.map((dataObject, i) => {
-          let eatenArray = [];
-          let neededArray = [];
-          dataObject.log.map((log) => {
-            eatenArray.push({ x: new Date(log.date), y: log.dailySum, label: `${log.dailySum}` })
-            neededArray.push({ x: new Date(log.date), y: dataObject.amount, label: `${dataObject.amount}` });
-          });
-          data.neededArrayObjects[i] = [...neededArray];
-          data.eatenArrayObjects[i] = [...eatenArray];
-        })
-
-        this.setState({
-          data
+      data.logs = [...result.data];
+      result.data.map((dataObject, i) => {
+        let eatenArray = [];
+        let neededArray = [];
+        dataObject.log.map((log) => {
+          eatenArray.push({ x: new Date(log.date), y: log.dailySum, label: `${log.dailySum}` })
+          neededArray.push({ x: new Date(log.date), y: dataObject.amount, label: `${dataObject.amount}` });
         });
-      }
+        data.neededArrayObjects[i] = [...neededArray];
+        data.eatenArrayObjects[i] = [...eatenArray];
+      })
+
+      this.setState({
+        data
+      });
+
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
   nurtientChoice(nutrient, index) {
     const { selectedNutrients } = this.state;
 
-    // let index = selectedNutrients.indexOf(nutrient);
-    if (nutrient in selectedNutrients) {
-      delete selectedNutrients[nutrient];
-    }
-    else {
-      selectedNutrients[nutrient] = index;
-    }
+    if (nutrient in selectedNutrients) delete selectedNutrients[nutrient];
+    else selectedNutrients[nutrient] = index;
 
     this.setState({ selectedNutrients });
   }
 
   render() {
-    const { data, selectedNutrients } = this.state;
-    const { neededArrayObjects, eatenArrayObjects } = data;
+    const { data, selectedNutrients } = this.state, { neededArrayObjects, eatenArrayObjects } = data;
 
     return (
       <Jumbotron id="nutrients_timeline-box" className="profile-box">

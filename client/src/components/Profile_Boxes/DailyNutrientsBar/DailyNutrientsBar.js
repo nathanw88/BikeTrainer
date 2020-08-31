@@ -13,9 +13,9 @@ class DailyNutrientsBar extends Component {
     this.state = {
       fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
-        eatenObjects:[],
-        neededObjects:[],
-        xValues:[],
+        eatenObjects: [],
+        neededObjects: [],
+        xValues: [],
         date: new Date(),
         logs: []
       }
@@ -27,32 +27,29 @@ class DailyNutrientsBar extends Component {
 
     API.dailySum(this.state.fk_user, today).then((result) => {
 
-      if (result.data.error) {
+      const { data } = this.state;
+      data.logs = [...result.data];
+      let eatenObject = {};
+      let neededObject = {};
 
-        // alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        const { data } = this.state;
-        data.logs = [...result.data];
-        let  eatenObject = {};
-        let neededObject ={};
-        
 
-        result.data.map((dataObject)=>{
-          eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
-          neededObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount, label: `${dataObject.name} Left To Eat: ${dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount}` };
-          data.xValues = data.xValues.concat(dataObject.name);
-          data.neededObjects = data.neededObjects.concat(neededObject);
-          data.eatenObjects = data.eatenObjects.concat(eatenObject);
-        })
+      result.data.map((dataObject) => {
+        eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
+        neededObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount, label: `${dataObject.name} Left To Eat: ${dataObject.log[0] ? dataObject.amount - dataObject.log[0].dailySum : dataObject.amount}` };
+        data.xValues = data.xValues.concat(dataObject.name);
+        data.neededObjects = data.neededObjects.concat(neededObject);
+        data.eatenObjects = data.eatenObjects.concat(eatenObject);
+      })
 
-        this.setState({ data });
-      }
+      this.setState({ data });
+
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -66,31 +63,28 @@ class DailyNutrientsBar extends Component {
 
     API.dailySum(this.state.fk_user, date).then((result) => {
 
-      if (result.data.error) {
+      data.logs = [...result.data];
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
+      let eatenObject = {};
+      data.eatenObjects = []
 
-        let  eatenObject = {};
-        data.eatenObjects = []
+      result.data.map((dataObject) => {
+        eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
+        data.eatenObjects = data.eatenObjects.concat(eatenObject);
+      })
 
-        result.data.map((dataObject)=>{
-          eatenObject = { x: dataObject.name, y: dataObject.log[0] ? dataObject.log[0].dailySum : 0, label: `${dataObject.name} Eaten: ${dataObject.log[0]?.dailySum}` };
-          data.eatenObjects = data.eatenObjects.concat(eatenObject);
-        })
-        
-        this.setState({
-          data,
-          date
-        });
-      }
+      this.setState({
+        data,
+        date
+      });
+
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -137,12 +131,12 @@ class DailyNutrientsBar extends Component {
               {/* Amount Eaten */}
               <VictoryBar
                 labelComponent={<VictoryTooltip />}
-                data={[ ...this.state.data.eatenObjects ]}
+                data={[...this.state.data.eatenObjects]}
               />
               {/* Amount Still Needed */}
               <VictoryBar
                 labelComponent={<VictoryTooltip />}
-                data={[ ...this.state.data.neededObjects ]}
+                data={[...this.state.data.neededObjects]}
               />
 
             </VictoryStack>

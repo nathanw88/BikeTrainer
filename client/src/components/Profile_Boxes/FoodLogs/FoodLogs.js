@@ -28,26 +28,19 @@ class FoodLogs extends Component {
     const today = new Date();
     dateFrom.setDate(today.getDate() - 7);
 
-    console.log(typeof this.state.fk_user)
-
     API.userFoodLogs(this.state.fk_user, dateFrom, today, this.state.limit, this.state.offset).then((result) => {
 
-      if (result.data.error) {
+      const { data } = this.state;
+      data.logs = [...result.data];
+      this.setState({ data, dateFrom });
 
-        // alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        const { data } = this.state;
-        data.logs = [...result.data];
-        console.log(data);
-
-        this.setState({ data, dateFrom });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -64,21 +57,16 @@ class FoodLogs extends Component {
 
     API.userFoodLogs(this.state.fk_user, data.dateFrom, data.dateTill, this.state.limit, this.state.offset).then((result) => {
 
-      if (result.data.error) {
+      data.logs = [...result.data];
+      this.setState({ data });
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-
-        // console.log(data);
-        this.setState({ data });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -91,19 +79,16 @@ class FoodLogs extends Component {
     API.deleteUserLogs(sendData).then((result) => {
       API.userFoodLogs(this.state.fk_user, dateFrom, dateTill, this.state.limit, this.state.offset).then((result) => {
 
-        if (result.data.error) {
+        data.logs = [...result.data];
+        this.setState({ data });
 
-          alert(result.data.error)
-          if (result.data.error === "Your session has expired.") {
-            sessionStorage.setItem("email", "");
-            sessionStorage.setItem("id", "");
-            window.location.replace(result.data.redirect);
-          }
-        }
-        else {
-          data.logs = [...result.data];
-          this.setState({ data });
-        }
+      }).catch(error => {
+        alert(error.response.data.message);
+        if (error.response.data.message === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace("/");
+        };
       });
     })
   }
@@ -115,20 +100,17 @@ class FoodLogs extends Component {
 
     API.userFoodLogs(this.state.fk_user, dateFrom, dateTill, limit, offset).then((result) => {
 
-      if (result.data.error) {
+      data.logs = [...result.data];
+      this.setState({ limit, data })
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-        this.setState({ limit, data })
-      }
-    })
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
   }
   more = () => {
     let { limit, data, offset } = this.state;
@@ -137,20 +119,17 @@ class FoodLogs extends Component {
 
     API.userFoodLogs(this.state.fk_user, dateFrom, dateTill, limit, offset).then((result) => {
 
-      if (result.data.error) {
+      data.logs = [...result.data];
+      this.setState({ offset, data })
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-        this.setState({ offset, data })
-      }
-    })
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
 
   }
 
@@ -161,20 +140,17 @@ class FoodLogs extends Component {
 
     API.userFoodLogs(this.state.fk_user, dateFrom, dateTill, limit, offset).then((result) => {
 
-      if (result.data.error) {
+      data.logs = [...result.data];
+      this.setState({ offset, data })
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
-        data.logs = [...result.data];
-        this.setState({ offset, data })
-      }
-    })
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
 
   }
 

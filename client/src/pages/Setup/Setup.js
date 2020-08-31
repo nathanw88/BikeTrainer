@@ -59,25 +59,18 @@ class Setup extends Component {
       data.weight = parseFloat((parseFloat(this.state.input.weight) / poundsToKilograms).toFixed(3));
       data.height = (this.state.input.heightFeet * feetToInches + parseFloat(this.state.input.heightInches)) * inchToCentimeter;
     }
-    // console.log(data);
-    // console.log(this.state.input);
 
     API.saveSetup(data).then((result) => {
-      // console.log(result)
-      if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        window.location.replace("/nutrition_plan")
-        // console.log(result);
-      }
+        window.location.replace("/nutrition_plan");
+      
+    }).catch(error =>{
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 

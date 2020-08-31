@@ -1,18 +1,18 @@
 let check = {
 
-  isNumber: (num) => typeof num === 'number',
+  isNumber: (num) => (typeof num === 'number' && !Number.isNaN(num)),
 
   isNumberString: (str) => {
-    if (str == null || Array.isArray(str)|| typeof str === 'number') return false;
+    if (str == null || Array.isArray(str)) return false;
     else if (Number.isNaN(parseInt(str))) return false;
-    else if (typeof str == "string" || (typeof str == "object" && str.constructor === String))
+    else if (typeof str === "string" || (typeof str === "object" && str.constructor === String) || typeof str === "number")
     return typeof parseInt(str) ==='number';
   },
 
   isString: (str) => {
     if (str === null) return false;
 
-    return typeof str == "string" || (typeof str == "object" && str.constructor === String)
+    return typeof str === "string" || (typeof str === "object" && str.constructor === String)
   },
 
   isDate: (date) => {

@@ -15,7 +15,7 @@ class Log extends Component {
 
       input: {
 
-        date: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000 ).toISOString().substr(0, 16),
+        date: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 16),
         food: "",
         grams: 0,
         selected: {},
@@ -42,25 +42,18 @@ class Log extends Component {
   };
 
   showCustomPortion = () => {
-
     this.setState({ hideGrams: false })
-
   }
 
   portionChoice = (grams) => {
-
     const { input } = this.state;
     input.grams = grams;
     this.setState({ input });
     this.setState({ hideGrams: false })
-    // console.log(this.state.input.grams)
-
   }
 
   //function that grabs food data 
   selectChoice = (i) => {
-
-    // console.log(this.state.choices[i])
     const { input } = this.state;
     input.food = `${this.state.choices[i].description} ${this.state.choices[i].additional_descriptions ? this.state.choices[i].additional_descriptions : ""} ${this.state.choices[i].brand ? this.state.choices[i].brand : ""}`;
     input.selected = this.state.choices[i]
@@ -79,45 +72,35 @@ class Log extends Component {
   }
 
   //function to send data to the backend to be stored in MySQL
-
   log = event => {
-
-
-    // console.log(this.state.selected)
     let data = {
-
       fk_user: this.state.log.fk_user,
       grams: this.state.log.grams,
       fk_food: this.state.log.fk_food,
       date: this.state.log.date
-
     };
 
     API.logFood(data).then(res => {
 
-      if (res.data.error) {
-
-        alert(res.data.error)
-        if (res.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(res.data.redirect);
-        }
-
-      }
-
-      else if (!res.data.error) { window.location.replace('/profile'); };
+      window.location.replace('/profile');
 
 
-    }).catch(err => console.log(err));
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
 
 
   }
 
   componentDidMount() {
 
-    if(!sessionStorage.getItem("id")){
-      alert("Please Login") 
+    if (!sessionStorage.getItem("id")) {
+      alert("Please Login")
       window.location.replace("/")
     };
 
@@ -239,20 +222,14 @@ class Log extends Component {
     if (this.state.input.food && this.state.input.food.length >= 3) {
 
       API.findFood(this.state.input.food, this.state.log.fk_user).then(res => {
-
-        // console.log(res);
-        if (res.data.error) {
-
-          alert(res.data.error)
-          if (res.data.error === "Your session has expired.") {
-            sessionStorage.setItem("email", "");
-            sessionStorage.setItem("id", "");
-            window.location.replace(res.data.redirect);
-          }
-
-        }
-        else { this.setState({ choices: [...this.state.choices, ...res.data] }); };
-
+        this.setState({ choices: [...this.state.choices, ...res.data] });
+      }).catch(error => {
+        alert(error.response.data.message);
+        if (error.response.data.message === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace("/");
+        };
       });
     }
   };

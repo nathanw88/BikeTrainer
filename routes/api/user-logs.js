@@ -13,10 +13,7 @@ router.route("/dailySum/:userID/:date").get((req, res) => {
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
 
     else {
       nutritionPlan.selectDailySum(req.params.userID, req.params.date, (result2) => {
@@ -44,10 +41,7 @@ router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
 
     else {
 
@@ -79,10 +73,7 @@ router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
 
     else {
 
@@ -114,10 +105,7 @@ router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((re
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
 
-    if (result.error) {
-
-      res.json(result)
-    }
+    if (result.error) return res.status(400).json({message: result.error});
 
     else {
 
@@ -146,7 +134,7 @@ router.route("/deleteUserLogs").delete((req, res) => {
 
   session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], id, function (result) {
 
-    if (result.error) res.json(result)
+    if (result.error) return res.status(400).json({message: result.error});
     
     else food.deleteUserLogs(req.body, (result2) => {res.json(result2)})
   });
