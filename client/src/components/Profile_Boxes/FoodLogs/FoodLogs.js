@@ -72,7 +72,7 @@ class FoodLogs extends Component {
 
   deleteLog = (index) => {
     const { fk_food, grams, date } = this.state.data.logs[index]
-    const sendData = { fk_food, grams, date, id: this.state.fk_user }
+    const sendData = { fk_food, grams, date, userID: this.state.fk_user }
     const { dateFrom, dateTill } = this.state.data;
     const { data } = this.state
 

@@ -15,7 +15,7 @@ export default {
   },
 
   logFood: (data) => {
-    return axios.post("/api/log/food", { data })
+    return axios.post("/api/log/food", data)
   },
 
   selectPortions: (fk) => {
@@ -51,7 +51,7 @@ export default {
   },
 
   deleteUserLogs:(data)=>{
-    return axios.delete(`/api/user-logs/deleteUserLogs`, { data })
+    return axios.delete(`/api/user-logs/userLogs`, { data })
   },
 
   getUserMeasurements:(userID)=>{

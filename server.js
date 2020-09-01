@@ -37,11 +37,12 @@ app.use(routes);
 
 app.use((error, req, res, next) => {
   // Sets HTTP status code
-  res.status(error.status)
+  let status = error.status || 500
+  res.status(status)
 
   // Sends response
   res.json({
-    status: error.status,
+    status: status,
     message: error.message,
     stack: error.stack
   })

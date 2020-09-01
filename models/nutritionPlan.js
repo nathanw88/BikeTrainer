@@ -21,7 +21,6 @@ let nutritionPlan = {
   },
 
   selectDailySum: (userID, date, cb) => {
-    // console.log("models")
     orm.selectDailySum(userID, date, (res) => {
       cb(res);
     });
