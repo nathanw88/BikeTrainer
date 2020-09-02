@@ -1,4 +1,3 @@
-// Import MySQL connection.
 var mysqlPool = require("../config/connection.js");
 
 function printQuestionMarks(num) {
@@ -21,13 +20,7 @@ var orm = {
   create: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      var queryString = "INSERT INTO " + table;
-      queryString += " (";
-      queryString += cols.toString();
-      queryString += ") VALUES (";
-      queryString += printQuestionMarks(vals.length);
-      queryString += ");";
-
+      var queryString = `INSERT INTO  ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)});`
       connection.query(queryString, vals, function (err, result) {
         if (err) throw err;
         cb(result);
