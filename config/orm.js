@@ -10,15 +10,17 @@ function printQuestionMarks(num) {
   return arr.toString();
 }
 
+function handleMysqlConnectionError(err, connection) {
+  connection.release();
+  console.log(' Error getting mysqlPool connection: ' + err);
+  throw err;
+}
+
 var orm = {
 
   create: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       var queryString = "INSERT INTO " + table;
       queryString += " (";
       queryString += cols.toString();
@@ -36,11 +38,7 @@ var orm = {
 
   update: function (table, condition, cols, vals, userID, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       var queryString = `UPDATE ${table} SET `
 
       cols.map((item, i) => {
@@ -63,11 +61,7 @@ var orm = {
 
   findFood: function (searchString, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?) LIMIT 25;`
       connection.query(queryString, [searchString], function (err, result) {
         if (err) throw err;
@@ -80,11 +74,7 @@ var orm = {
 
   delete: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       var queryString = "DELETE FROM ?? WHERE "
 
       if (cols.length != vals.length && cols.length <= 0) {
@@ -114,11 +104,7 @@ var orm = {
 
   deleteNutritionPlan: function (planID, userID, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
       connection.query(queryString, [userID, planID], function (err, result) {
         if (err) throw err;
@@ -141,11 +127,7 @@ var orm = {
 
   postingFood: function (data, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let resultArray = [];
       data.grams.map((item, i) => {
         let arrayObjects = {
@@ -158,7 +140,7 @@ var orm = {
         var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`
 
         connection.query(queryString, Object.values(arrayObjects), function (err, res) {
-          if (err) throw err; 
+          if (err) throw err;
           let results = res;
           resultArray.push(results)
           let gramsDivided = parseFloat(arrayObjects.grams) / 100;
@@ -197,22 +179,18 @@ var orm = {
             }
           });
         });
-        
+
       });
-      
-        connection.release();
-        return cb(resultArray);
-      
+
+      connection.release();
+      return cb(resultArray);
+
     });
   },
 
   selectWhere: function (table, searchCol, val, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       if (searchCol.length <= 0) {
         err = "Number of Columns is 0";
         throw err
@@ -231,11 +209,7 @@ var orm = {
 
   postNutritionPlanNutrients: (obj, fkNutritionPlan, cb) => {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       const keysArray = Object.keys(obj);
       let vals = [];
       let queryString2 = "INSERT INTO nutrition_plan_nutrients (fk_nutrition_plan, fk_nutrient, amount) VALUES "
@@ -269,11 +243,7 @@ var orm = {
 
   selectDailySum: (userID, date, cb) => {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let dataArray = [], queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`, val = [userID]
       connection.query(queryString, val, (err, result) => {
         if (result.length === 0) return cb({ error: "No Nutrition Plan" })
@@ -309,11 +279,7 @@ var orm = {
 
   selectAverageMacros: (userID, dateFrom, dateTill, cb) => {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let dataArray = [], val = [userID],
         queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`
 
@@ -352,11 +318,7 @@ var orm = {
 
   userFoodLogs: (userId, dateFrom, dateTill, limit, offset, cb) => {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let maxDate = new Date(dateTill), minDate = new Date(dateFrom)
       maxDate.setDate(maxDate.getDate() + 1);
       let val = [userId, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10), parseInt(offset), parseInt(limit)],
@@ -371,11 +333,7 @@ var orm = {
 
   userNutrientsTimeline: (userID, dateFrom, dateTill, cb) => {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let dataArray = [];
       let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
       let val = [userID]
@@ -430,11 +388,7 @@ var orm = {
 
   deleteUserLogs: function (data, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let gramsDivided = parseFloat(data.grams) / 100;
       var queryString = "SELECT fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
 
@@ -479,11 +433,7 @@ var orm = {
 
   selectActiveNutritionPlan: function (userID, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) {
-        connection.release();
-        console.log(' Error getting mysqlPool connection: ' + err);
-        throw err;
-      }
+      if (err) handleMysqlConnectionError(err, connection)
       let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
       let val = [userID];
 
