@@ -3,7 +3,7 @@
 ## Description
 
 a trainer to log your diet. 
-Live Link: https://community_diet.com for testing use the following login info email: qwq@qwq.qwq password: qwe123QWE!@#
+Live Link: https://community_diet.com for testing use the following login info email: testing@domain.web password: password
 
 ## Available Scripts
 
