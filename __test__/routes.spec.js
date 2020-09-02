@@ -6,7 +6,7 @@ let newNutritionPlanID, whatID;
 describe("users routes", () => {
   describe('post /login', () => {
 
-    describe('post /login with incorrect inputs', () => {
+    describe('status: 400', () => {
       test('Testing login route with missing userPassword', () => {
         return request
           .post('/api/users/login')
@@ -104,7 +104,7 @@ describe("users routes", () => {
       });
     });
 
-    describe('post /login with correct input', () => {
+    describe('status: 200', () => {
       test('Testing login route with qwq@qwq.qwq userEmail and correct password', () => {
         return request
           .post('/api/users/login')
@@ -124,9 +124,9 @@ describe("users routes", () => {
 
   describe('post /register', () => {
 
-    describe('post /register with incorrect input', () => {
+    describe('status: 400', () => {
 
-      test("Testing register route with missing inputs", () => {
+      test("Testing register route with no userBirthday", () => {
         return request
           .post('/api/users/register')
           .send({ userEmail: "qwq@qwq.qwq", userPassword: "qwe123QWE!@#" })
@@ -138,7 +138,7 @@ describe("users routes", () => {
           });
       });
 
-      test("Testing register route with incorrect email", () => {
+      test("Testing register route with email in the wrong format", () => {
         return request
           .post('/api/users/register')
           .send({ userEmail: "qwqqwq.qwq", userPassword: "qwe123QWE!@#", userBirthday: new Date })
@@ -150,7 +150,7 @@ describe("users routes", () => {
           });
       });
 
-      test("Testing register route with incorrect birthday", () => {
+      test("Testing register route with userBirthday not as a date", () => {
         return request
           .post('/api/users/register')
           .send({ userEmail: "qwq@qwq.qwq", userPassword: "qwe123QWE!@#", userBirthday: "notADate" })
@@ -187,7 +187,7 @@ describe("users routes", () => {
       });
     });
 
-    describe('post /register with correct input', () => {
+    describe('status: 200', () => {
 
       test("Testing register route with new user", () => {
         return request
@@ -220,8 +220,9 @@ describe("users routes", () => {
   });
 
   describe('post /setup', () => {
-    test('working correctly', () => {
-      return request
+    describe("status: 200", ()=>{
+      test('Changing user info for qwq@qwq.qwq', () => {
+        return request
         .post('/api/users/setup')
         .send({ gender: "female", weight: 72, height: 180, metric: 0, userID: 7 })
         .set('Accept', 'application/json')
@@ -230,9 +231,10 @@ describe("users routes", () => {
         .then(response => {
           expect(response.body.affectedRows).toBe(1)
         });
+      });
     });
 
-    describe('Making it fail', () => {
+    describe('status: 400', () => {
 
       beforeAll(() => {
         return request
@@ -254,7 +256,7 @@ describe("users routes", () => {
           });
       });
 
-      test('making it fail with only valid gender', () => {
+      test('making it fail sending only valid gender', () => {
         return request
           .post('/api/users/setup')
           .send({ gender: "female" })
@@ -378,7 +380,7 @@ describe("users routes", () => {
 
   describe("post /nutritionPlan", () => {
 
-    describe("Incorrect nutrition plan posting", () => {
+    describe("status: 400", () => {
 
       test('null for user id', () => {
         return request
@@ -555,6 +557,31 @@ describe("users routes", () => {
           });
       });
 
+      test('null for nutritionPlanNutrients.fats.amount', () => {
+        return request
+          .post('/api/users/nutritionPlan')
+          .send({
+            id: 7,
+            nutritionPlanData: {
+              name: "Runner's Delight",
+              description: "Carbs For Fuel",
+              exercise_amount: "Hardcore Exercise"
+            },
+            nutritionPlanNutrients: {
+              calories: { id: 1008, amount: 2906 },
+              fats: { id: 1004, amount: null },
+              carbs: { id: 1005, amount: 464 },
+              protein: { id: 1003, amount: 167 }
+            }
+          })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("id And Amount Of Each Nutrient Must Be A Number")
+          });
+      });
+
       test('null for nutritionPlanData', () => {
         return request
           .post('/api/users/nutritionPlan')
@@ -599,9 +626,7 @@ describe("users routes", () => {
       test('no data sent', () => {
         return request
           .post('/api/users/nutritionPlan')
-          .send({
-
-          })
+          .send({ })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -612,7 +637,7 @@ describe("users routes", () => {
 
     });
 
-    describe("Correct nutrition plan posting", () => {
+    describe("status: 200", () => {
 
       beforeAll(async () => {
         await request
@@ -654,9 +679,9 @@ describe("users routes", () => {
 
   describe('delete /nutritionPlan/:planID/:userID', () => {
 
-    describe("failing tests", () => {
+    describe("status: 400", () => {
 
-      test("null inputs", () => {
+      test("null sting inputs", () => {
         return request
           .delete('/api/users/nutritionPlan/null/null')
           .set('Accept', 'application/json')
@@ -667,7 +692,7 @@ describe("users routes", () => {
           });
       });
 
-      test("null planID", () => {
+      test("null string planID", () => {
         return request
           .delete('/api/users/nutritionPlan/null/7')
           .set('Accept', 'application/json')
@@ -701,9 +726,9 @@ describe("users routes", () => {
       });
     });
 
-    describe('Delete nutrition plan created in earlier tests', () => {
+    describe('status:200', () => {
 
-      test("passing in variable for planID created in earlier test ", () => {
+      test("Delete nutrition plan created in earlier tests", () => {
         return request
           .delete(`/api/users/nutritionPlan/${newNutritionPlanID}/7`)
           .set('Accept', 'application/json')
@@ -717,7 +742,7 @@ describe("users routes", () => {
   });
 
   describe('get /measurments/:userID', () => {
-    describe('Failing tests', () => {
+    describe('status: 400', () => {
 
       test("passing in null as userID", () => {
         return request
@@ -742,7 +767,7 @@ describe("users routes", () => {
       });
     })
 
-    describe("passing test", () => {
+    describe("status: 200", () => {
       test("passing in userID for qwq@qwq.com", () => {
         return request
           .get(`/api/users/measurements/7`)
@@ -763,7 +788,7 @@ describe("users routes", () => {
   })
 
   describe("get /nutritionPlan/:userID", () => {
-    describe("failing tests", () => {
+    describe("status: 400", () => {
       test("passing in null for userID", () => {
         return request
           .get(`/api/users/nutritionPlan/null`)
@@ -798,7 +823,7 @@ describe("users routes", () => {
       });
     })
 
-    describe("correct userID sent in", () => {
+    describe("status: 200", () => {
       beforeAll(async () => {
         await request
           .post('/api/users/login')
@@ -866,7 +891,7 @@ describe("users routes", () => {
   });
 
   describe("get /personalInfo", () => {
-    describe("incorrect userID passed in as param", () => {
+    describe("status: 400", () => {
       test("passing in null for userID", () => {
         return request
           .get(`/api/users/personalInfo/null`)
@@ -890,7 +915,7 @@ describe("users routes", () => {
       });
     })
 
-    describe("Correct parameters passed in", () => {
+    describe("status: 200", () => {
       beforeAll(async () => {
         await request
           .post('/api/users/login')
@@ -919,7 +944,7 @@ describe("users routes", () => {
   })
 
   describe("put /personalInfo", () => {
-    describe("incorrect data sent in", () => {
+    describe("status: 400", () => {
 
       test("sending in null", () => {
         return request
@@ -982,8 +1007,8 @@ describe("users routes", () => {
       });
     });
 
-    describe("sending in correct Data", () => {
-      test("sending in a string that's not a date", () => {
+    describe("status: 200", () => {
+      test("updating qwq@qwq.qwq personal info", () => {
         return request
           .put('/api/users/personalInfo')
           .send({ userID: "7", userEmail: "qwq@qwq.qwq", userBirthday: "1988-03-15" })
@@ -1000,7 +1025,7 @@ describe("users routes", () => {
 
 describe("log routes", () => {
   describe("post /findFood", () => {
-    describe("incorrect attempts at consuming route", () => {
+    describe("status: 400", () => {
 
       test("Testing find food route with no inputs", () => {
         return request
@@ -1114,7 +1139,7 @@ describe("log routes", () => {
           });
       });
     });
-    describe("correct consumption of route", () => {
+    describe("status: 200", () => {
       beforeAll(async () => {
         await request
           .post('/api/users/login')
@@ -1363,8 +1388,8 @@ describe("log routes", () => {
     });
   });
   describe("get /findPortion/:fk", () => {
-    describe("incorrect tests", () => {
-      test("Testing find food route with missing fk for food", () => {
+    describe("status: 400", () => {
+      test("Testing route with missing fk for food", () => {
         return request
           .get('/api/log/findPortion/:fk')
           .set('Accept', 'application/json')
@@ -1374,7 +1399,7 @@ describe("log routes", () => {
             expect(response.body.message).toBe("fk Isn't A Number")
           });
       });
-      test("Testing find food route with fk for food that doesn't exist", () => {
+      test("Testing route with fk for food that doesn't exist", () => {
         return request
           .get('/api/log/findPortion/9999999999999999999')
           .set('Accept', 'application/json')
@@ -1385,8 +1410,8 @@ describe("log routes", () => {
           });
       });
     });
-    describe("correct test", () => {
-      test("Testing find food route with fk for food that doesn't exist", () => {
+    describe("status: 200", () => {
+      test("Testing route with fk_food for whole grain oats", () => {
         return request
           .get('/api/log/findPortion/661924')
           .set('Accept', 'application/json')
@@ -1399,7 +1424,7 @@ describe("log routes", () => {
     })
   });
   describe("post /food", () => {
-    describe("incorrect consumption of route", () => {
+    describe("status: 400", () => {
       test('Passing in no data', () => {
         return request
           .post('/api/log/food')
@@ -1444,6 +1469,61 @@ describe("log routes", () => {
             expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
           });
       });
+      test('Passing in only correct fk_user the rest is null', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: null, fk_food: null, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
+          });
+      });
+      test('Passing in only correct fk_user and grams the rest is undefined', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: 200, fk_food: undefined, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
+          });
+      });
+      test('Passing in only correct fk_user and grams the rest is null', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: 200, fk_food: null, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
+          });
+      });
+      test('Passing in undefined for date', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: 200, fk_food: 661924, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
+          });
+      });
+      test('Passing in null for date', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: 200, fk_food: 661924, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Must Pass In fk_user, grams, date, and fk_food")
+          });
+      });
       test('Passing in strings for all', () => {
         return request
           .post('/api/log/food')
@@ -1464,6 +1544,17 @@ describe("log routes", () => {
           .expect(400)
           .then(response => {
             expect(response.body.message).toBe("Not All Grams Are Numbers")
+          });
+      });
+      test('Passing in string for fk_user arrays of string for the rest', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: "key", grams: ["string"], fk_food: ["string"], date: ["string"] })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("fk_user Should Be A Number")
           });
       });
       test('Passing in correct fk_user and grams the rest are arrays with strings', () => {
@@ -1488,7 +1579,7 @@ describe("log routes", () => {
             expect(response.body.message).toBe("Dates Aren't Dates")
           });
       });
-      test('Passing in correct data besides date', () => {
+      test('Passing in correct fk_user the rest are arrays containing null', () => {
         return request
           .post('/api/log/food')
           .send({ fk_user: 320, grams: [null], fk_food: [null], date: [null] })
@@ -1499,7 +1590,7 @@ describe("log routes", () => {
             expect(response.body.message).toBe("Not All Grams Are Numbers")
           });
       });
-      test('Passing in correct data besides date', () => {
+      test('Passing in correct fk_user the rest are arrays containing undefined', () => {
         return request
           .post('/api/log/food')
           .send({ fk_user: 320, grams: [undefined], fk_food: [undefined], date: [undefined] })
@@ -1510,7 +1601,7 @@ describe("log routes", () => {
             expect(response.body.message).toBe("Not All Grams Are Numbers")
           });
       });
-      test('Passing in correct data besides date', () => {
+      test('Passing in correct fk_user and grams the rest are arrays with undefined', () => {
         return request
           .post('/api/log/food')
           .send({ fk_user: 320, grams: [200], fk_food: [undefined], date: [undefined] })
@@ -1544,10 +1635,10 @@ describe("log routes", () => {
             expect(response.body.message).toBe("Dates Aren't Dates")
           });
       });
-      test('Passing in correct data besides date', () => {
+      test(`Length of grams, fk_food, and date arrays aren't matching`, () => {
         return request
           .post('/api/log/food')
-          .send({ fk_user: 320, grams: [200, 86, 200, 200, 100, 1000, 200, 86], fk_food: [577581, 629058, 577581, 365289, 578780, 632180, 577581, 629058], date: [ new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()] })
+          .send({ fk_user: 320, grams: [200, 86, 200, 200, 100, 1000, 200, 86], fk_food: [577581, 629058, 577581, 365289, 578780, 632180, 577581, 629058], date: [new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()] })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1555,8 +1646,32 @@ describe("log routes", () => {
             expect(response.body.message).toBe("The Numer Of Food Ids, Grams, or Dates Not Matching")
           });
       });
+      test('Passing in string for one element in fk_food array', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 320, grams: [200, 86, 200, 200, 100, 1000, 200, 86], fk_food: [577581, 629058, 577581, 365289, 578780, 632180, "num", 629058], date: [new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()] })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Not All Food Ids Are Numbers")
+          });
+      });
+      test('Passing invalid user id', () => {
+        return request
+          .post('/api/log/food')
+          .send({ fk_user: 9999999999999, grams: [200], fk_food: [577581], date: [new Date()] })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Your session has expired.")
+
+
+          });
+      });
     });
-    describe("correct logging food", () => {
+    describe("status: 200", () => {
       test('Passing in date for logging 200 grams of eggs', () => {
         return request
           .post('/api/log/food')
@@ -1566,8 +1681,6 @@ describe("log routes", () => {
           .expect(200)
           .then(response => {
             expect(response.body).toStrictEqual([])
-          
-
           });
       });
 
@@ -1588,7 +1701,7 @@ describe("log routes", () => {
 
 describe("user-logs route", () => {
   describe("get /dailySum/:userID/:date", () => {
-    describe("incorrect test", () => {
+    describe("status: 400", () => {
       test('null parameters', () => {
         return request
           .get('/api/user-logs/dailySum/null/null')
@@ -1633,7 +1746,7 @@ describe("user-logs route", () => {
           expect(response.body.message).toBe("No Nutrition Plan")
         });
     });
-    describe("working test", () => {
+    describe("status: 200", () => {
       beforeAll(async () => {
         await request
           .post('/api/users/login')
@@ -1646,7 +1759,7 @@ describe("user-logs route", () => {
             whatID = response.body.userID
           });
       });
-      test('with data to return', () => {
+      test('getting sums for what@what.what for august 31 2020', () => {
         return request
           .get(`/api/user-logs/dailySum/${whatID}/${new Date("8/31/2020")}`)
           .set('Accept', 'application/json')
@@ -1699,9 +1812,8 @@ describe("user-logs route", () => {
     });
   });
 
-
   describe("get /averageMacros/:userID/:dateFrom/:dateTill", () => {
-    describe("Testing Errors", () => {
+    describe("status: 400", () => {
 
       test('passing in incorrect parameters', () => {
         return request
@@ -1714,7 +1826,7 @@ describe("user-logs route", () => {
           });
       });
 
-      test('passing in incorrect parameters', () => {
+      test('passing in correct userID the rest are incorrect parameters', () => {
         return request
           .get(`/api/user-logs/averageMacros/${whatID}/:dateFrom/:dateTill`)
           .set('Accept', 'application/json')
@@ -1725,7 +1837,7 @@ describe("user-logs route", () => {
           });
       });
 
-      test('passing in one correct date parameters', () => {
+      test('passing in userID and one correct date parameters', () => {
         return request
           .get(`/api/user-logs/averageMacros/${whatID}/${new Date()}/:dateTill`)
           .set('Accept', 'application/json')
@@ -1736,7 +1848,7 @@ describe("user-logs route", () => {
           });
       });
 
-      test('passing in one correct date parameters', () => {
+      test('passing in userID and one correct date parameters', () => {
         return request
           .get(`/api/user-logs/averageMacros/${whatID}/:dateFrom/${new Date()}`)
           .set('Accept', 'application/json')
@@ -1747,7 +1859,7 @@ describe("user-logs route", () => {
           });
       });
 
-      test('passing in user without nutrition plan', () => {
+      test('passing in user who has no nutrition plan', () => {
         return request
           .get(`/api/user-logs/averageMacros/7/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
           .set('Accept', 'application/json')
@@ -1757,11 +1869,21 @@ describe("user-logs route", () => {
             expect(response.body.message).toBe("No Nutrition Plan")
           });
       });
+      test(`passing in user who doesn't exsist`, () => {
+        return request
+          .get(`/api/user-logs/averageMacros/99999999999/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Your session has expired.")
+          });
+      });
     })
 
-    describe("Correct  Tests", () => {
+    describe("status: 200", () => {
 
-      test('passing in user without nutrition plan', () => {
+      test('getting data for what@what.what', () => {
         return request
           .get(`/api/user-logs/averageMacros/${whatID}/${new Date("8/29/2020")}/${new Date("9/1/2020")}`)
           .set('Accept', 'application/json')
@@ -1814,73 +1936,76 @@ describe("user-logs route", () => {
   })
 
   describe("get /userNutrientsTimeline/:userID/:dateFrom/:dateTill", () => {
-    test('passing in all incorrect parameters', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/:userID/:dateFrom/:dateTill`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("userID Should Be A Number")
-        });
+    describe("status:400", () => {
+
+      test('passing in all incorrect parameters', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/:userID/:dateFrom/:dateTill`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("userID Should Be A Number")
+          });
+      });
+
+      test('passing in a userID all other inputs are incorrect', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/7/:dateFrom/:dateTill`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
+
+      test('passing in a userID and one date other date is still incorrect', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/7/${new Date()}/:dateTill`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
+
+      test('passing in a userID and one date other date is still incorrect', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/7/:dateFrom/${new Date()}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
+
+      test('userID with no nutrition plan', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("No Nutrition Plan Or User")
+          });
+      });
+
+      test('userID for nonexistent user', () => {
+        return request
+          .get(`/api/user-logs/userNutrientsTimeline/9999999/${new Date("8/30/2020")}/${new Date("9/1/2020")}`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Your session has expired.")
+          });
+      });
     });
 
-    test('passing in a userID all other inputs are incorrect', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/7/:dateFrom/:dateTill`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
-
-    test('passing in a userID and one date other date is still incorrect', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/7/${new Date()}/:dateTill`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
-
-    test('passing in a userID and one date other date is still incorrect', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/7/:dateFrom/${new Date()}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
-
-    test('userID with no nutrition plan', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("No Nutrition Plan Or User")
-        });
-    });
-
-    test('userID for nonexistent user', () => {
-      return request
-        .get(`/api/user-logs/userNutrientsTimeline/9999999/${new Date("8/30/2020")}/${new Date("9/1/2020")}`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Your session has expired.")
-        });
-    });
-
-    describe("correct test", () => {
+    describe("status: 200", () => {
       test('userID for what@what.what', () => {
         return request
           .get(`/api/user-logs/userNutrientsTimeline/${whatID}/${new Date("8/29/2020")}/${new Date("9/1/2020")}`)
@@ -1959,86 +2084,96 @@ describe("user-logs route", () => {
   });
 
   describe("get /userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset", () => {
-    describe("Incorrect calls", ()=>{
-    test('passing in all incorrect parameters', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("userID Should Be A Number")
-        });
-    });
+    describe("status: 400", () => {
+      test('passing in all incorrect parameters', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("userID Should Be A Number")
+          });
+      });
 
-    test('passing in userID all else are incorrect parameters', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/:dateFrom/:dateTill/:limit/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
+      test('passing in userID all else are incorrect parameters', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/:dateFrom/:dateTill/:limit/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
 
-    test('passing in correct userID and dateFrom', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/:dateTill/:limit/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
+      test('passing in correct userID and dateFrom', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/:dateTill/:limit/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
 
-    test('passing in correct userID and dateTill', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/:dateFrom/${new Date("9/1/2020")}/:limit/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("Dates Aren't Dates")
-        });
-    });
+      test('passing in correct userID and dateTill', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/:dateFrom/${new Date("9/1/2020")}/:limit/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Dates Aren't Dates")
+          });
+      });
 
-    test('passing in incorrect limit and offset', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/:limit/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("limit And offset Should Be Numbers")
-        });
-    });
+      test('passing in correct userID and dates while passing incorrect limit and offset', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/:limit/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("limit And offset Should Be Numbers")
+          });
+      });
 
-    test('passing in incorrect offset', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/5/:offset`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("limit And offset Should Be Numbers")
-        });
-    });
+      test('passing in incorrect offset', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/5/:offset`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("limit And offset Should Be Numbers")
+          });
+      });
 
-    test('passing in incorrect limit', () => {
-      return request
-        .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/:limit/0`)
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(400)
-        .then(response => {
-          expect(response.body.message).toBe("limit And offset Should Be Numbers")
-        });
-    });
-  });
-    describe("correct parameters passed in", () => {
       test('passing in incorrect limit', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/7/${new Date("8/30/2020")}/${new Date("9/1/2020")}/:limit/0`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("limit And offset Should Be Numbers")
+          });
+      });
+      test('passing in incorrect user for session', () => {
+        return request
+          .get(`/api/user-logs/userFoodLogs/9999999999999999999/${new Date("8/25/2020")}/${new Date("9/1/2020")}/5/0`)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Your session has expired.");
+          });
+      });
+    })
+    describe("status: 200", () => {
+      test('passing in correct data', () => {
         return request
           .get(`/api/user-logs/userFoodLogs/7/${new Date("8/25/2020")}/${new Date("9/1/2020")}/5/0`)
           .set('Accept', 'application/json')
@@ -2051,10 +2186,10 @@ describe("user-logs route", () => {
           });
       });
     })
-  })
+  });
 
-  describe("delete / userLogs", ()=>{
-    describe("Incorrect calls", ()=>{
+  describe("delete / userLogs", () => {
+    describe("status: 400", () => {
       test('passing in no data', () => {
         return request
           .delete(`/api/user-logs/userLogs`)
@@ -2077,7 +2212,86 @@ describe("user-logs route", () => {
             expect(response.body.message).toBe("userID Should Be A Number")
           });
       });
-      test('passing in correct userID the rest is incorrect data', () => {
+      test('passing in null for all data besides userID', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: null, grams: null, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("fk_food Should Be A Number")
+          });
+      });
+      test('passing in null for all data besides userID and fk_food', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: 577581, grams: null, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("grams Should Be A Number")
+          });
+      });
+
+      test('passing in null for date', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: 577581, grams: 200, date: null })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("date Should Be A Date")
+          });
+      });
+
+      test('passing in undefined for all data', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: undefined, fk_food: undefined, grams: undefined, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("userID Should Be A Number")
+          });
+      });
+      test('passing in undefined for all data besides userID', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: undefined, grams: undefined, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("fk_food Should Be A Number")
+          });
+      });
+      test('passing in undefined for all data besides userID and fk_food', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: 577581, grams: undefined, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("grams Should Be A Number")
+          });
+      });
+      test('passing in undefined for date', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 7, fk_food: 577581, grams: 200, date: undefined })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("date Should Be A Date")
+          });
+      });
+      test('passing in correct userID the rest is strings', () => {
         return request
           .delete(`/api/user-logs/userLogs`)
           .send({ userID: 320, fk_food: "num", grams: "string", date: "string" })
@@ -2088,7 +2302,7 @@ describe("user-logs route", () => {
             expect(response.body.message).toBe("fk_food Should Be A Number")
           });
       });
-      test('passing in incorrect grams and date', () => {
+      test('passing in strings for grams and date', () => {
         return request
           .delete(`/api/user-logs/userLogs`)
           .send({ userID: 320, fk_food: 577581, grams: "string", date: "string" })
@@ -2112,10 +2326,22 @@ describe("user-logs route", () => {
           });
       });
 
+      test('passing in user with no session', () => {
+        return request
+          .delete(`/api/user-logs/userLogs`)
+          .send({ userID: 999999999999999, fk_food: 577581, grams: 200, date: new Date() })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .then(response => {
+            expect(response.body.message).toBe("Your session has expired.")
+          });
+      });
+    });
 
-      describe("correct call to delete egg post", ()=>{
-        test('passing in incorrect data', () => {
-          return request
+    describe("status: 200", () => {
+      test('deleting egg log for testing@domain.web', () => {
+        return request
           .delete(`/api/user-logs/userLogs`)
           .send({ userID: 320, fk_food: 577581, grams: 200, date: new Date() })
           .set('Accept', 'application/json')
@@ -2124,8 +2350,10 @@ describe("user-logs route", () => {
           .then(response => {
             expect(response.body).toBe("done")
           });
-        });
-      })
-    });
-  })
+      });
+    })
+  });
+
 });
+
+

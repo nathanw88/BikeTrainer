@@ -34,7 +34,6 @@ router.route("/food").post((req, res) => {
     if (result.error) return res.status(400).json({message: result.error});
       if (data.fk_food.length === data.grams.length && data.grams.length === data.date.length ) {
         food.postingFood(data, function (response) {
-          console.log(response)
           if (response.error) return res.status(400).json({message: response.error}) 
            return res.json(response)
           })
