@@ -1,10 +1,19 @@
 var mysqlPool = require("../config/connection.js"), createError = require('http-errors');
 
-function printQuestionMarks(num) {
+function printSingleQuestionMarks(num) {
   var arr = [];
 
   for (var i = 0; i < num; i++) {
     arr.push("?");
+  }
+  return arr.toString();
+}
+
+function printDoubleQuestionMarks(num) {
+  var arr = [];
+
+  for (var i = 0; i < num; i++) {
+    arr.push("??");
   }
   return arr.toString();
 }
@@ -20,7 +29,7 @@ var orm = {
   create: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection);
-      var queryString = `INSERT INTO  ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)});`;
+      var queryString = `INSERT INTO  ${table} (${cols.toString()}) VALUES (${printSingleQuestionMarks(vals.length)});`;
       connection.query(queryString, vals, function (err, result) {
         if (err) throw err;
         cb(result);
@@ -95,6 +104,7 @@ var orm = {
   deleteNutritionPlan: function (planID, userID, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
+
       const updateUserFKActiveNutritionPlanToNull = (planID, userID) => {
         let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
         connection.query(queryString, [userID, planID], function (err, result) {
@@ -103,23 +113,23 @@ var orm = {
           return deleteUserNutritionPlanNutrients(planID);
         });
       },
-      deleteUserNutritionPlanNutrients = (planID)=>{
-        let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
-        connection.query(queryString2, [planID], function (err, result) {
-          if (err) throw createError(400, err);
-          return deleteUserNutritionPlan(planID, userID)
-        })
+        deleteUserNutritionPlanNutrients = (planID) => {
+          let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
+          connection.query(queryString2, [planID], function (err, result) {
+            if (err) throw createError(400, err);
+            return deleteUserNutritionPlan(planID, userID)
+          })
         },
-        deleteUserNutritionPlan = (planID, userID)=>{
+        deleteUserNutritionPlan = (planID, userID) => {
           let queryString3 = `DELETE FROM nutrition_plan WHERE id = ? AND fk_user = ?;`
           connection.query(queryString3, [planID, userID], function (err, result) {
             if (err) throw createError(400, err);
             cb(result);
           })
         }
-        updateUserFKActiveNutritionPlanToNull(planID, userID)
-        connection.release();
-      })
+      updateUserFKActiveNutritionPlanToNull(planID, userID)
+      connection.release();
+    })
 
   },
 
@@ -127,62 +137,54 @@ var orm = {
   postingFood: function (data, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      let resultArray = [];
-      data.grams.map((item, i) => {
-        let arrayObjects = {
-          fk_user: data.fk_user,
-          fk_food: data.fk_food[i],
-          grams: item,
-          date: data.date[i].toString(),
-        };
-
-        var queryString = `INSERT INTO user_food (${Object.keys(arrayObjects).toString()}) VALUES (${printQuestionMarks(Object.values(arrayObjects).length)} );`
-
-        connection.query(queryString, Object.values(arrayObjects), function (err, res) {
-          if (err) throw err;
-          let results = res;
-          resultArray.push(results)
-          let gramsDivided = parseFloat(arrayObjects.grams) / 100;
-          var queryString2 = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
-
-          connection.query(queryString2, [gramsDivided, arrayObjects.fk_food], function (err, result) {
-            if (err) throw err;
-            let vals = []
-            var queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES `
-
-            for (let i = 0; i < result.length; i++) {
-              let dataObject = {
-                fk_user: arrayObjects.fk_user,
-                fk_nutrient: result[i].fk_nutrient,
-                value: result[i].value,
-                date: arrayObjects.date.toString(),
-              }
-
-              vals.push(dataObject.fk_user);
-              vals.push(dataObject.fk_nutrient);
-              vals.push(dataObject.value);
-              vals.push(dataObject.date);
-
-              if (i < result.length - 1) {
-                queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)}),`
-
-              }
-              if (i === result.length - 1) {
-                queryString3 += `(${printQuestionMarks(Object.values(dataObject).length)});`
-
-                connection.query(queryString3, vals, function (err, response) {
-                  if (err) throw err;
-                })
-              }
-            }
+      let resultArray = [],
+        itterateThroughData = (data) => {
+          data.grams.map((item, i) => {
+            let foodObject = {
+              fk_user: data.fk_user,
+              fk_food: data.fk_food[i],
+              grams: item,
+              date: data.date[i].toString(),
+            };
+           return insertIntoUserFood(foodObject)
           });
-        });
-
-      });
-
+        },
+        insertIntoUserFood = (foodObject) => {
+          var queryString = `INSERT INTO user_food (${printDoubleQuestionMarks(Object.keys(foodObject).length)}) VALUES (${printSingleQuestionMarks(Object.values(foodObject).length)});`
+          connection.query(queryString, [...Object.keys(foodObject), ...Object.values(foodObject)], function (err, result) {
+            if (err) throw createError(500, err);
+            resultArray.push(result);
+            return selectFoodNutrient(foodObject);
+          })
+        },
+        selectFoodNutrient = (foodObject) => {
+          let gramsDivided = parseFloat(foodObject.grams) / 100,
+            queryString = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
+          connection.query(queryString, [gramsDivided, foodObject.fk_food], function (err, result) {
+            if (err) throw createError(500, err);
+            return insertIntoUserNutrient(result, foodObject)
+          })
+        },
+        insertIntoUserNutrient = (result, foodObject) => {
+          let values = [],
+            queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ? `
+          for (let i = 0; i < result.length; i++) {
+            let dataObject = {
+              fk_user: foodObject.fk_user,
+              fk_nutrient: result[i].fk_nutrient,
+              value: result[i].value,
+              date: foodObject.date.toString(),
+            }
+            values.push([dataObject.fk_user, dataObject.fk_nutrient, dataObject.value, dataObject.date]);
+            connection.query(queryString3, [values], function (err, response) {
+              if (err) throw createError(500, err);
+            })
+          }
+          return
+        };
+      itterateThroughData(data)
       connection.release();
       return cb(resultArray);
-
     });
   },
 
