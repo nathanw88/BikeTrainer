@@ -1,4 +1,4 @@
-var mysqlPool = require("../config/connection.js");
+var mysqlPool = require("../config/connection.js"), createError = require('http-errors');
 
 function printQuestionMarks(num) {
   var arr = [];
@@ -11,16 +11,16 @@ function printQuestionMarks(num) {
 
 function handleMysqlConnectionError(err, connection) {
   connection.release();
-  console.log(' Error getting mysqlPool connection: ' + err);
-  throw err;
+  throw createError(503, err);
 }
+
 
 var orm = {
 
   create: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) handleMysqlConnectionError(err, connection)
-      var queryString = `INSERT INTO  ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)});`
+      if (err) handleMysqlConnectionError(err, connection);
+      var queryString = `INSERT INTO  ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)});`;
       connection.query(queryString, vals, function (err, result) {
         if (err) throw err;
         cb(result);
@@ -29,37 +29,19 @@ var orm = {
     });
   },
 
-  update: function (table, condition, cols, vals, userID, cb) {
+  update: function (table, condition, cols, vals, conditionMatch, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      var queryString = `UPDATE ${table} SET `
-
+      var queryString = `UPDATE ${table} SET `;
       cols.map((item, i) => {
-
-        if (i < cols.length - 1) {
-          queryString += `${item} = ?,`
-        }
+        if (i < cols.length - 1) queryString += `${item} = ?,`;
         else {
-          queryString += `${item} = ? WHERE ${condition} = ?`
-
-          connection.query(queryString, [...vals, userID], function (err, result) {
+          queryString += `${item} = ? WHERE ${condition} = ?;`;
+          connection.query(queryString, [...vals, conditionMatch], function (err, result) {
             if (err) throw err;
             cb(result);
           });
-        }
-      })
-      connection.release();
-    });
-  },
-
-  findFood: function (searchString, cb) {
-    mysqlPool.getConnection(function (err, connection) {
-      if (err) handleMysqlConnectionError(err, connection)
-      var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?) LIMIT 25;`
-      connection.query(queryString, [searchString], function (err, result) {
-        if (err) throw err;
-        cb(result)
-
+        };
       });
       connection.release();
     });
@@ -67,53 +49,77 @@ var orm = {
 
   delete: function (table, cols, vals, cb) {
     mysqlPool.getConnection(function (err, connection) {
-      if (err) handleMysqlConnectionError(err, connection)
-      var queryString = "DELETE FROM ?? WHERE "
-
-      if (cols.length != vals.length && cols.length <= 0) {
-        err = "Error: BAD_INPUTS_ERROR: ";
-
-        if (cols.length <= 0) err += "Number of Columns is 0";
-        else if (vals.length <= 0) err += "Number of Values is 0";
-        else err += "Number of Columns does not match number of Values";
-        throw err;
+      if (err) handleMysqlConnectionError(err, connection);
+      var queryString = `DELETE FROM ?? WHERE `;
+      let columnsValues = [];
+      for (var i = 0; i < cols.length; i++) {
+        columnsValues[i] = { [cols[i]]: vals[i] }
+        if (i === 0) queryString += "?";
+        else queryString += " AND ?";
       }
-      else {
-        queryString += cols[0] + " = " + vals[0];
-
-        for (var i = 1; i < cols.length; i++) {
-          queryString += " AND " + cols[i] + " = " + vals[i];
-        }
-        queryString += ";";
-
-        connection.query(queryString, [table], function (err, result) {
-          if (err) throw err;
-          cb(result);
-        });
-      }
+      queryString += ";";
+      connection.query(queryString, [table, ...columnsValues], function (err, result) {
+        if (err) throw err;
+        cb(result);
+      });
       connection.release();
     });
   },
 
+  selectWhere: function (table, searchCol, val, cb) {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) handleMysqlConnectionError(err, connection)
+      if (searchCol.length <= 0) throw ({ error: "Number of Columns is 0" });
+      var queryString = "SELECT * FROM ?? WHERE ?? = ?;";
+      connection.query(queryString, [table, searchCol, val], function (err, result) {
+        if (err) throw err;
+        cb(result);
+      });
+      connection.release();
+    });
+  },
+
+  findFood: function (searchString, cb) {
+    mysqlPool.getConnection(function (err, connection) {
+      if (err) handleMysqlConnectionError(err, connection);
+      var queryString = `SELECT * FROM food WHERE MATCH(description, gtin, name, brand, additional_description) AGAINST(?) LIMIT 25;`;
+      connection.query(queryString, [searchString], function (err, result) {
+        if (err) throw err;
+        cb(result);
+      });
+      connection.release();
+    });
+  },
+
+
   deleteNutritionPlan: function (planID, userID, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
-      connection.query(queryString, [userID, planID], function (err, result) {
-        if (err) throw err;
-        if (result.affectedRows === 0) return cb(result)
+      const updateUserFKActiveNutritionPlanToNull = (planID, userID) => {
+        let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
+        connection.query(queryString, [userID, planID], function (err, result) {
+          if (err) throw createError(400, err);
+          if (result.affectedRows === 0) return cb(result)
+          return deleteUserNutritionPlanNutrients(planID);
+        });
+      },
+      deleteUserNutritionPlanNutrients = (planID)=>{
         let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
         connection.query(queryString2, [planID], function (err, result) {
-          if (err) throw err
+          if (err) throw createError(400, err);
+          return deleteUserNutritionPlan(planID, userID)
+        })
+        },
+        deleteUserNutritionPlan = (planID, userID)=>{
           let queryString3 = `DELETE FROM nutrition_plan WHERE id = ? AND fk_user = ?;`
           connection.query(queryString3, [planID, userID], function (err, result) {
-            if (err) throw err;
+            if (err) throw createError(400, err);
             cb(result);
           })
-        })
+        }
+        updateUserFKActiveNutritionPlanToNull(planID, userID)
+        connection.release();
       })
-      connection.release();
-    })
 
   },
 
@@ -166,7 +172,6 @@ var orm = {
 
                 connection.query(queryString3, vals, function (err, response) {
                   if (err) throw err;
-                  // if(resultArray.length === data.grams.length) return cb(resultArray);
                 })
               }
             }
@@ -181,24 +186,6 @@ var orm = {
     });
   },
 
-  selectWhere: function (table, searchCol, val, cb) {
-    mysqlPool.getConnection(function (err, connection) {
-      if (err) handleMysqlConnectionError(err, connection)
-      if (searchCol.length <= 0) {
-        err = "Number of Columns is 0";
-        throw err
-      }
-      else {
-        var queryString = "SELECT * FROM ?? WHERE ?? = ?;";
-
-        connection.query(queryString, [table, searchCol, val], function (err, result) {
-          if (err) throw err;
-          cb(result);
-        });
-      }
-      connection.release();
-    });
-  },
 
   postNutritionPlanNutrients: (obj, fkNutritionPlan, cb) => {
     mysqlPool.getConnection(function (err, connection) {

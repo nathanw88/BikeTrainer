@@ -43,5 +43,5 @@ var user = {
 
 };
 
-// Export the database functions to route controllers.
+
 module.exports = user;

@@ -39,7 +39,6 @@ app.use((error, req, res, next) => {
   // Sets HTTP status code
   let status = error.status || 500
   res.status(status)
-
   // Sends response
   res.json({
     status: status,
