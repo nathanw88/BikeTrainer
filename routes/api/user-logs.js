@@ -16,7 +16,10 @@ router.route("/dailySum/:userID/:date").get((req, res) => {
     if (result.error) return res.status(400).json({ message: result.error });
     nutritionPlan.selectDailySum(userID, date, (result2) => {
       if (result2.error) return res.status(400).json({ message: result2.error });
-      return res.json(result2)
+      else{
+
+        return res.json(result2)
+      }
     });
   });
 });
@@ -26,13 +29,16 @@ router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
   userID = parseInt(userID)
   if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number");
   if (!check.isDate(dateFrom) || !check.isDate(dateTill)) throw createError(400, "Dates Aren't Dates");
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-    if (result.error) return res.status(400).json({ message: result.error });
-    nutritionPlan.selectAverageMacros(userID, dateFrom, dateTill, (result2) => {
-      if (result2.error) return res.status(400).json({ message: result2.error })
-      return res.json(result2)
+  else{
+
+    session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
+      if (result.error) return res.status(400).json({ message: result.error });
+      nutritionPlan.selectAverageMacros(userID, dateFrom, dateTill, (result2) => {
+        if (result2.error) return res.status(400).json({ message: result2.error })
+        return res.json(result2)
+      });
     });
-  });
+  }
 });
 
 router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res) => {

@@ -220,17 +220,17 @@ describe("users routes", () => {
   });
 
   describe('post /setup', () => {
-    describe("status: 200", ()=>{
+    describe("status: 200", () => {
       test('Changing user info for qwq@qwq.qwq', () => {
         return request
-        .post('/api/users/setup')
-        .send({ gender: "female", weight: 72, height: 180, metric: 0, userID: 7 })
-        .set('Accept', 'application/json')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .then(response => {
-          expect(response.body.affectedRows).toBe(1)
-        });
+          .post('/api/users/setup')
+          .send({ gender: "female", weight: 72, height: 180, metric: 0, userID: 7 })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then(response => {
+            expect(response.body.affectedRows).toBe(1)
+          });
       });
     });
 
@@ -626,7 +626,7 @@ describe("users routes", () => {
       test('no data sent', () => {
         return request
           .post('/api/users/nutritionPlan')
-          .send({ })
+          .send({})
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1769,41 +1769,29 @@ describe("user-logs route", () => {
             expect(response.body).toStrictEqual([
               {
                 "amount": 2928,
-                "log": [{
-                  "dailySum": 1127.33,
-                  "date": "2020-08-31T05:00:00.000Z"
-                }],
-                "max_amount": null,
+                "log": [{ "dailySum": 1127.33, "date": "2020-08-31T05:00:00.000Z" }],
+                "maxAmount": null,
                 "name": "Calories",
                 "unit": "KCAL"
               },
               {
                 "amount": 65,
-                "log": [{
-                  "dailySum": 56.06,
-                  "date": "2020-08-31T05:00:00.000Z"
-                }],
-                "max_amount": null,
+                "log": [{ "dailySum": 56.06, "date": "2020-08-31T05:00:00.000Z" }],
+                "maxAmount": null,
                 "name": "Total Fat",
                 "unit": "G"
               },
               {
                 "amount": 366,
-                "log": [{
-                  "dailySum": 85.487,
-                  "date": "2020-08-31T05:00:00.000Z"
-                }],
-                "max_amount": null,
+                "log": [{ "dailySum": 85.487, "date": "2020-08-31T05:00:00.000Z" }],
+                "maxAmount": null,
                 "name": "Total Carbohydrate",
                 "unit": "G"
               },
               {
                 "amount": 219,
-                "log": [{
-                  "dailySum": 68.889,
-                  "date": "2020-08-31T05:00:00.000Z"
-                }],
-                "max_amount": null,
+                "log": [{ "dailySum": 68.889, "date": "2020-08-31T05:00:00.000Z" }],
+                "maxAmount": null,
                 "name": "Protein",
                 "unit": "G"
               }])

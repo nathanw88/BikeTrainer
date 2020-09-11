@@ -1,4 +1,4 @@
-var mysqlPool = require("../config/connection.js"), createError = require('http-errors');
+var mysqlPool = require("../config/connection.js");
 
 function printSingleQuestionMarks(num) {
   var arr = [];
@@ -20,7 +20,7 @@ function printDoubleQuestionMarks(num) {
 
 function handleMysqlConnectionError(err, connection) {
   connection.release();
-  throw createError(503, err);
+  throw (err);
 }
 
 
@@ -108,7 +108,7 @@ var orm = {
       const updateUserFKActiveNutritionPlanToNull = (planID, userID) => {
         let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
         connection.query(queryString, [userID, planID], function (err, result) {
-          if (err) throw createError(400, err);
+          if (err) throw err;
           if (result.affectedRows === 0) return cb(result)
           return deleteUserNutritionPlanNutrients(planID);
         });
@@ -116,14 +116,14 @@ var orm = {
         deleteUserNutritionPlanNutrients = (planID) => {
           let queryString2 = `DELETE FROM nutrition_plan_nutrients WHERE fk_nutrition_plan = ?;`
           connection.query(queryString2, [planID], function (err, result) {
-            if (err) throw createError(400, err);
+            if (err) throw err;
             return deleteUserNutritionPlan(planID, userID)
           })
         },
         deleteUserNutritionPlan = (planID, userID) => {
           let queryString3 = `DELETE FROM nutrition_plan WHERE id = ? AND fk_user = ?;`
           connection.query(queryString3, [planID, userID], function (err, result) {
-            if (err) throw createError(400, err);
+            if (err) throw err;
             cb(result);
           })
         }
@@ -146,13 +146,13 @@ var orm = {
               grams: item,
               date: data.date[i].toString(),
             };
-           return insertIntoUserFood(foodObject)
+            return insertIntoUserFood(foodObject)
           });
         },
         insertIntoUserFood = (foodObject) => {
           var queryString = `INSERT INTO user_food (${printDoubleQuestionMarks(Object.keys(foodObject).length)}) VALUES (${printSingleQuestionMarks(Object.values(foodObject).length)});`
           connection.query(queryString, [...Object.keys(foodObject), ...Object.values(foodObject)], function (err, result) {
-            if (err) throw createError(500, err);
+            if (err) throw (err);
             resultArray.push(result);
             return selectFoodNutrient(foodObject);
           })
@@ -161,7 +161,7 @@ var orm = {
           let gramsDivided = parseFloat(foodObject.grams) / 100,
             queryString = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
           connection.query(queryString, [gramsDivided, foodObject.fk_food], function (err, result) {
-            if (err) throw createError(500, err);
+            if (err) throw (err);
             return insertIntoUserNutrient(result, foodObject)
           })
         },
@@ -169,15 +169,9 @@ var orm = {
           let values = [],
             queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ? `
           for (let i = 0; i < result.length; i++) {
-            let dataObject = {
-              fk_user: foodObject.fk_user,
-              fk_nutrient: result[i].fk_nutrient,
-              value: result[i].value,
-              date: foodObject.date.toString(),
-            }
-            values.push([dataObject.fk_user, dataObject.fk_nutrient, dataObject.value, dataObject.date]);
+            values.push([foodObject.fk_user, result[i].fk_nutrient, result[i].value, foodObject.date.toString()]);
             connection.query(queryString3, [values], function (err, response) {
-              if (err) throw createError(500, err);
+              if (err) throw (err);
             })
           }
           return
@@ -189,77 +183,69 @@ var orm = {
   },
 
 
-  postNutritionPlanNutrients: (obj, fkNutritionPlan, cb) => {
+  postNutritionPlanNutrients: function (obj, fkNutritionPlan, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      const keysArray = Object.keys(obj);
-      let vals = [];
-      let queryString2 = "INSERT INTO nutrition_plan_nutrients (fk_nutrition_plan, fk_nutrient, amount) VALUES "
-      let i;
-      let maxLength = keysArray.length;
-
+      let queryString2 = "INSERT INTO nutrition_plan_nutrients (fk_nutrition_plan, fk_nutrient, amount) VALUES ?",
+        keysArray = Object.keys(obj), vals = [], i, maxLength = keysArray.length;
       for (i = 0; i < maxLength; i++) {
-
-        vals.push(
-          fkNutritionPlan,
-          obj[keysArray[i]].id,
-          obj[keysArray[i]].amount
-        )
-
-        if (i < maxLength - 1) {
-          queryString2 += `(?,?,?),`
-
-        }
-        else if (i === maxLength - 1) {
-          queryString2 += `(?,?,?);`
-        }
+        vals.push([fkNutritionPlan, obj[keysArray[i]].id, obj[keysArray[i]].amount])
       }
-
-      connection.query(queryString2, vals, function (err, response) {
-        if (err) throw err;
-        cb(response)
+      connection.query(queryString2, [vals], function (err, response) {
+        if (err) throw createError(500, err);
+        return cb(response)
       })
       connection.release();
     });
   },
 
-  selectDailySum: (userID, date, cb) => {
+  selectDailySum: function (userID, date, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      let dataArray = [], queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`, val = [userID]
-      connection.query(queryString, val, (err, result) => {
-        if (result.length === 0) return cb({ error: "No Nutrition Plan" })
-        if (err) throw err;
-        let maxLength = result.length;
-        for (let i = 0; i < maxLength; i++) {
-          let { amount, max_amount, name, unit, id } = result[i], maxDate = new Date(), minDate = new Date(date);
-          maxDate.setDate(minDate.getDate() + 1);
-          let queryString2 = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date;`, vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
-          connection.query(queryString2, vals, (err, result2) => {
-            if (err) throw err;
-            let resultArray = [], maxLength2 = result2.length;
-            for (let i = 0; i < maxLength2; i++) {
-              resultArray.push({
-                dailySum: result2[i].dailySum,
-                date: new Date(result2[i].date)
-              });
-            };
-            dataArray.push({
-              amount,
-              max_amount,
-              name,
-              unit,
-              log: [...resultArray]
+      let selectActiveNutritionPlanNutrients = (userID) => {
+        let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users 
+            INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan 
+            INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
+        connection.query(queryString, [userID], (error, result) => {
+          if (result.length === 0) return cb({ error: "No Nutrition Plan" })
+          if (error) throw (error)
+          selectDailySumFromArrayOfNutrientsFromNutritionPlan(result)
+        })
+      },
+        selectDailySumFromArrayOfNutrientsFromNutritionPlan = (nutrientArray) => {
+          let maxLength = nutrientArray.length, resultArray = [];
+          for (let i = 0; i < maxLength; i++) {
+            let { amount, max_amount, name, unit, id } = nutrientArray[i], maxDate = new Date(date), minDate = new Date(date);
+            maxDate.setDate(minDate.getDate() + 1);
+            let queryString = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date;`,
+              vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
+            connection.query(queryString, vals, (err, result2) => {
+              if (err) throw err;
+              let logArray = [], maxLength2 = result2.length, j;
+              for (j = 0; j < maxLength2; j++) {
+                logArray.push({
+                  dailySum: result2[j].dailySum,
+                  date: new Date(result2[j].date)
+                });
+              }
+              let data = {
+                amount: amount,
+                maxAmount: max_amount,
+                name: name,
+                unit: unit,
+                log: [...logArray]
+              }
+              resultArray.push(data)
+              if (i === maxLength - 1) return cb(resultArray)
             });
-            if (i === (maxLength - 1)) return cb(dataArray)
-          })
+          }
         }
-      })
+      selectActiveNutritionPlanNutrients(userID)
       connection.release();
     });
   },
 
-  selectAverageMacros: (userID, dateFrom, dateTill, cb) => {
+  selectAverageMacros: function (userID, dateFrom, dateTill, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
       let dataArray = [], val = [userID],
@@ -298,7 +284,7 @@ var orm = {
     });
   },
 
-  userFoodLogs: (userId, dateFrom, dateTill, limit, offset, cb) => {
+  userFoodLogs: function (userId, dateFrom, dateTill, limit, offset, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
       let maxDate = new Date(dateTill), minDate = new Date(dateFrom)
@@ -313,7 +299,7 @@ var orm = {
     });
   },
 
-  userNutrientsTimeline: (userID, dateFrom, dateTill, cb) => {
+  userNutrientsTimeline: function (userID, dateFrom, dateTill, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
       let dataArray = [];
