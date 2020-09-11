@@ -38,8 +38,8 @@ export default {
     return axios.get(`/api/user-logs/dailySum/${id}/${date}`)
   },
 
-  averageMacros:(id, dateFrom, dateTill) =>{
-    return axios.get(`/api/user-logs/averageMacros/${id}/${dateFrom}/${dateTill}`)
+  averageNutrients:(id, dateFrom, dateTill) =>{
+    return axios.get(`/api/user-logs/averageNutrients/${id}/${dateFrom}/${dateTill}`)
   },
 
   userNutrientsTimeline:(id, dateFrom, dateTill) =>{

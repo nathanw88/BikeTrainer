@@ -26,9 +26,9 @@ let nutritionPlan = {
     });
   },
 
-  selectAverageMacros: (userID, dateFrom, dateTill, cb)=>{
+  selectAverageNutrients: (userID, dateFrom, dateTill, cb)=>{
 
-    orm.selectAverageMacros(userID, dateFrom, dateTill, (res) => {
+    orm.selectAverageNutrients(userID, dateFrom, dateTill, (res) => {
       cb(res);
     });
   },

@@ -1800,12 +1800,12 @@ describe("user-logs route", () => {
     });
   });
 
-  describe("get /averageMacros/:userID/:dateFrom/:dateTill", () => {
+  describe("get /averageNutrients/:userID/:dateFrom/:dateTill", () => {
     describe("status: 400", () => {
 
       test('passing in incorrect parameters', () => {
         return request
-          .get(`/api/user-logs/averageMacros/:userID/:dateFrom/:dateTill`)
+          .get(`/api/user-logs/averageNutrients/:userID/:dateFrom/:dateTill`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1816,7 +1816,7 @@ describe("user-logs route", () => {
 
       test('passing in correct userID the rest are incorrect parameters', () => {
         return request
-          .get(`/api/user-logs/averageMacros/${whatID}/:dateFrom/:dateTill`)
+          .get(`/api/user-logs/averageNutrients/${whatID}/:dateFrom/:dateTill`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1827,7 +1827,7 @@ describe("user-logs route", () => {
 
       test('passing in userID and one correct date parameters', () => {
         return request
-          .get(`/api/user-logs/averageMacros/${whatID}/${new Date()}/:dateTill`)
+          .get(`/api/user-logs/averageNutrients/${whatID}/${new Date()}/:dateTill`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1838,7 +1838,7 @@ describe("user-logs route", () => {
 
       test('passing in userID and one correct date parameters', () => {
         return request
-          .get(`/api/user-logs/averageMacros/${whatID}/:dateFrom/${new Date()}`)
+          .get(`/api/user-logs/averageNutrients/${whatID}/:dateFrom/${new Date()}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1849,7 +1849,7 @@ describe("user-logs route", () => {
 
       test('passing in user who has no nutrition plan', () => {
         return request
-          .get(`/api/user-logs/averageMacros/7/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
+          .get(`/api/user-logs/averageNutrients/7/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1859,7 +1859,7 @@ describe("user-logs route", () => {
       });
       test(`passing in user who doesn't exsist`, () => {
         return request
-          .get(`/api/user-logs/averageMacros/99999999999/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
+          .get(`/api/user-logs/averageNutrients/99999999999/${new Date("8/30/2020")}/${new Date("8/31/2020")}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(400)
@@ -1873,7 +1873,7 @@ describe("user-logs route", () => {
 
       test('getting data for what@what.what', () => {
         return request
-          .get(`/api/user-logs/averageMacros/${whatID}/${new Date("8/29/2020")}/${new Date("9/1/2020")}`)
+          .get(`/api/user-logs/averageNutrients/${whatID}/${new Date("8/29/2020")}/${new Date("9/1/2020")}`)
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(200)
@@ -1884,7 +1884,7 @@ describe("user-logs route", () => {
                 "dailyAverage": 638.665,
                 "date": "2020-08-30T05:00:00.000Z",
               }],
-              "max_amount": null,
+              "maxAmount": null,
               "name": "Calories",
               "unit": "KCAL"
             },
@@ -1894,7 +1894,7 @@ describe("user-logs route", () => {
                 "dailyAverage": 29.53,
                 "date": "2020-08-30T05:00:00.000Z",
               }],
-              "max_amount": null,
+              "maxAmount": null,
               "name": "Total Fat",
               "unit": "G"
             },
@@ -1904,7 +1904,7 @@ describe("user-logs route", () => {
                 "dailyAverage": 56.2435,
                 "date": "2020-08-30T05:00:00.000Z",
               }],
-              "max_amount": null,
+              "maxAmount": null,
               "name": "Total Carbohydrate",
               "unit": "G"
             },
@@ -1914,7 +1914,7 @@ describe("user-logs route", () => {
                 "dailyAverage": 36.9445,
                 "date": "2020-08-30T05:00:00.000Z",
               }],
-              "max_amount": null,
+              "maxAmount": null,
               "name": "Protein",
               "unit": "G"
             }])
@@ -1977,7 +1977,7 @@ describe("user-logs route", () => {
           .expect('Content-Type', /json/)
           .expect(400)
           .then(response => {
-            expect(response.body.message).toBe("No Nutrition Plan Or User")
+            expect(response.body.message).toBe("No Nutrition Plan")
           });
       });
 
@@ -2014,7 +2014,7 @@ describe("user-logs route", () => {
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
-                "max_amount": null,
+                "maxAmount": null,
                 "name": "Calories",
                 "unit": "KCAL"
               },
@@ -2030,7 +2030,7 @@ describe("user-logs route", () => {
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
-                "max_amount": null,
+                "maxAmount": null,
                 "name": "Total Fat",
                 "unit": "G"
               },
@@ -2046,7 +2046,7 @@ describe("user-logs route", () => {
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
-                "max_amount": null,
+                "maxAmount": null,
                 "name": "Total Carbohydrate",
                 "unit": "G"
               },
@@ -2062,7 +2062,7 @@ describe("user-logs route", () => {
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
-                "max_amount": null,
+                "maxAmount": null,
                 "name": "Protein",
                 "unit": "G"
               }])

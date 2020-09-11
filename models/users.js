@@ -36,7 +36,7 @@ var user = {
 
   selectActiveNutritionPlan: (userID, cb) => {
 
-    orm.selectActiveNutritionPlan(userID, (res)=>{
+    orm.selectActiveNutritionPlanNutrients(userID, (res)=>{
       cb(res);
     });
   }

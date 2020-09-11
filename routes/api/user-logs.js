@@ -24,7 +24,7 @@ router.route("/dailySum/:userID/:date").get((req, res) => {
   });
 });
 
-router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
+router.route("/averageNutrients/:userID/:dateFrom/:dateTill").get((req, res) => {
   let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, dateFrom, dateTill } = req.params;
   userID = parseInt(userID)
   if (!check.isNumber(userID)) throw createError(400, "userID Should Be A Number");
@@ -33,7 +33,7 @@ router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
 
     session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
       if (result.error) return res.status(400).json({ message: result.error });
-      nutritionPlan.selectAverageMacros(userID, dateFrom, dateTill, (result2) => {
+      nutritionPlan.selectAverageNutrients(userID, dateFrom, dateTill, (result2) => {
         if (result2.error) return res.status(400).json({ message: result2.error })
         return res.json(result2)
       });

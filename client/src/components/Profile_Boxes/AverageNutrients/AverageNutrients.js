@@ -26,7 +26,7 @@ class AverageNutrients extends Component {
     const today = new Date();
     dateFrom.setDate(today.getDate() - 7);
 
-    API.averageMacros(this.state.fk_user, dateFrom, today).then((result) => {
+    API.averageNutrients(this.state.fk_user, dateFrom, today).then((result) => {
       
         data.logs = [...result.data];
 
@@ -57,7 +57,7 @@ class AverageNutrients extends Component {
       data
     });
 
-    API.averageMacros(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
+    API.averageNutrients(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
 
         data.logs = [...result.data];
 
