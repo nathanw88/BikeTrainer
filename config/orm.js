@@ -158,9 +158,9 @@ var orm = {
           })
         },
         selectFoodNutrient = (foodObject) => {
-          let gramsDivided = parseFloat(foodObject.grams) / 100,
+          let conversionToAmountEaten = parseFloat(foodObject.grams) / 100,
             queryString = "SELECT fk_food, fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
-          connection.query(queryString, [gramsDivided, foodObject.fk_food], function (err, result) {
+          connection.query(queryString, [conversionToAmountEaten, foodObject.fk_food], function (err, result) {
             if (err) throw (err);
             return insertIntoUserNutrient(result, foodObject)
           })
@@ -322,54 +322,63 @@ var orm = {
           });
         }
       }
-      orm.selectActiveNutritionPlanNutrients(userID, selectTimelineOfNutrientsFromNutritionPlan) 
+      orm.selectActiveNutritionPlanNutrients(userID, selectTimelineOfNutrientsFromNutritionPlan)
       connection.release();
     })
-    
+
   },
 
   deleteUserLogs: function (data, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      let gramsDivided = parseFloat(data.grams) / 100;
-      var queryString = "SELECT fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
 
-      connection.query(queryString, [gramsDivided, data.fk_food], function (err, result) {
-        if (err) throw err;
+      let selectNutrientsInFoodLogToBeDeleted = (grams, fkFood) => {
+        let conversionToAmountEaten = parseFloat(grams) / 100;
+        var queryString = "SELECT fk_nutrient, amount * ? as value FROM food_nutrient WHERE fk_food = ?;";
 
-        let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;  `
+        connection.query(queryString, [conversionToAmountEaten, fkFood], function (err, result) {
+          if (err) throw err;
+          deleteNutrientLogs(result)
+        })
+      },
+        deleteNutrientLogs = (result) => {
 
-        for (let i = 0; i < result.length; i++) {
-          let vals = []
-          let dataObject = {
-            fk_user: data.userID,
-            fk_nutrient: result[i].fk_nutrient,
-            value: parseFloat(result[i].value.toFixed(3)),
-            date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000).toISOString().substr(0, 10)
+          let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;  `
+
+          for (let i = 0; i < result.length; i++) {
+            let vals = []
+            let dataObject = {
+              fk_user: data.userID,
+              fk_nutrient: result[i].fk_nutrient,
+              value: parseFloat(result[i].value.toFixed(3)),
+              date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000).toISOString().substr(0, 10)
+            }
+
+            vals.push(dataObject.fk_user);
+            vals.push(dataObject.fk_nutrient);
+            vals.push(parseFloat(dataObject.value).toFixed(3));
+            vals.push(dataObject.date);
+
+            connection.query(queryString2, vals, function (err, response) {
+              if (err) throw err;
+            })
+            if (i === result.length - 1) return deleteFoodLog(dataObject.date)
           }
+        },
+        deleteFoodLog = (date) => {
 
-          vals.push(dataObject.fk_user);
-          vals.push(dataObject.fk_nutrient);
-          vals.push(parseFloat(dataObject.value).toFixed(3));
-          vals.push(dataObject.date);
+          let queryString3 = `DELETE FROM user_food WHERE fk_user = ? and DATE(date) = ? and fk_food = ? and grams = ? LIMIT 1;`
 
-          connection.query(queryString2, vals, function (err, response) {
+          connection.query(queryString3, [data.id, date, data.fk_food, data.grams], function (err, response3) {
             if (err) throw err;
+            cb("done");
           })
 
-          if (i === result.length - 1) {
-            let queryString3 = `DELETE FROM user_food WHERE fk_user = ? and DATE(date) = ? and fk_food = ? and grams = ? LIMIT 1;`
+        };
+        selectNutrientsInFoodLogToBeDeleted(data.grams, data.fk_food);
+        connection.release();
+    })
 
-            connection.query(queryString3, [data.id, dataObject.date, data.fk_food, data.grams], function (err, response3) {
-
-            })
-
-          }
-        }
-      })
-      connection.release();
-      cb("done");
-    });
 
   },
 
@@ -377,9 +386,7 @@ var orm = {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
       let queryString = `SELECT nutrition_plan_nutrients.amount, nutrition_plan_nutrients.max_amount, nutrient.id, nutrient.name, nutrient.unit FROM users INNER JOIN nutrition_plan_nutrients ON users.fk_active_nutrition_plan = nutrition_plan_nutrients.fk_nutrition_plan INNER JOIN nutrient ON nutrition_plan_nutrients.fk_nutrient = nutrient.id WHERE users.id = ?;`;
-      let val = [userID];
-
-      connection.query(queryString, val, (err, result) => {
+      connection.query(queryString, [userID], (err, result) => {
         if (err) throw err;
         if (result.length === 0) cb({ error: "No Nutrition Plan" })
         cb(result);
