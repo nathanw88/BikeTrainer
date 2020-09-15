@@ -192,7 +192,7 @@ var orm = {
         vals.push([fkNutritionPlan, obj[keysArray[i]].id, obj[keysArray[i]].amount])
       }
       connection.query(queryString2, [vals], function (err, response) {
-        if (err) throw createError(500, err);
+        if (err) throw err;
         return cb(response)
       })
       connection.release();

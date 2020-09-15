@@ -35,18 +35,6 @@ app.use(express.json());
 
 app.use(routes);
 
-app.use((error, req, res, next) => {
-  // Sets HTTP status code
-  let status = error.status || 500
-  res.status(status)
-  // Sends response
-  res.json({
-    status: status,
-    message: error.message,
-    stack: error.stack
-  })
-})
-
 // Start the API server
 app.listen(PORT, () =>
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`)

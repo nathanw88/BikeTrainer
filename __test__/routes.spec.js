@@ -382,6 +382,16 @@ describe("users routes", () => {
 
     describe("status: 400", () => {
 
+      beforeAll(async () => {
+        await request
+          .post('/api/users/login')
+          .send({ userEmail: "qwq@qwq.qwq", userPassword: "qwe123QWE!@#" })
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .then((response) => { console.log("Logged in as qwq@qwq.qwq") });
+      });
+
       test('null for user id', () => {
         return request
           .post('/api/users/nutritionPlan')
@@ -557,7 +567,7 @@ describe("users routes", () => {
           });
       });
 
-      test('null for nutritionPlanNutrients.fats.amount', () => {
+      test('null for nutritionPlanNutrients.protein.amount', () => {
         return request
           .post('/api/users/nutritionPlan')
           .send({
@@ -569,9 +579,9 @@ describe("users routes", () => {
             },
             nutritionPlanNutrients: {
               calories: { id: 1008, amount: 2906 },
-              fats: { id: 1004, amount: null },
+              fats: { id: 1004, amount: 41 },
               carbs: { id: 1005, amount: 464 },
-              protein: { id: 1003, amount: 167 }
+              protein: { id: 1003, amount: null }
             }
           })
           .set('Accept', 'application/json')
@@ -638,16 +648,6 @@ describe("users routes", () => {
     });
 
     describe("status: 200", () => {
-
-      beforeAll(async () => {
-        await request
-          .post('/api/users/login')
-          .send({ userEmail: "qwq@qwq.qwq", userPassword: "qwe123QWE!@#" })
-          .set('Accept', 'application/json')
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .then((response) => { console.log("Logged in as qwq@qwq.qwq") });
-      });
 
       test('logging new nutrition plan', () => {
         return request
