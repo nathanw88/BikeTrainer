@@ -11,7 +11,7 @@ class AverageNutrients extends Component {
 
     this.state = {
 
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
         dateFrom: new Date(),
         dateTill: new Date(),
@@ -20,32 +20,30 @@ class AverageNutrients extends Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount = () => { 
     const { data } = this.state;
     let { dateFrom } = this.state.data
     const today = new Date();
     dateFrom.setDate(today.getDate() - 7);
 
-    API.averageMacros(this.state.fk_user, dateFrom, today).then((result) => {
-
-      if (result.data.error) {
-        alert(result.data.error)
-
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
+    API.averageNutrients(this.state.fk_user, dateFrom, today).then((result) => {
+      
         data.logs = [...result.data];
 
         this.setState({
           data,
           dateFrom
         });
-      }
-    });
+      
+    }).catch(error =>{
+        alert(error.response.data.message);
+        if (error.response.data.message === "Your session has expired.") {
+          sessionStorage.setItem("email", "");
+          sessionStorage.setItem("id", "");
+          window.location.replace("/");
+        };
+      });
+      
   }
 
   dateClick = (event, name) => {
@@ -59,25 +57,22 @@ class AverageNutrients extends Component {
       data
     });
 
-    API.averageMacros(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
+    API.averageNutrients(this.state.fk_user, data.dateFrom, data.dateTill).then((result) => {
 
-      if (result.data.error) {
-        alert(result.data.error)
-
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
         data.logs = [...result.data];
 
         this.setState({
           data
         });
-      }
-    });
+      
+      }).catch(error =>{
+          alert(error.response.data.message);
+          if (error.response.data.message === "Your session has expired.") {
+            sessionStorage.setItem("email", "");
+            sessionStorage.setItem("id", "");
+            window.location.replace("/");
+          };
+        });
   }
 
   render() {

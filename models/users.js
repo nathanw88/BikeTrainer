@@ -8,8 +8,16 @@ var user = {
     });
   },
 
-  update: function(cols, vals, userID, cb){
-    orm.update("users", "id", cols, vals, userID, function(res){
+  deleteTestUser: function (cols, vals, cb) {
+    orm.delete("session", ["fk_user"], vals, function (sessionRes) {
+      orm.delete("users", cols, vals, function (res) {
+        cb(res)
+      })
+    })
+  },
+
+  update: function (cols, vals, userID, cb) {
+    orm.update("users", "id", cols, vals, userID, function (res) {
       cb(res)
     })
   },
@@ -20,15 +28,15 @@ var user = {
     });
   },
 
-  selectLogs: function(userId, table, cb){
-    orm.selectLogs(userId, table, function(res){
+  selectLogs: function (userId, table, cb) {
+    orm.selectLogs(userId, table, function (res) {
       cb(res);
     })
   },
 
-  selectActiveNutritionPlan: (userID, cb) => {
+  selectActiveNutritionPlanNutrients: (userID, cb) => {
 
-    orm.selectActiveNutritionPlan(userID, (res)=>{
+    orm.selectActiveNutritionPlanNutrients(userID, (res) => {
       cb(res);
     });
   }

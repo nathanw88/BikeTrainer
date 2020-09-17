@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Jumbotron, Label, Input, Button, Form, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, FormGroup } from 'reactstrap';
+import { Jumbotron, Label, Input, Button, Form, FormGroup } from 'reactstrap';
 import API from '../../../utils/API';
 import "./UserPersonalInfo.css"
 
@@ -10,7 +10,7 @@ class UserMeasurements extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       userPersonalInfo: {},
       edit: 0
 
@@ -24,52 +24,39 @@ class UserMeasurements extends Component {
     };
 
     API.getUserPersonalInfo(this.state.userID).then((result) => {
-      if (result.data.error) {
+      let { userPersonalInfo } = this.state;
+      userPersonalInfo = result.data;
+      this.setState({ userPersonalInfo });
 
-        // alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        let { userPersonalInfo } = this.state;
-
-        userPersonalInfo = result.data;
-        this.setState({ userPersonalInfo });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
 
   handleInputChange = event => {
-    const { userPersonalInfo } = this.state;
-    const { name, value } = event.target;
+    const { userPersonalInfo } = this.state, { name, value } = event.target;
     userPersonalInfo[name] = value;
     this.setState({ userPersonalInfo });
   };
 
   save = () => {
     let data = this.state.userPersonalInfo;
-    data.id = this.state.userID
+    data.userID = this.state.userID
     API.updatePersonalInfo(data).then((result) => {
-      // console.log(result)
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        window.location.replace("/user_profile")
-        // console.log(result);
-      }
+      window.location.replace("/user_profile")
+    }).catch(error =>{
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 

@@ -1,112 +1,66 @@
-const express = require("express");
-const router = express.Router();
-const axios = require("axios");
-const user = require("../../models/users")
-const food = require("../../models/food");
-const nutrient = require("../../models/nutrient");
-const session = require("../../models/session")
+const express = require("express"), router = express.Router(), food = require("../../models/food"),
+  validate = require("../../utils/validate");
 require('dotenv').config();
-const fs = require('fs')
-const check = require("../../utils/check")
 
 
-// router.route("/bike").post((req, res) => {
-
-//   biking.create(req.body.keys, req.body.values, function (data) {
-//     res.json(data)
-//   });
-// });
-
-// router.route("/run").post((req, res) => {
-//   running.create(req.body.keys, req.body.values, function (data) {
-//     res.json(data)
-//   });
-// });
-
-// router.route("/sleep").post((req, res) => {
-//   sleeping.create(req.body.keys, req.body.values, function (data) {
-//     res.json(data)
-//   });
-// });
 router.route("/findFood").post((req, res) => {
-  if(!check.isNumber(req.body.fk_user)){
-    res.json({error: "User Id Is Not A Number!"})
-
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
+  const userID = (req.body.fk_user);
+  async function validateClientData(cb) {
+    if (validate.isNumber(userID) === false) return res.status(400).json({ message: "userID Should Be A Number" });
+    else if (validate.isString(req.body.searchString) === false) return res.status(400).json({ message: "searchString Should Be A String" });
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let findFood = () => {
+    food.findFood(req.body.searchString, (data) => {
+      return res.json(data);
+    });
   }
-
-  else if (!check.isString(req.body.searchString)){
-    res.json({error:"Search String Not A String!"})
-  }
-
-  // console.log(req)
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.body.fk_user, function (result) {
-    //  console.log(result)
-    if (result.error) {
-      res.json(result)
-    }
-    else {
-      food.findFood(req.body.searchString, function (data) {
-        res.json(data);
-      });
-    }
-  });
-  // food.findFood(req.body.searchString, function(data){
-  //   res.json(data);
-  // })
+  validateClientData((boolen) => {
+    if (boolen === true) findFood()
+  })
 });
 
 router.route("/findPortion/:fk").get((req, res) => {
-  if(!check.isNumber(req.params.fk)){
-    res.json({error: "fk Isn't A Number!"})
-  }
-  food.selectFoodFK("food_portion", req.params.fk, function (data) {
-    // console.log(data)
-    res.json(data);
+  let foodFK = req.params.fk,
+    validateClientData = (cb) => {
+      if (!validate.isNumber(parseInt(foodFK))) return res.status(400).json({ message: "fk Isn't A Number" })
+      else cb(true);
+    };
+  let getFoodPortions = () => {
+    food.selectFoodFK("food_portion", foodFK, function (data) {
+      res.json(data);
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen) getFoodPortions()
   })
 })
 
 router.route("/food").post((req, res) => {
-
-  let { fk_user, grams, fk_food, date } = req.body.data;
-  let data = { fk_user, grams, fk_food, date };
-
-  if(!check.isNumber(data.fk_user)){
-    res.json({error: "User ID Isn't A Number!"})
+  let { fk_user, grams, fk_food, date } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
+  async function validateClientData(cb) {
+    if (fk_user == null || grams == null || fk_food == null || date == null) return res.status(400).json({ message: "Must Pass In fk_user, grams, date, and fk_food" })
+    else if (!Array.isArray(grams) || !Array.isArray(fk_food) || !Array.isArray(date) || Array.isArray(fk_user)) return res.status(400).json({ message: "grams fk_food and date Should Be Arrays While fk_user Should Be A Number" })
+    else if (!validate.isNumber(parseInt(fk_user))) return res.status(400).json({ message: "fk_user Should Be A Number" })
+    else if (!grams.every(validate.isNumber)) return res.status(400).json({ message: "Not All Grams Are Numbers" })
+    else if (!fk_food.every(validate.isNumber)) return res.status(400).json({ message: "Not All Food Ids Are Numbers" })
+    else if (!date.every(validate.isDate)) return res.status(400).json({ message: "Dates Aren't Dates" })
+    else if ((fk_food.length === grams.length && grams.length === date.length) === false) return res.status(400).json({ message: "The Numer Of Food Ids, Grams, or Dates Not Matching" })
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, fk_user)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true)
   }
-  else if (!data.grams.every(check.isNumber)){
-    res.json({error: "Not All Grams Are A Number!"})
-  }
-  else if (!data.fk_food.every(check.isNumber)){
-    res.json({error: "Not All Food IDs Are A Number!"})
-  }
-  else if (!data.date.every(check.isDate)){
-    res.json({error: "Date Isn't A Date!"})
-  }
+  let data = { fk_user, grams, fk_food, date },
+    postFood = () => {
+      food.postingFood(data, function (response) {
+        if (response.error) return res.status(400).json({ message: response.error })
+        return res.json(response)
+      })
 
-  // console.log(data)
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], data.fk_user, function (result) {
-    if (result.error) {
-      res.json(result)
     }
-    else {
-
-
-      if (data.fk_food.length === data.grams.length) {
-        food.postingFood(data, function (response) {
-
-          res.json(response)
-
-        })
-      }
-
-      else res.json({ error: "food and grams not matching" })
-
-    };
+  validateClientData((boolen) => {
+    if (boolen) postFood()
   });
 });
 

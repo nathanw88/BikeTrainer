@@ -1,177 +1,108 @@
-var express = require("express");
-var router = express.Router();
-var session = require("../../models/session");
-var nutritionPlan = require("../../models/nutritionPlan");
-const check = require("../../utils/check");
-const food = require("../../models/food");
-
+const express = require("express"), router = express.Router(), nutritionPlan = require("../../models/nutritionPlan")
+validate = require("../../utils/validate"), food = require("../../models/food");
 
 router.route("/dailySum/:userID/:date").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  // console.log("here")
-
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], req.params.userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-      nutritionPlan.selectDailySum(req.params.userID, req.params.date, (result2) => {
-        // console.log(result2);
-        res.json(result2)
-      });
-    }
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, date } = req.params;
+  async function validateClientData(cb) {
+    if (!validate.isNumber(parseInt(userID))) return res.status(400).json({ message: "userID Should Be A Number" })
+    else if (!validate.isDate(date)) return res.status(400).json({ message: "date Needs To Be A Valid Date" })
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let selectDailySum = () => {
+    nutritionPlan.selectDailySum(userID, date, (result2) => {
+      if (result2.error) return res.status(400).json({ message: result2.error });
+      else return res.json(result2)
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen === true) selectDailySum()
   });
+});
 
+router.route("/averageNutrients/:userID/:dateFrom/:dateTill").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, dateFrom, dateTill } = req.params;
+  userID = parseInt(userID)
+  async function validateClientData(cb) {
+    if (!validate.isNumber(userID)) return res.status(400).json({ message: "userID Should Be A Number" });
+    else if (!validate.isDate(dateFrom) || !validate.isDate(dateTill)) return res.status(400).json({ message: "Dates Aren't Dates" });
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let selectAverageNutrients = () => {
+    nutritionPlan.selectAverageNutrients(userID, dateFrom, dateTill, (result2) => {
+      if (result2.error) return res.status(400).json({ message: result2.error })
+      return res.json(result2)
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen === true) selectAverageNutrients()
+  });
 
 });
 
-router.route("/averageMacros/:userID/:dateFrom/:dateTill").get((req, res) => {
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill } = req.params;
-
-  if(!check.isNumber(userID)){
-    res.json({error: "User ID Isn't A Number!"});
-  }
-  else if(!check.isDate(dateFrom) && !check.isDate(dateTill)){
-    res.json({error: "Dates Aren't Dates"});
-  }
-  
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-
-
-        nutritionPlan.selectAverageMacros(userID, dateFrom, dateTill, (result2) => {
-          // console.log(result2);
-          res.json(result2)
-        });
-   
- 
-    }
+router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, { userID, dateFrom, dateTill } = req.params;
+  userID = parseInt(userID)
+  async function validateClientData(cb) {
+    if (!validate.isNumber(userID)) return res.status(400).json({ message: "userID Should Be A Number" });
+    else if (!validate.isDate(dateFrom) || !validate.isDate(dateTill)) return res.status(400).json({ message: "Dates Aren't Dates" });
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let selectNutrientsTimeline = () => {
+    nutritionPlan.userNutrientsTimeline(userID, dateFrom, dateTill, (result2) => {
+      if (result2.error) return res.status(400).json({ message: result2.error })
+      return res.json(result2)
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen === true) selectNutrientsTimeline()
   });
-
-
-});
-
-router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res)=>{
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill } = req.params;
-
-  if(!check.isNumber(userID)){
-    res.json({error: "User ID Isn't A Number!"});
-  }
-  else if(!check.isDate(dateFrom) && !check.isDate(dateTill)){
-    res.json({error: "Dates Aren't Dates"});
-  }
-  
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-
-
-        nutritionPlan.userNutrientsTimeline(userID, dateFrom, dateTill, (result2) => {
-          // console.log(result2);
-          res.json(result2)
-        });
-   
- 
-    }
-  });
-
-
 });
 
 
-router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((req, res)=>{
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-  const { userID, dateFrom, dateTill, limit, offset } = req.params;
-
-  if(!check.isNumber(userID)){
-    res.json({error: "User ID Isn't A Number!"});
-  }
-  else if(!check.isDate(dateFrom) && !check.isDate(dateTill)){
-    res.json({error: "Dates Aren't Dates"});
-  }
-  
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], userID, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-
-
-        food.userFoodLogs(userID, dateFrom, dateTill, limit, offset, (result2) => {
-          // console.log(result2);
-          res.json(result2)
-        });
-   
- 
-    }
+router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((req, res) => {
+  let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID,
+    { userID, dateFrom, dateTill, limit, offset } = req.params;
+  userID = parseInt(userID);
+  async function validateClientData(cb) {
+    if (!validate.isNumber(userID)) return res.status(400).json({ message: "userID Should Be A Number" });
+    else if (!validate.isDate(dateFrom) || !validate.isDate(dateTill)) return res.status(400).json({ message: "Dates Aren't Dates" });
+    else if (!validate.isNumber(parseInt(limit)) || !validate.isNumber(parseInt(offset))) return res.status(400).json({ message: "limit And offset Should Be Numbers" })
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let selectUserFoodLogs = () => {
+    food.userFoodLogs(userID, dateFrom, dateTill, limit, offset, (result2) => {
+      return res.json(result2)
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen === true) selectUserFoodLogs()
   });
-
-
 });
 
 
-router.route("/deleteUserLogs").delete((req, res)=>{
-  // console.log(req.body)
-  const { id } = req.body;
-  let sessionExpires = req.session.cookie._expires;
-  let sessionID = req.sessionID;
-
-  if(!check.isNumber(id)){
-    res.json({error: "User ID Isn't A Number!"});
+router.route("/userLogs").delete((req, res) => {
+  let { userID, fk_food, grams, date } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
+  userID = parseInt(userID);
+  async function validateClientData(cb) {
+    if (!validate.isNumber(userID)) return res.status(400).json({ message: "userID Should Be A Number" });
+    else if (!validate.isNumber(parseInt(fk_food))) return res.status(400).json({ message: "fk_food Should Be A Number" });
+    else if (!validate.isNumber(parseInt(grams))) return res.status(400).json({ message: "grams Should Be A Number" });
+    else if (!validate.isDate(date)) return res.status(400).json({ message: "date Should Be A Date" });
+    else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
+    else cb(true);
+  };
+  let deleteUserLogs = () => {
+    food.deleteUserLogs(req.body, (result2) => {
+      return res.json(result2)
+    });
   }
-  
-  session.checkSession(["session_id", "expires"], [sessionID, sessionExpires], id, function (result) {
-
-    if (result.error) {
-
-      res.json(result)
-    }
-
-    else {
-
-
-        food.deleteUserLogs( req.body, (result2) => {
-          // console.log(result2);
-          res.json(result2)
-        });
-   
- 
-    }
+  validateClientData((boolen) => {
+    if (boolen === true) deleteUserLogs()
   });
-
-
 });
 
-
-
-// router.route("/logs/average/:id/:table/:date1/:date2").get((req,res) =>{
-//     nutrient.selectAverage(req.params.id, req.params.table, req.params.date1, req.params.date2, function(result){
-//         console.log(result)
-//         res.json(result)
-//     })
-
-// })
 module.exports = router;

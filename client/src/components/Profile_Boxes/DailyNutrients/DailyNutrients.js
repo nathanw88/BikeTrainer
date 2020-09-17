@@ -11,7 +11,7 @@ class DailyNutrients extends Component {
 
     this.state = {
 
-      fk_user: sessionStorage.getItem("id"),
+      fk_user: parseInt(sessionStorage.getItem("id")),
       data: {
         date: new Date(),
         logs: []
@@ -24,21 +24,18 @@ class DailyNutrients extends Component {
 
     API.dailySum(this.state.fk_user, today).then((result) => {
 
-      if (result.data.error) {
-
-        // alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
         const { data } = this.state;
         data.logs = [...result.data];
 
         this.setState({ data });
-      }
+      
+    }).catch(error =>{
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 
@@ -51,24 +48,21 @@ class DailyNutrients extends Component {
     date.setUTCFullYear(year, month, day)
 
     API.dailySum(this.state.fk_user, date).then((result) => {
-      
-      if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-      }
-      else {
         data.logs = [...result.data];
 
-        this.setState({
+        this.setState({ 
           data,
           date
         });
-      }
+      
+    }).catch(error =>{
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   }
 

@@ -10,7 +10,7 @@ class UserNutritionPlan extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       userNutritionPlan: {},
       userNutritionPlanData: []
 
@@ -19,50 +19,37 @@ class UserNutritionPlan extends Component {
 
   componentDidMount = () => {
     if (!sessionStorage.getItem("id")) {
-      // alert("Please Login")
       window.location.replace("/")
     };
     API.getUserNutritionPlan(this.state.userID).then((result) => {
-      if (result.data.error) {
+      let { userNutritionPlan, userNutritionPlanData } = this.state;
+      userNutritionPlanData = [...result.data.nutritionPlanData];
+      userNutritionPlan = result.data.nutritionPlan;
+      this.setState({ userNutritionPlan, userNutritionPlanData });
 
-        // alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        let { userNutritionPlan, userNutritionPlanData } = this.state;
-        userNutritionPlanData = [...result.data.nutritionPlanData];
-        userNutritionPlan = result.data.nutritionPlan;
-        console.log();
-        this.setState({ userNutritionPlan, userNutritionPlanData });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
-  delete = () =>{
+  delete = () => {
     let { userNutritionPlan } = this.state;
     console.log(userNutritionPlan)
-    API.deleteNutritionPlan(userNutritionPlan.id , this.state.userID).then((result)=>{
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else{
-        window.location.replace("/nutrition_plan");
-
-      }
-
-    })
+    API.deleteNutritionPlan(userNutritionPlan.id, this.state.userID).then((result) => {
+      window.location.replace("/nutrition_plan");
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
   }
 
   render() {
@@ -75,8 +62,8 @@ class UserNutritionPlan extends Component {
           <h1 className="text-center">{userNutritionPlan.name}</h1>
           <h4>Description:</h4>
           <h5 className="indent">{userNutritionPlan.description}</h5>
-          <br/>
-          <br/>
+          <br />
+          <br />
           {userNutritionPlanData.map((nutrition, i) =>
             <div key={i}>
               <h4> <span id="nutrient-name">{nutrition.name}:</span> {nutrition.amount} {nutrition.unit}</h4>

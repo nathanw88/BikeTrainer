@@ -11,14 +11,14 @@
     "react-bootstrap-slider": "^2.2.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^3.4.3",
     "reactstrap": "^8.4.1",
     "victory": "^34.3.12"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
     "eject": "react-scripts eject"
   }
 }

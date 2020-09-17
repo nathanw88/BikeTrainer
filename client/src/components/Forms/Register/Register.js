@@ -43,9 +43,8 @@ export default class Register extends React.Component {
     }
     this.setState({ validate })
   }
-  // funtion for checking password length might add in regex to make password have to be complex plus check against an array of common passwords
+
   validatePassword(p) {
-    // const regex = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
     const regex = /^\S{8,}$/;
 
     const password = p.target.value

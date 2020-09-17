@@ -15,7 +15,7 @@ export default {
   },
 
   logFood: (data) => {
-    return axios.post("/api/log/food", { data })
+    return axios.post("/api/log/food", data)
   },
 
   selectPortions: (fk) => {
@@ -31,15 +31,15 @@ export default {
   },
 
   updatePersonalInfo: (data) => {
-    return axios.put("/api/users/updatePersonalInfo", data)
+    return axios.put("/api/users/personalInfo", data)
   },
 
   dailySum: (id, date) => {
     return axios.get(`/api/user-logs/dailySum/${id}/${date}`)
   },
 
-  averageMacros:(id, dateFrom, dateTill) =>{
-    return axios.get(`/api/user-logs/averageMacros/${id}/${dateFrom}/${dateTill}`)
+  averageNutrients:(id, dateFrom, dateTill) =>{
+    return axios.get(`/api/user-logs/averageNutrients/${id}/${dateFrom}/${dateTill}`)
   },
 
   userNutrientsTimeline:(id, dateFrom, dateTill) =>{
@@ -51,43 +51,24 @@ export default {
   },
 
   deleteUserLogs:(data)=>{
-    return axios.delete(`/api/user-logs/deleteUserLogs`, { data })
+    return axios.delete(`/api/user-logs/userLogs`, { data })
   },
 
   getUserMeasurements:(userID)=>{
-    return axios.get(`/api/users/getMeasurements/${userID}`)
-  },
-  
-  getUserInfo: (userID) => {
-    return axios.get(`/api/users/measurments/${userID}`)
+    
+    return axios.get(`/api/users/measurements/${userID}`)
   },
   
   getUserNutritionPlan: (userID)=>{
-    return axios.get(`/api/users/getUserNutritionPlan/${userID}`)
+    return axios.get(`/api/users/nutritionPlan/${userID}`)
   },
 
   getUserPersonalInfo: (userID)=>{
-    return axios.get(`/api/users/getPersonalInfo/${userID}`)
+    return axios.get(`/api/users/personalInfo/${userID}`)
   },
 
   deleteNutritionPlan: (planID, userID)=>{
     return axios.delete(`/api/users/nutritionPlan/${planID}/${userID}`)
   }
-
-
-
-  // selectLogs: (id, table) =>{
-  //   return axios.get(`/api/user-logs/logs/${id}/${table}`)
-  // },
-
-  // selectSums: (table, id, date1, date2) =>{
-  //   console.log(date1)
-  //   return axios.get(`/api/user-logs/logs/sums/${id}/${table}/${date1}/${date2}`)
-  // },
-
-  // selectAverage: (table, id, date1, date2) =>{
-  //   console.log(date1)
-  //   return axios.get(`/api/user-logs/logs/average/${id}/${table}/${date1}/${date2}`)
-  // }
 
 };

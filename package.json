@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "axios": "^0.19.2",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "chia": "0.0.1",
     "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
@@ -13,10 +13,12 @@
     "inquirer": "^7.1.0",
     "memorystore": "^1.6.2",
     "mysql": "^2.18.1",
+    "react-scripts": "^3.4.3",
     "uuid": "^3.4.0"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "node server.js",
     "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
@@ -38,7 +40,8 @@
   "main": "server.js",
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   },
   "repository": {
     "type": "git",

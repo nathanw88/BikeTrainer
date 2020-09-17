@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Jumbotron, Label, Input, Button, Form, UncontrolledDropdown, DropdownItem, DropdownToggle, DropdownMenu, FormGroup } from 'reactstrap';
 import API from '../../../utils/API';
 import "./UserMeasurements.css";
+import convert from "../../../utils/convert.js";
 
 class UserMeasurements extends Component {
 
@@ -10,67 +11,56 @@ class UserMeasurements extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       userMeasurements: {}
 
     };
   };
 
   componentDidMount = () => {
-    let poundsToKilograms = 2.2046;
     if (!sessionStorage.getItem("id")) {
-      // alert("Please Login")
       window.location.replace("/")
     };
 
     API.getUserMeasurements(this.state.userID).then((result) => {
-      if (result.data.error) {
 
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
+      const { userMeasurements } = this.state;
+      let values = Object.values(result.data);
+      let keys = Object.keys(result.data);
+      let length = keys.length;
+
+      for (let i = 0; i < length; i++) {
+        userMeasurements[keys[i]] = values[i]
+      };
+      if (!userMeasurements.metric) {
+        var { ft, inches } = convert.cmToFtRemainderInInches(userMeasurements.height);
+        userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
+        userMeasurements.heightFeet = ft;
+        userMeasurements.heightInches = inches;
 
       }
-      else {
-        const { userMeasurements } = this.state;
-        let values = Object.values(result.data);
-        let keys = Object.keys(result.data);
-        let length = keys.length;
+      this.setState({ userMeasurements });
 
-        for (let i = 0; i < length; i++) {
-          userMeasurements[keys[i]] = values[i]
-        };
-        if (!userMeasurements.metric) {
-          userMeasurements.weight = Math.round(userMeasurements.weight * poundsToKilograms);
-          userMeasurements.heightFeet = parseInt((userMeasurements.height / 2.54) / 12)
-          userMeasurements.heightInches = parseInt((userMeasurements.height / 2.54) % 12)
-
-        }
-        // console.log(userMeasurements);
-        this.setState({ userMeasurements });
-      }
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
 
   handleInputChange = event => {
-
     const { userMeasurements } = this.state;
-    // console.log(event.target)
     const { name, value } = event.target;
-    //console.log(userMeasurements)
     userMeasurements[name] = value;
     this.setState({ userMeasurements });
 
   };
 
   save = () => {
-    let inchToCentimeter = 2.54;
-    let feetToInches = 12;
-    let poundsToKilograms = 2.2046;
     let data = {
       gender: this.state.userMeasurements.gender,
       userID: sessionStorage.getItem("id"),
@@ -84,28 +74,19 @@ class UserMeasurements extends Component {
       data.height = this.state.userMeasurements.height;
     }
     else if (!data.metric) {
-      data.weight = parseFloat((parseFloat(this.state.userMeasurements.weight) / poundsToKilograms).toFixed(3));
-      data.height = (this.state.userMeasurements.heightFeet * feetToInches + parseFloat(this.state.userMeasurements.heightInches)) * inchToCentimeter;
+      data.weight = convert.lbsToKg(this.state.userMeasurements.weight);
+      data.height = convert.ftAndInchesToCm(this.state.userMeasurements.heightFeet, this.state.userMeasurements.heightInches);
     }
-    // console.log(data);
-    // console.log(this.state.userMeasurements);
 
     API.saveSetup(data).then((result) => {
-      // console.log(result)
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-        window.location.replace("/user_profile")
-        // console.log(result);
-      }
+      window.location.replace("/user_profile");
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
@@ -113,26 +94,20 @@ class UserMeasurements extends Component {
 
     const { userMeasurements } = this.state;
     const { name, value } = event.target;
-    // console.log(value)
     userMeasurements[name] = value;
     this.setState({ userMeasurements });
-    // console.log(this.state.userMeasurements.metric)
 
   };
 
   metricHandler = event => {
-    let poundsToKilograms = 2.2046;
     const { userMeasurements } = this.state;
     const { value } = event.target;
-    // console.log(userMeasurements.metric)
     if (parseInt(value) !== parseInt(userMeasurements.metric)) {
       if (parseInt(value)) {
-        // console.log("KG")
-        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) / poundsToKilograms).toFixed(3));
+        userMeasurements.weight = convert.lbsToKg(userMeasurements.weight);
       }
       else if (!parseInt(value)) {
-        // console.log("pounds")
-        userMeasurements.weight = parseFloat((parseFloat(userMeasurements.weight) * parseFloat(poundsToKilograms)).toFixed(1));
+        userMeasurements.weight = convert.kgToLbs(userMeasurements.weight);
       }
       userMeasurements.metric = parseInt(value);
       this.setState({ userMeasurements });

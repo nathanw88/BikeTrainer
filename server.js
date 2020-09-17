@@ -7,7 +7,6 @@ var session = require('express-session');
 var bodyParser = require("body-parser");
 const uuid = require('uuid/v4');
 var MemoryStore = require('memorystore')(session);
-var orm = require("./config/orm")
 const PORT = process.env.PORT || 8080;
 
 app.use(session({
@@ -40,3 +39,5 @@ app.use(routes);
 app.listen(PORT, () =>
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`)
 );
+
+module.exports = app

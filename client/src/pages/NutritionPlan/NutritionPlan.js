@@ -11,7 +11,7 @@ class NutritionPlan extends Component {
     super(props);
 
     this.state = {
-      userID: sessionStorage.getItem("id"),
+      userID: parseInt(sessionStorage.getItem("id")),
       user: {},
       input: {
         name: "",
@@ -54,29 +54,23 @@ class NutritionPlan extends Component {
       window.location.replace("/")
     };
 
-    API.getUserInfo(this.state.userID).then((result) => {
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
+    API.getUserMeasurements(this.state.userID).then((result) => {
         const { user } = this.state;
-        let values = Object.values(result.data);
-        let keys = Object.keys(result.data);
-        let length = keys.length;
+        let values = Object.values(result.data), keys = Object.keys(result.data), length = keys.length;
         console.log(user)
         for (let i = 0; i < length; i++) {
           user[keys[i]] = values[i]
         };
-          this.setState({ user });
+        this.setState({ user });
 
-      }
+      
+    }).catch(error =>{
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
     });
   };
 
@@ -120,30 +114,22 @@ class NutritionPlan extends Component {
   }
 
   changePercentValue = (event, name) => {
-    const { diet } = this.state.input;
-    const { percentSliders } = this.state;
-    const { value } = event.target;
-    const percentChanged = percentSliders[name] - value;
+    const { diet } = this.state.input, { percentSliders } = this.state, { value } = event.target, percentChanged = percentSliders[name] - value, namesUnchangedArray = Object.keys(this.state.percentSliders);
     percentSliders[name] = value;
-    // creating an array of the names of percents then removing the changed one
-    let namesUnchangedArray = Object.keys(this.state.percentSliders);
     namesUnchangedArray.splice(namesUnchangedArray.indexOf(name), 1);
 
     percentSliders[namesUnchangedArray[0]] += percentChanged / 2;
     percentSliders[namesUnchangedArray[1]] += percentChanged / 2;
-    // console.log(percentSliders)
 
     if (percentSliders[namesUnchangedArray[0]] < 0) {
 
       percentSliders[namesUnchangedArray[1]] += percentSliders[namesUnchangedArray[0]];
       percentSliders[namesUnchangedArray[0]] = 0;
-      // console.log(percentSliders)
     }
     else if (percentSliders[namesUnchangedArray[1]] < 0) {
 
       percentSliders[namesUnchangedArray[0]] += percentSliders[namesUnchangedArray[1]];
       percentSliders[namesUnchangedArray[1]] = 0;
-      // console.log(percentSliders)
     }
 
     diet.carbs.amount = parseInt(diet.calories.amount * (percentSliders.carbs / 100) / 4);
@@ -158,8 +144,7 @@ class NutritionPlan extends Component {
   }
 
   clickHandler = event => {
-    const { input } = this.state;
-    const { name, value } = event.target;
+    const { input } = this.state, { name, value } = event.target;
 
     if (name === "exerciseAmount") {
       const { midPointSliders } = this.state;
@@ -213,23 +198,15 @@ class NutritionPlan extends Component {
     }
 
     API.saveNutritionPlan(data).then((result) => {
-      if (result.data.error) {
-
-        alert(result.data.error)
-        if (result.data.error === "Your session has expired.") {
-          sessionStorage.setItem("email", "");
-          sessionStorage.setItem("id", "");
-          window.location.replace(result.data.redirect);
-        }
-
-      }
-      else {
-
-        window.location.replace("/log")
-      }
-
-    })
-
+      window.location.replace("/log");
+    }).catch(error => {
+      alert(error.response.data.message);
+      if (error.response.data.message === "Your session has expired.") {
+        sessionStorage.setItem("email", "");
+        sessionStorage.setItem("id", "");
+        window.location.replace("/");
+      };
+    });
   }
 
   render() {
