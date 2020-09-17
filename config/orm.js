@@ -375,8 +375,8 @@ var orm = {
           })
 
         };
-        selectNutrientsInFoodLogToBeDeleted(data.grams, data.fk_food);
-        connection.release();
+      selectNutrientsInFoodLogToBeDeleted(data.grams, data.fk_food);
+      connection.release();
     })
 
 

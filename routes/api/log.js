@@ -10,26 +10,31 @@ router.route("/findFood").post((req, res) => {
     if (validate.isNumber(userID) === false) return res.status(400).json({ message: "userID Should Be A Number" });
     else if (validate.isString(req.body.searchString) === false) return res.status(400).json({ message: "searchString Should Be A String" });
     else if (await validate.isSessionExpired(sessionID, sessionExpires, userID)) return res.status(400).json({ message: "Your session has expired." })
-    else cb(true)
+    else cb(true);
+  };
+  let findFood = () => {
+    food.findFood(req.body.searchString, (data) => {
+      return res.json(data);
+    });
   }
   validateClientData((boolen) => {
-
-    if (boolen === true) food.findFood(req.body.searchString, function (data) { return res.json(data); })
+    if (boolen === true) findFood()
   })
 });
 
 router.route("/findPortion/:fk").get((req, res) => {
   let foodFK = req.params.fk,
-  validateClientData = (cb)=>{
-    if (!validate.isNumber(parseInt(foodFK))) return res.status(400).json({ message: "fk Isn't A Number" })
-    else cb(true)
-  }
-  validateClientData((boolen)=>{
-    if(boolen){
-      food.selectFoodFK("food_portion", foodFK, function (data) {
-        res.json(data);
-      })
-    }
+    validateClientData = (cb) => {
+      if (!validate.isNumber(parseInt(foodFK))) return res.status(400).json({ message: "fk Isn't A Number" })
+      else cb(true);
+    };
+  let getFoodPortions = () => {
+    food.selectFoodFK("food_portion", foodFK, function (data) {
+      res.json(data);
+    });
+  };
+  validateClientData((boolen) => {
+    if (boolen) getFoodPortions()
   })
 })
 
@@ -46,14 +51,16 @@ router.route("/food").post((req, res) => {
     else if (await validate.isSessionExpired(sessionID, sessionExpires, fk_user)) return res.status(400).json({ message: "Your session has expired." })
     else cb(true)
   }
-  let data = { fk_user, grams, fk_food, date }
-  validateClientData((boolen) => {
-    if (boolen) {
+  let data = { fk_user, grams, fk_food, date },
+    postFood = () => {
       food.postingFood(data, function (response) {
         if (response.error) return res.status(400).json({ message: response.error })
         return res.json(response)
       })
+
     }
+  validateClientData((boolen) => {
+    if (boolen) postFood()
   });
 });
 

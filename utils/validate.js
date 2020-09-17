@@ -36,10 +36,10 @@ let session = require("../models/session"),
     },
 
     isSessionExpired: (sessionId, sessionExpiration, userId) => {
-      return new Promise((resolve)=>{
+      return new Promise((resolve) => {
         session.checkSession(["session_id", "expires"], [sessionId, sessionExpiration], userId, function (result) {
           if (result.error) resolve(true);
-          resolve (false)
+          resolve(false)
         })
       })
     }

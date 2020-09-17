@@ -1,7 +1,7 @@
 const app = require('../server.js');
 let request = require('supertest');
 request = request.agent(app);
-let newNutritionPlanID, whatID;
+let newNutritionPlanID, whatID, newUserID;
 
 describe("users routes", () => {
   describe('post /login', () => {
@@ -199,6 +199,7 @@ describe("users routes", () => {
           .then(response => {
             expect(response.body.affectedRows).toBe(1)
             expect(response.body.insertId).toBeDefined()
+            newUserID = response.body.insertId
           });
       });
     });
@@ -209,7 +210,7 @@ describe("users routes", () => {
     test("Delete Test user", () => {
       return request
         .delete('/api/users/deleteTestUser')
-        .send({ userEmail: "new@new.new", userPassword: "newPassword" })
+        .send({ userEmail: "new@new.new", userPassword: "newPassword", userID: newUserID })
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -670,8 +671,8 @@ describe("users routes", () => {
           .expect('Content-Type', /json/)
           .expect(200)
           .then(response => {
-            expect(response.body.affectedRows).toBe(1)
-            newNutritionPlanID = response.body.insertId
+            expect(response.body.message).toBe("new nutrition plan created")
+            newNutritionPlanID = response.body.nutritionPlanId
           });
       });
     });

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "axios": "^0.19.2",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "chia": "0.0.1",
     "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
