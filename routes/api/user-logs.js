@@ -96,8 +96,8 @@ router.route("/userLogs").delete((req, res) => {
     else cb(true);
   };
   let deleteUserLogs = () => {
-    food.deleteUserLogs(req.body, (result2) => {
-      return res.json(result2)
+    food.deleteUserLogs(req.body, (result) => {
+      return res.json(result)
     });
   }
   validateClientData((boolen) => {

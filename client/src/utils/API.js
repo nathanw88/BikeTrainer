@@ -55,7 +55,6 @@ export default {
   },
 
   getUserMeasurements:(userID)=>{
-    
     return axios.get(`/api/users/measurements/${userID}`)
   },
   

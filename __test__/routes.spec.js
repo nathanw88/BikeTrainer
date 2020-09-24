@@ -1688,7 +1688,7 @@ describe("log routes", () => {
       test('Passing in 8 items to be logged', () => {
         return request
           .post('/api/log/food')
-          .send({ fk_user: 320, grams: [200, 86, 200, 200, 100, 1000, 200, 86], fk_food: [577581, 629058, 577581, 365289, 578780, 632180, 577581, 629058], date: [new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()] })
+          .send({ fk_user: 320, grams: [200, 86, 200, 200, 100, 100, 200, 86], fk_food: [577581, 629058, 577581, 365289, 578780, 632180, 577581, 629058], date: [new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()] })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(200)
@@ -1770,28 +1770,28 @@ describe("user-logs route", () => {
             expect(response.body).toStrictEqual([
               {
                 "amount": 2928,
-                "log": [{ "dailySum": 1127.33, "date": "2020-08-31T05:00:00.000Z" }],
+                "log": [{ "dailySum": 448, "date": "2020-08-31T05:00:00.000Z" }],
                 "maxAmount": null,
                 "name": "Calories",
                 "unit": "KCAL"
               },
               {
                 "amount": 65,
-                "log": [{ "dailySum": 56.06, "date": "2020-08-31T05:00:00.000Z" }],
+                "log": [{ "dailySum": 7.174, "date": "2020-08-31T05:00:00.000Z" }],
                 "maxAmount": null,
                 "name": "Total Fat",
                 "unit": "G"
               },
               {
                 "amount": 366,
-                "log": [{ "dailySum": 85.487, "date": "2020-08-31T05:00:00.000Z" }],
+                "log": [{ "dailySum": 83.884, "date": "2020-08-31T05:00:00.000Z" }],
                 "maxAmount": null,
                 "name": "Total Carbohydrate",
                 "unit": "G"
               },
               {
                 "amount": 219,
-                "log": [{ "dailySum": 68.889, "date": "2020-08-31T05:00:00.000Z" }],
+                "log": [{ "dailySum": 14.324, "date": "2020-08-31T05:00:00.000Z" }],
                 "maxAmount": null,
                 "name": "Protein",
                 "unit": "G"
@@ -1882,8 +1882,8 @@ describe("user-logs route", () => {
             expect(response.body).toStrictEqual([{
               "amount": 2928,
               "log": [{
-                "dailyAverage": 638.665,
-                "date": "2020-08-30T05:00:00.000Z",
+                "dailyAverage": 448,
+                "date": "2020-08-31T05:00:00.000Z",
               }],
               "maxAmount": null,
               "name": "Calories",
@@ -1892,8 +1892,8 @@ describe("user-logs route", () => {
             {
               "amount": 65,
               "log": [{
-                "dailyAverage": 29.53,
-                "date": "2020-08-30T05:00:00.000Z",
+                "dailyAverage": 7.174,
+                "date": "2020-08-31T05:00:00.000Z",
               }],
               "maxAmount": null,
               "name": "Total Fat",
@@ -1902,8 +1902,8 @@ describe("user-logs route", () => {
             {
               "amount": 366,
               "log": [{
-                "dailyAverage": 56.2435,
-                "date": "2020-08-30T05:00:00.000Z",
+                "dailyAverage": 83.884,
+                "date": "2020-08-31T05:00:00.000Z",
               }],
               "maxAmount": null,
               "name": "Total Carbohydrate",
@@ -1912,8 +1912,8 @@ describe("user-logs route", () => {
             {
               "amount": 219,
               "log": [{
-                "dailyAverage": 36.9445,
-                "date": "2020-08-30T05:00:00.000Z",
+                "dailyAverage": 14.324,
+                "date": "2020-08-31T05:00:00.000Z",
               }],
               "maxAmount": null,
               "name": "Protein",
@@ -2007,11 +2007,7 @@ describe("user-logs route", () => {
                 "amount": 2928,
                 "log": [
                   {
-                    "dailySum": 150,
-                    "date": "2020-08-30T05:00:00.000Z",
-                  },
-                  {
-                    "dailySum": 1127.33,
+                    "dailySum": 448,
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
@@ -2023,11 +2019,7 @@ describe("user-logs route", () => {
                 "amount": 65,
                 "log": [
                   {
-                    "dailySum": 3,
-                    "date": "2020-08-30T05:00:00.000Z",
-                  },
-                  {
-                    "dailySum": 56.06,
+                    "dailySum": 7.174,
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
@@ -2039,11 +2031,7 @@ describe("user-logs route", () => {
                 "amount": 366,
                 "log": [
                   {
-                    "dailySum": 27,
-                    "date": "2020-08-30T05:00:00.000Z",
-                  },
-                  {
-                    "dailySum": 85.487,
+                    "dailySum":83.884,
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
@@ -2055,11 +2043,7 @@ describe("user-logs route", () => {
                 "amount": 219,
                 "log": [
                   {
-                    "dailySum": 5,
-                    "date": "2020-08-30T05:00:00.000Z",
-                  },
-                  {
-                    "dailySum": 68.889,
+                    "dailySum": 14.324,
                     "date": "2020-08-31T05:00:00.000Z",
                   },
                 ],
@@ -2170,8 +2154,8 @@ describe("user-logs route", () => {
           .expect(200)
           .then(response => {
             expect(response.body).toStrictEqual([
-              { "brand": "The Quaker Oats Company", "date": "2020-08-31T19:23:00.000Z", "description": "STEEL CUT QUICK 3-MINUTE 100% WHOLE GRAIN OATS, WHOLE GRAIN", "fk_food": 661924, "grams": 100 },
-              { "brand": "Dole Packaged Foods Company", "date": "2020-08-31T19:23:00.000Z", "description": "SLICED STRAWBERRIES AND BLUEBERRIES MIX, STRAWBERRIES AND BLUEBERRIES", "fk_food": 632462, "grams": 140 }])
+              { "brand": "The Quaker Oats Company", "date": "2020-08-31T15:41:00.000Z", "description": "STEEL CUT QUICK 3-MINUTE 100% WHOLE GRAIN OATS, WHOLE GRAIN", "fk_food": 661924, "grams": 100 },
+              { "brand": "Dole Packaged Foods Company", "date": "2020-08-31T15:41:00.000Z", "description": "SLICED STRAWBERRIES AND BLUEBERRIES MIX, STRAWBERRIES AND BLUEBERRIES", "fk_food": 632462, "grams": 140 }])
           });
       });
     })
@@ -2337,7 +2321,7 @@ describe("user-logs route", () => {
           .expect('Content-Type', /json/)
           .expect(200)
           .then(response => {
-            expect(response.body).toBe("done")
+            expect(response.body.affectedRows).toBe(1)
           });
       });
     })

@@ -21,9 +21,9 @@ class LoginModal extends React.Component {
   login = event => {
 
     API.login(this.state.userEmail, this.state.userPassword).then(res => {
-        sessionStorage.setItem("email", res.data.userEmail)
-        sessionStorage.setItem("id", res.data.userID)
-        window.location.replace('/profile')
+      sessionStorage.setItem("email", res.data.userEmail)
+      sessionStorage.setItem("id", res.data.userID)
+      window.location.replace('/profile')
     }).catch(err => {
       console.log(err)
       alert("Please Make Sure Password And Email Are Correct")
@@ -82,7 +82,7 @@ class LoginModal extends React.Component {
 
 
               <Col size="md-6">
-              {/* Button to open the register modal */}
+                {/* Button to open the register modal */}
                 <Button id="register-button" onClick={this.toggle}>Register</Button>
               </Col>
             </Row>

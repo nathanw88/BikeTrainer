@@ -166,13 +166,15 @@ var orm = {
           })
         },
         insertIntoUserNutrient = (result, foodObject) => {
-          let values = [],
-            queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ? `
+          let values = []
+          let queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ? `
           for (let i = 0; i < result.length; i++) {
             values.push([foodObject.fk_user, result[i].fk_nutrient, result[i].value, foodObject.date.toString()]);
-            connection.query(queryString3, [values], function (err, response) {
-              if (err) throw (err);
-            })
+            if (i === result.length - 1) {
+              connection.query(queryString3, [values], function (err, response) {
+                if (err) throw (err);
+              })
+            }
           }
           return
         };
@@ -353,33 +355,26 @@ var orm = {
               value: parseFloat(result[i].value.toFixed(3)),
               date: new Date(new Date(data.date).getTime() - new Date(data.date).getTimezoneOffset() * 60000).toISOString().substr(0, 10)
             }
-
             vals.push(dataObject.fk_user);
             vals.push(dataObject.fk_nutrient);
             vals.push(parseFloat(dataObject.value).toFixed(3));
             vals.push(dataObject.date);
-
             connection.query(queryString2, vals, function (err, response) {
               if (err) throw err;
+              if (i === result.length - 1) return deleteFoodLog(dataObject.date)
             })
-            if (i === result.length - 1) return deleteFoodLog(dataObject.date)
           }
         },
         deleteFoodLog = (date) => {
-
           let queryString3 = `DELETE FROM user_food WHERE fk_user = ? and DATE(date) = ? and fk_food = ? and grams = ? LIMIT 1;`
-
-          connection.query(queryString3, [data.id, date, data.fk_food, data.grams], function (err, response3) {
+          connection.query(queryString3, [data.userID, date, data.fk_food, data.grams], function (err, response3) {
             if (err) throw err;
-            cb("done");
+            cb(response3);
           })
-
         };
       selectNutrientsInFoodLogToBeDeleted(data.grams, data.fk_food);
       connection.release();
     })
-
-
   },
 
   selectActiveNutritionPlanNutrients: function (userID, cb) {
