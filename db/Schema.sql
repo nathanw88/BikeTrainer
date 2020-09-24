@@ -112,7 +112,7 @@ CREATE TABLE user_nutrient (
 	id INT(11) NOT NULL AUTO_INCREMENT,
     fk_user INT(11) NOT NULL,
     fk_nutrient INT(11) NOT NULL,
-    value DECIMAL(6, 3) NOT NULL,
+    value DECIMAL(12, 3) NOT NULL,
     date_time DATETIME,
     FOREIGN KEY (fk_user) REFERENCES users (id),
     FOREIGN KEY (fk_nutrient) REFERENCES nutrient (id),
