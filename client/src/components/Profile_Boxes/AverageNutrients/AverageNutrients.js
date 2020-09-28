@@ -36,7 +36,6 @@ class AverageNutrients extends Component {
         });
       
     }).catch(error =>{
-        alert(error.response.data.message);
         if (error.response.data.message === "Your session has expired.") {
           sessionStorage.setItem("email", "");
           sessionStorage.setItem("id", "");

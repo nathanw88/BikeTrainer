@@ -35,7 +35,6 @@ class FoodLogs extends Component {
       this.setState({ data, dateFrom });
 
     }).catch(error => {
-      alert(error.response.data.message);
       if (error.response.data.message === "Your session has expired.") {
         sessionStorage.setItem("email", "");
         sessionStorage.setItem("id", "");

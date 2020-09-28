@@ -21,7 +21,7 @@ var session = {
   },
 
   checkSession: function (cols, vals, userID, cb) {
-    let clientsSessionID = vals[0]
+    let clientsSessionID = vals[0];
     orm.selectWhere("session", "fk_user", userID, function (res) {
       if (res[0]) {
         var databaseSessionID = res[0].session_id, now = new Date();
