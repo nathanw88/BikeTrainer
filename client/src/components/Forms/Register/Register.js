@@ -90,7 +90,6 @@ export default class Register extends React.Component {
   render() {
     return (
       <Form>
-        {/* form that takes the info to register a new user */}
         <FormGroup>
           <Label for="userEmail">Email</Label>
           <Input className={this.state.validate.emailState} valid={this.state.validate.emailState === 'has-success'}

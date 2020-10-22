@@ -19,7 +19,6 @@ class LoginModal extends React.Component {
   }
   //login function where the login data is send over to the utils API to be send to the backend 
   login = event => {
-
     API.login(this.state.userEmail, this.state.userPassword).then(res => {
       sessionStorage.setItem("email", res.data.userEmail)
       sessionStorage.setItem("id", res.data.userID)
@@ -52,11 +51,11 @@ class LoginModal extends React.Component {
           {/* login form */}
           <Form>
             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-              <Label for="exampleEmail" className="mr-sm-2">Email</Label>
+              <Label for="userEmail" className="mr-sm-2">Email</Label>
               <Input type="email" name="userEmail" id="userEmail" onChange={this.handleInputChange} value={this.state.userEmail} placeholder="Example@web.com" />
             </FormGroup>
             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-              <Label for="examplePassword" className="mr-sm-2">Password</Label>
+              <Label for="userPassword" className="mr-sm-2">Password</Label>
               <Input type="password" name="userPassword" id="userPassword" onChange={this.handleInputChange} value={this.state.userPassword} placeholder="Password!" />
             </FormGroup>
             <br />
@@ -89,7 +88,7 @@ class LoginModal extends React.Component {
           </Container>
           <div id="register-modal">
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-              <ModalHeader toggle={this.toggle}>Register</ModalHeader>
+              <ModalHeader toggle={this.toggle}>Register Modal</ModalHeader>
               <ModalBody>
                 <Register />
               </ModalBody>

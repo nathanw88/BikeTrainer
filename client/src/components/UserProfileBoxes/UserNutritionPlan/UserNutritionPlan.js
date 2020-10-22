@@ -28,6 +28,7 @@ class UserNutritionPlan extends Component {
       this.setState({ userNutritionPlan, userNutritionPlanData });
 
     }).catch(error => {
+      console.log(error)
       if (error.response.data.message === "Your session has expired.") {
         sessionStorage.setItem("email", "");
         sessionStorage.setItem("id", "");

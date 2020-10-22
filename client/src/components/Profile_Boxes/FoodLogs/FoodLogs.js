@@ -159,7 +159,7 @@ class FoodLogs extends Component {
 
     return (
       <Jumbotron id="FoodLogs-box" className="profile-box">
-        <h2 className="text-center">Nutrients Logs</h2>
+        <h2 className="text-center">Nutrient Logs</h2>
         <br />
         <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
           <div className="table">

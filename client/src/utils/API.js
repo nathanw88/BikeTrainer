@@ -5,9 +5,7 @@ export default {
     return axios.post("/api/users/register", user);
   },
   login: (userEmail, userPassword) => {
-
     return axios.post("/api/users/login", { userEmail, userPassword })
-
   },
 
   findFood: (searchString, fk_user) => {
