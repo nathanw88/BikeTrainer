@@ -106,7 +106,7 @@ var orm = {
       if (err) handleMysqlConnectionError(err, connection)
 
       const updateUserFKActiveNutritionPlanToNull = (planID, userID) => {
-        let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ? ;`
+        let queryString = `UPDATE users SET fk_active_nutrition_plan = NULL WHERE id = ? AND fk_active_nutrition_plan = ?;`
         connection.query(queryString, [userID, planID], function (err, result) {
           if (err) throw err;
           if (result.affectedRows === 0) return cb(result)
@@ -167,7 +167,7 @@ var orm = {
         },
         insertIntoUserNutrient = (result, foodObject) => {
           let values = []
-          let queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ? `
+          let queryString3 = `INSERT INTO user_nutrient (fk_user, fk_nutrient, value, date_time) VALUES ?; `
           for (let i = 0; i < result.length; i++) {
             values.push([foodObject.fk_user, result[i].fk_nutrient, result[i].value, foodObject.date.toString()]);
             if (i === result.length - 1) {
@@ -188,7 +188,7 @@ var orm = {
   postNutritionPlanNutrients: function (obj, fkNutritionPlan, cb) {
     mysqlPool.getConnection(function (err, connection) {
       if (err) handleMysqlConnectionError(err, connection)
-      let queryString2 = "INSERT INTO nutrition_plan_nutrients (fk_nutrition_plan, fk_nutrient, amount) VALUES ?",
+      let queryString2 = "INSERT INTO nutrition_plan_nutrients (fk_nutrition_plan, fk_nutrient, amount) VALUES ?;",
         keysArray = Object.keys(obj), vals = [], i, maxLength = keysArray.length;
       for (i = 0; i < maxLength; i++) {
         vals.push([fkNutritionPlan, obj[keysArray[i]].id, obj[keysArray[i]].amount])
@@ -248,7 +248,7 @@ var orm = {
         let maxLength = nutrientArray.length, resultArray = [];
         for (let i = 0; i < maxLength; i++) {
           let { amount, max_amount, name, unit, id } = nutrientArray[i], maxDate = new Date(dateTill), minDate = new Date(dateFrom);
-          let queryString = `SELECT AVG(dailySum) as dailyAverage, date FROM (SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date) as average`,
+          let queryString = `SELECT AVG(dailySum) as dailyAverage, date FROM (SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date) as average;`,
             vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
           connection.query(queryString, vals, (err, result2) => {
             if (err) throw err;
@@ -301,7 +301,7 @@ var orm = {
         for (let i = 0; i < maxLength; i++) {
           let { amount, max_amount, name, unit, id } = nutrientArray[i], maxDate = new Date(dateTill), minDate = new Date(dateFrom);
           maxDate.setDate(maxDate.getDate() + 1);
-          let queryString = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date`,
+          let queryString = `SELECT SUM(value) as dailySum, DATE(date_time) as date FROM user_nutrient WHERE fk_nutrient = ? AND fk_user = ? AND date_time >= ? AND date_time < ? GROUP BY date ORDER BY date;`,
             vals = [id, userID, minDate.toISOString().substring(0, 10), maxDate.toISOString().substring(0, 10)]
           connection.query(queryString, vals, (err, result2) => {
             if (err) throw err;
@@ -345,7 +345,7 @@ var orm = {
       },
         deleteNutrientLogs = (result) => {
 
-          let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;  `
+          let queryString2 = `DELETE FROM user_nutrient WHERE fk_user = ? and fk_nutrient = ? and value = ?  and DATE(date_time) = ? LIMIT 1;`
 
           for (let i = 0; i < result.length; i++) {
             let vals = []

@@ -3,7 +3,7 @@ const express = require("express"), router = express.Router(), bcrypt = require(
 
 
 router.route("/login").post((req, res) => {
-  let { userPassword, userEmail } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID, userID;
+  let { userPassword, userEmail } = req.body, sessionExpires = req.session.cookie._expires, sessionID = req.sessionID;
   validateClientData = (cb) => {
     if (userEmail === undefined || userPassword === undefined) return res.status(400).json({ message: "Data must include userPassword and userEmail" });
     else if (!validate.isString(userPassword)) return res.status(400).json({ message: "Password Isn't A String" });
@@ -31,7 +31,7 @@ router.route("/login").post((req, res) => {
     })
   };
   validateClientData((boolen) => {
-    if (boolen) checkIfUserExsist(userEmail)
+    if (boolen === true) checkIfUserExsist(userEmail)
   })
 });
 

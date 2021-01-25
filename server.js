@@ -7,12 +7,10 @@ var session = require('express-session');
 var bodyParser = require("body-parser");
 const uuid = require('uuid/v4');
 var MemoryStore = require('memorystore')(session);
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 80;
 
 app.use(session({
   genid: (req) => {
-    // console.log('Inside the session middleware')
-    // console.log(req.sessionID)
     return uuid() // use UUIDs for session IDs
   },
   cookie: { maxAge: 3600000 },

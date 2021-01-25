@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen } from "../../custom-render";
+import { render, screen } from "../../custom-render";
 import '@testing-library/jest-dom/extend-expect';
 import Profile from '../../pages/Profile/Profile';
 import API from "../../utils/API"
@@ -19,7 +19,7 @@ test('Make sure everything is there', (done) => {
   jest.setTimeout(300000)
   render(<Profile />);
   setTimeout(() => {
-    const dailyNutrients = screen.getByText("Daily Nutrients")
+    expect(screen.getByText("Daily Nutrients")).toBeTruthy;
     expect(screen.getByText("Daily Nutrients")).toBeTruthy;
     expect(screen.getByText("Average Daily Nutrients")).toBeTruthy;
     expect(screen.getByText("Daily Nutrition Bar Chart")).toBeTruthy;

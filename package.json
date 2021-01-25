@@ -2,18 +2,18 @@
   "name": "trainer",
   "version": "1.0.0",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "chia": "0.0.1",
-    "csv-parser": "^2.3.2",
+    "csv-parser": "^2.3.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "if-env": "^1.0.4",
     "inquirer": "^7.1.0",
-    "memorystore": "^1.6.2",
+    "memorystore": "^1.6.4",
     "mysql": "^2.18.1",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^3.4.4",
     "uuid": "^3.4.0"
   },
   "scripts": {
@@ -26,6 +26,11 @@
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
     "heroku-postbuild": "npm run build"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/client/"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,7 +45,7 @@
   "main": "server.js",
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.7",
     "supertest": "^4.0.2"
   },
   "repository": {

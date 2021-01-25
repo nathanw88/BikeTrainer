@@ -64,7 +64,7 @@ router.route("/userNutrientsTimeline/:userID/:dateFrom/:dateTill").get((req, res
 
 router.route("/userFoodLogs/:userID/:dateFrom/:dateTill/:limit/:offset").get((req, res) => {
   let sessionExpires = req.session.cookie._expires, sessionID = req.sessionID,
-    { userID, dateFrom, dateTill, limit, offset } = req.params;
+  { userID, dateFrom, dateTill, limit, offset } = req.params;
   userID = parseInt(userID);
   async function validateClientData(cb) {
     if (!validate.isNumber(userID)) return res.status(400).json({ message: "userID Should Be A Number" });
